@@ -1,14 +1,30 @@
-const http = require('http');
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
 
-const hostname = '127.0.0.1';
-const port = 3000;
+const app = express();
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World');
-});
+app.use(cors());
+app.use(express.json());
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+const rtAuth = require('./routes/auth.js');
+const rtForn = require('./routes/fornecedores.js');
+const rtMate = require('./routes/materiais.js');
+const rtPess = require('./routes/pessoas.js');
+const rtUser = require('./routes/users.js');
+//const rtComp = require('./routes/compras.js');
+
+app.use("/api/auth", rtAuth);
+
+app.use("/api/fornecedores", rtForn);
+
+app.use("/api/materiais", rtMate);
+
+app.use("/api/pessoas", rtPess);
+
+app.use("/api/users", rtUser);
+
+//app.use("/api/compras", rtComp);
+
+
+app.listen(process.env.PORT, () => console.log(`Listening to port ${process.env.PORT}`));
