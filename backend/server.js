@@ -12,7 +12,8 @@ const rtForn = require('./routes/fornecedores.js');
 const rtMate = require('./routes/materiais.js');
 const rtPess = require('./routes/pessoas.js');
 const rtUser = require('./routes/users.js');
-//const rtComp = require('./routes/compras.js');
+const rtComp = require('./routes/compras.js');
+const rtDash = require('./routes/dashboards.js');
 
 app.use("/api/auth", rtAuth);
 
@@ -24,7 +25,9 @@ app.use("/api/pessoas", rtPess);
 
 app.use("/api/users", rtUser);
 
-//app.use("/api/compras", rtComp);
+app.use("/api/compras", rtComp);
+
+app.use("/api/dashboards", rtDash);
 
 
 app.listen(process.env.PORT, () => console.log(`Listening to port ${process.env.PORT}`));

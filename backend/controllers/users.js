@@ -19,7 +19,7 @@ async function createUser(req, res) {
 }
 
 async function editUser(req, res) {
-    serUser.editFornecedor(req.headers['authorization'], req.headers.refreshtoken, req.params.id, req.body).then(value => {
+    serUser.editUser(req.headers['authorization'], req.headers.refreshtoken, req.params.id, req.body).then(value => {
         res.status(value.code).send(value.info)
     })
     .catch(error => {

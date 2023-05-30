@@ -44,7 +44,6 @@ async function createPessoa(id, body) {
 
 async function togglePessoa(id, estado) {
     const pool = new sql.Request();
-    console.log(id, estado)
     return new Promise((resolve, reject) => {
         let slct = `UPDATE Pessoas SET [estado] = @estado WHERE [id] = @id`;
         pool.input('estado', sql.VarChar(50), estado).input('id', sql.VarChar(50), id).query(slct, (err, res) => {
@@ -60,8 +59,8 @@ async function togglePessoa(id, estado) {
 async function editPessoa(body, id) {
     const pool = new sql.Request();
     return new Promise((resolve, reject) => {
-        slct = `UPDATE Pessoas SET [nome] = @nome, [email] = @email, [contacto] = @contacto, [cargo] = @cargo WHERE [id] = @id`;
-        pool.input('nome', sql.VarChar(200), body.nome).input('email', sql.VarChar(50), body.email).input('contacto', sql.VarChar(50), body.contacto).input('cargo', sql.VarChar(50), body.cargo).input('id', sql.VarChar(50), id).query(slct, (err, res) => {
+        slct = `UPDATE Pessoas SET [nome] = @nome, [email] = @email, [contacto] = @contacto, [cargo] = @cargo, [id_fornecedor] = @idFornecedor WHERE [id] = @id`;
+        pool.input('nome', sql.VarChar(200), body.nome).input('email', sql.VarChar(50), body.email).input('contacto', sql.VarChar(50), body.contacto).input('cargo', sql.VarChar(50), body.cargo).input('idFornecedor', sql.VarChar(50), body.idFornecedor).input('id', sql.VarChar(50), id).query(slct, (err, res) => {
             if (!err) {
                 resolve(res);
             } else {

@@ -99,30 +99,29 @@ async function createUser(access_token, refresh_token, body) {
 
 async function toggleUser(access_token, refresh_token, id, estado) {
     return new Promise((resolve, reject) => {
-        
         if(access_token) access_token = access_token.split(" ")[1];
 
         utils.validateToken(access_token, refresh_token).then(value => {
             let info = value;
-
+            
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "forbidden" } });
             } else if(estado != 'Ativo' && estado != 'Inativo') {
                 reject({ code: 400, error: { message: "invalidState" } });
             } else {
-                dbForn.getAllFornecedores().then(value2 => {
+                dbUser.getAllUsers().then(value2 => {
 
                     let existe = false;
                             
-                    value2.forEach(f => {
-                        if(f.id == id) existe = true;
+                    value2.forEach(u => {
+                        if(u.id == id && u.tipo == 'user') existe = true;
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noFornecedor" } });
+                        reject({ code: 404, error: { message: "noUser" } });
                     } else {
-                        dbForn.toggleFornecedor(id, estado).then(value3 => {
-                            info.message = "Fornecedor alterado com sucesso.";
+                        dbUser.toggleUser(id, estado).then(value3 => {
+                            info.message = "Utilizador alterado com sucesso.";
                             resolve({ code: 200, info: info });
                         })
                         .catch(error => {
@@ -154,33 +153,33 @@ async function editUser(access_token, refresh_token, id, body) {
 
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "forbidden" } });
-            } else if(!body.nome || !body.contacto || !body.email || !body.morada || !body.nif) {
+            } else if(!body.username || !body.password) {
                 reject({ code: 400, error: { message: "emptyFields" } });
             } else {
 
-                dbForn.getAllFornecedores().then(value2 => {
+                dbUser.getAllUsers().then(value2 => {
 
                     let existe = false;
                             
-                    value2.forEach(f => {
-                        if(f.id == id) existe = true;
+                    value2.forEach(u => {
+                        if(u.id == id && u.tipo == 'user') existe = true;
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noFornecedor" } });
+                        reject({ code: 404, error: { message: "noUser" } });
                     } else {
 
                         let existe2 = false;
 
-                        value2.forEach(f => {
-                            if(f.id != id && (f.nome == body.nome || f.contacto == body.contacto || f.email == body.email || f.morada == body.morada || f.nif == body.nif)) existe2 = true;
+                        value2.forEach(u => {
+                            if(u.id != id && u.username == body.username) existe2 = true;
                         });
 
                         if(existe2) {
                             reject({ code: 400, error: { message: "fieldTaken" } });
                         } else {
-                            dbForn.editFornecedor(body, id).then(value3 => {
-                                info.message = "Fornecedor alterado com sucesso.";
+                            dbUser.editUser(body, id).then(value3 => {
+                                info.message = "Utilizador alterado com sucesso.";
                                 resolve({ code: 200, info: info });
                             })
                             .catch(error => {
@@ -269,25 +268,25 @@ async function toggleAdm(access_token, refresh_token, id, estado) {
 
         utils.validateToken(access_token, refresh_token).then(value => {
             let info = value;
-
-            if(info.user.tipo == "user") {
+            
+            if(info.user.tipo != "superadm") {
                 reject({ code: 403, error: { message: "forbidden" } });
             } else if(estado != 'Ativo' && estado != 'Inativo') {
                 reject({ code: 400, error: { message: "invalidState" } });
             } else {
-                dbForn.getAllFornecedores().then(value2 => {
+                dbUser.getAllUsers().then(value2 => {
 
                     let existe = false;
                             
-                    value2.forEach(f => {
-                        if(f.id == id) existe = true;
+                    value2.forEach(u => {
+                        if(u.id == id && u.tipo == 'adm') existe = true;
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noFornecedor" } });
+                        reject({ code: 404, error: { message: "noUser" } });
                     } else {
-                        dbForn.toggleFornecedor(id, estado).then(value3 => {
-                            info.message = "Fornecedor alterado com sucesso.";
+                        dbUser.toggleUser(id, estado).then(value3 => {
+                            info.message = "Utilizador alterado com sucesso.";
                             resolve({ code: 200, info: info });
                         })
                         .catch(error => {
@@ -317,35 +316,35 @@ async function editAdm(access_token, refresh_token, id, body) {
         utils.validateToken(access_token, refresh_token).then(value => {
             let info = value;
 
-            if(info.user.tipo == "user") {
+            if(info.user.tipo != "superadm") {
                 reject({ code: 403, error: { message: "forbidden" } });
-            } else if(!body.nome || !body.contacto || !body.email || !body.morada || !body.nif) {
+            } else if(!body.username || !body.password) {
                 reject({ code: 400, error: { message: "emptyFields" } });
             } else {
 
-                dbForn.getAllFornecedores().then(value2 => {
+                dbUser.getAllUsers().then(value2 => {
 
                     let existe = false;
                             
-                    value2.forEach(f => {
-                        if(f.id == id) existe = true;
+                    value2.forEach(u => {
+                        if(u.id == id && u.tipo == 'adm') existe = true;
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noFornecedor" } });
+                        reject({ code: 404, error: { message: "noUser" } });
                     } else {
 
                         let existe2 = false;
 
-                        value2.forEach(f => {
-                            if(f.id != id && (f.nome == body.nome || f.contacto == body.contacto || f.email == body.email || f.morada == body.morada || f.nif == body.nif)) existe2 = true;
+                        value2.forEach(u => {
+                            if(u.id != id && u.username == body.username) existe2 = true;
                         });
 
                         if(existe2) {
                             reject({ code: 400, error: { message: "fieldTaken" } });
                         } else {
-                            dbForn.editFornecedor(body, id).then(value3 => {
-                                info.message = "Fornecedor alterado com sucesso.";
+                            dbUser.editUser(body, id).then(value3 => {
+                                info.message = "Utilizador alterado com sucesso.";
                                 resolve({ code: 200, info: info });
                             })
                             .catch(error => {

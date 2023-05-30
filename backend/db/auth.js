@@ -29,7 +29,7 @@ async function authenticateUser(username, password) {
 async function createToken(token) {
     const pool = new sql.Request();
     return new Promise((resolve, reject) => {
-        pool.input('token', sql.VarChar(200), token).query(`INSERT INTO [Tokens] ([token]) VALUES (@token)`, (err, res) => {
+        pool.input('token', sql.VarChar(300), token).query(`INSERT INTO [Tokens] ([token]) VALUES (@token)`, (err, res) => {
             if (!err) {
                 resolve('Token stored with success.');
             } else {
@@ -42,7 +42,7 @@ async function createToken(token) {
 async function checkToken(token) {
     const pool = new sql.Request();
     return new Promise((resolve, reject) => {
-        pool.input('token', sql.VarChar(200), token).query(`SELECT * FROM [Tokens] WHERE [token] = @token`, (err, res) => {
+        pool.input('token', sql.VarChar(300), token).query(`SELECT * FROM [Tokens] WHERE [token] = @token`, (err, res) => {
             if (!err) {
                 resolve(res.recordset);
             } else {
@@ -55,7 +55,7 @@ async function checkToken(token) {
 async function deleteToken(token) {
     const pool = new sql.Request();
     return new Promise((resolve, reject) => {
-        pool.input('token', sql.VarChar(200), token).query(`DELETE FROM [Tokens] WHERE [token] = @token`, (err, res) => {
+        pool.input('token', sql.VarChar(300), token).query(`DELETE FROM [Tokens] WHERE [token] = @token`, (err, res) => {
             if (!err) {
                 resolve(res);
             } else {

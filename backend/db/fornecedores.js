@@ -44,7 +44,6 @@ async function createFornecedor(id, body) {
 
 async function toggleFornecedor(id, estado) {
     const pool = new sql.Request();
-    console.log(id, estado)
     return new Promise((resolve, reject) => {
         let slct = `UPDATE Fornecedores SET [estado] = @estado WHERE [id] = @id`;
         pool.input('estado', sql.VarChar(50), estado).input('id', sql.VarChar(50), id).query(slct, (err, res) => {

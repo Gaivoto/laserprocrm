@@ -137,40 +137,57 @@ async function editPessoa(access_token, refresh_token, id, body) {
 
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "forbidden" } });
-            } else if(!body.contacto || !body.nome || !body.email || body.cargo == null) {
+            } else if(!body.idFornecedor || !body.contacto || !body.nome || !body.email || body.cargo == null) {
                 reject({ code: 400, error: { message: "emptyFields" } });
             } else {
 
-                dbPess.getAllPessoas().then(value2 => {
+                dbForn.getAllFornecedores().then(value2 => {
 
                     let existe = false;
-                            
-                    value2.forEach(p => {
-                        if(p.id == id) existe = true;
-                    })
 
-                    if (!existe) {
-                        reject({ code: 404, error: { message: "noPessoa" } });
+                    value2.forEach(f => {
+                        if(f.id == body.idFornecedor) existe = true;
+                    });
+
+                    if(!existe) {
+                        reject({ code: 404, error: { message: "noFornecedor" } });
                     } else {
+                        dbPess.getAllPessoas().then(value2 => {
 
-                        let existe2 = false;
-
-                        value2.forEach(p => {
-                            if(p.id != id && (p.contacto == body.contacto || p.email == body.email)) existe2 = true;
-                        });
-
-                        if(existe2) {
-                            reject({ code: 400, error: { message: "emailContactTaken" } });
-                        } else {
-                            dbPess.editPessoa(body, id).then(value3 => {
-                                info.message = "Pessoa de contacto alterada com sucesso.";
-                                resolve({ code: 200, info: info });
+                            let existe = false;
+                                    
+                            value2.forEach(p => {
+                                if(p.id == id) existe = true;
                             })
-                            .catch(error => {
-                                console.log(error);
-                                reject({ code: 400, error: { message: "backendQueryError" } });
-                            });
-                        }
+        
+                            if (!existe) {
+                                reject({ code: 404, error: { message: "noPessoa" } });
+                            } else {
+        
+                                let existe2 = false;
+        
+                                value2.forEach(p => {
+                                    if(p.id != id && (p.contacto == body.contacto || p.email == body.email)) existe2 = true;
+                                });
+        
+                                if(existe2) {
+                                    reject({ code: 400, error: { message: "emailContactTaken" } });
+                                } else {
+                                    dbPess.editPessoa(body, id).then(value3 => {
+                                        info.message = "Pessoa de contacto alterada com sucesso.";
+                                        resolve({ code: 200, info: info });
+                                    })
+                                    .catch(error => {
+                                        console.log(error);
+                                        reject({ code: 400, error: { message: "backendQueryError" } });
+                                    });
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            reject({ code: 400, error: { message: "backendQueryError" } });
+                        });
                     }
                 })
                 .catch(error => {

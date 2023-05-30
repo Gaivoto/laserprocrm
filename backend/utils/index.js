@@ -21,7 +21,7 @@ async function validateToken(access_token, refresh_token){
 async function refreshToken(user, refresh_token){
     return new Promise((resolve, reject) => {
         dbAuth.checkToken(refresh_token).then(value => {
-            if(value == 0) {
+            if(value.length == 0) {
                 reject({code: 401, message: "Token inválido."});
             } else {
                 let access_token = jwt.sign(user, process.env.ACCESS_SECRET, {expiresIn: '240m'});
