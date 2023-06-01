@@ -25,7 +25,6 @@
     </div>
   </div>
   <!-- end:: Body -->
-  <KTScrollTop />
 </template>
 
 <script lang="ts">

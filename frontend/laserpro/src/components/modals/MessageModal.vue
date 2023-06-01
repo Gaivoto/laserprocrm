@@ -40,12 +40,12 @@ export default {
         left: 0px;
         width: 100%;
         height: 100%;
-        background: rgba(60, 60, 60, 0.8);
-        z-index: 10;
+        background: rgba(60, 60, 60, 0.4);
+        z-index: 100;
     }
 
     .modal-wrapper > div {
-        background-color: var(--mobalytics-card);
+        background-color: var(--bs-page-bg);
         width: 380px;
         padding: 40px;
         margin: auto;
@@ -62,12 +62,13 @@ export default {
     }
 
     .modal-wrapper button {
-        background: var(--mobalytics-back);
-        color: var(--light);
+        background: var(--bs-primary);
+        color: white;
         height: 50px;
         width: 120px;
         border: none;
         border-radius: 8px;
         box-shadow: rgba(20, 14, 49, 0.6) 6px 6px 4px 4px;
+        font-size: 16px;
     }
 </style>

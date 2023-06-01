@@ -92,16 +92,7 @@ const router = createRouter({
           },
         },
       ],
-    },/*
-    {
-      path: "/multi-step-sign-up",
-      name: "multi-step-sign-up",
-      component: () =>
-        import("@/views/crafted/authentication/MultiStepSignUp.vue"),
-      meta: {
-        pageTitle: "Multi-step Sign up",
-      },
-    },*/
+    },
     {
       path: "/",
       component: () => import("@/layouts/SystemLayout.vue"),
