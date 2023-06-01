@@ -26,12 +26,12 @@ async function getAllCompras(access_token, refresh_token) {
             })
             .catch(error => {
                 console.log(error);
-                reject({ code: 400, error: { message: "backendQueryError" } });
+                reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
             });
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } });
+            reject({ code: 401, error: { message: "Sessão expirou." } });
         });
     });
 }
@@ -45,7 +45,7 @@ async function createCompra(access_token, refresh_token, body) {
             let info = value1;
 
             if(!body.valor || !body.quantidade || !body.data || !body.idFornecedor || !body.idMaterial || parseFloat(body.valor) <= 0 || parseFloat(body.quantidade) <= 0) {
-                reject({ code: 400, error: { message: "emptyFields" } });
+                reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
                 dbForn.getAllFornecedores().then(value2 => {
 
@@ -56,7 +56,7 @@ async function createCompra(access_token, refresh_token, body) {
                     });
 
                     if(!existe) {
-                        reject({ code: 404, error: { message: "noFornecedor" } });
+                        reject({ code: 404, error: { message: "Este fornecedor não foi encontrado." } });
                     } else {
                         dbMate.getAllMateriais().then(value3 => {
                             let existe2 = false;
@@ -66,7 +66,7 @@ async function createCompra(access_token, refresh_token, body) {
                             });
         
                             if(!existe2) {
-                                reject({ code: 404, error: { message: "noMaterial" } });
+                                reject({ code: 404, error: { message: "Este material não foi encontrado." } });
                             } else {
                                 dbComp.getAllCompras().then(value4 => {
                     
@@ -87,30 +87,30 @@ async function createCompra(access_token, refresh_token, body) {
                                     })
                                     .catch(error => {
                                         console.log(error);
-                                        reject({ code: 400, error: { message: "backendQueryError" } });
+                                        reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                                     });
                                 })
                                 .catch(error => {
                                     console.log(error);
-                                    reject({ code: 400, error: { message: "backendQueryError" } });
+                                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                                 });
                             }
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }
@@ -124,9 +124,9 @@ async function editCompra(access_token, refresh_token, id, body) {
             let info = value;
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(!body.valor || !body.quantidade || !body.data || !body.idFornecedor || !body.idMaterial || parseFloat(body.valor) <= 0 || parseFloat(body.quantidade) <= 0) {
-                reject({ code: 400, error: { message: "emptyFields" } });
+                reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
                 dbForn.getAllFornecedores().then(value2 => {
 
@@ -137,7 +137,7 @@ async function editCompra(access_token, refresh_token, id, body) {
                     });
 
                     if(!existe) {
-                        reject({ code: 404, error: { message: "noFornecedor" } });
+                        reject({ code: 404, error: { message: "Este fornecedor não foi encontrado." } });
                     } else {
                         dbMate.getAllMateriais().then(value3 => {
                             let existe2 = false;
@@ -147,7 +147,7 @@ async function editCompra(access_token, refresh_token, id, body) {
                             });
         
                             if(!existe2) {
-                                reject({ code: 404, error: { message: "noMaterial" } });
+                                reject({ code: 404, error: { message: "Este material não foi encontrado." } });
                             } else {
                                 dbComp.getAllCompras().then(value4 => {
 
@@ -158,7 +158,7 @@ async function editCompra(access_token, refresh_token, id, body) {
                                     })
                 
                                     if (!existe3) {
-                                        reject({ code: 404, error: { message: "noCompra" } });
+                                        reject({ code: 404, error: { message: "Esta compra não foi encontrada." } });
                                     } else {
                 
                                         dbComp.editCompra(body, id).then(value5 => {
@@ -167,31 +167,31 @@ async function editCompra(access_token, refresh_token, id, body) {
                                         })
                                         .catch(error => {
                                             console.log(error);
-                                            reject({ code: 400, error: { message: "backendQueryError" } });
+                                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                                         });
                                     }
                                 })
                                 .catch(error => {
                                     console.log(error);
-                                    reject({ code: 400, error: { message: "backendQueryError" } });
+                                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                                 });
                             }
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }
@@ -205,7 +205,7 @@ async function deleteCompra(access_token, refresh_token, id) {
             let info = value;
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else {
                 dbComp.getAllCompras().then(value2 => {
 
@@ -216,7 +216,7 @@ async function deleteCompra(access_token, refresh_token, id) {
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noCompra" } });
+                        reject({ code: 404, error: { message: "Esta compra não foi encontrada." } });
                     } else {
                         dbComp.deleteCompra(id).then(value3 => {
                             info.message = "Compra apagada com sucesso.";
@@ -224,19 +224,19 @@ async function deleteCompra(access_token, refresh_token, id) {
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }

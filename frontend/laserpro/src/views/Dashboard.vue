@@ -109,8 +109,10 @@ export default {
       }
     });
   },
-  mounted() {
-    this.$emit("open-modal", "usernamePasswordEmpty");
+  created() {
+    if(!this.$store.getters.getUser.id) {
+      this.$router.push({ name: "login" });
+    }
   }
 }
 </script>

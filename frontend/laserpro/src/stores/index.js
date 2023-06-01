@@ -17,7 +17,7 @@ const store = new Vuex.Store({
     },
     getters: {
         getUser(state){
-            return { id: state.user.id, username: state.user.username, tipo: Crypto.AES.decrypt(state.user.tipo, import.meta.env.VITE_CRYPTO_KEY).toString(Crypto.enc.Utf8) };
+            return { id: state.user.id, username: state.user.username, tipo: state.user.tipo ? Crypto.AES.decrypt(state.user.tipo, import.meta.env.VITE_CRYPTO_KEY).toString(Crypto.enc.Utf8) : null };
         },
         getAccessToken(state) {
             return state.tokens.accessToken;

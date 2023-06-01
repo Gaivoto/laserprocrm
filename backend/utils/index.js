@@ -30,7 +30,7 @@ async function refreshToken(user, refresh_token){
         })
         .catch(error => {
             console.log(error);
-            reject({code: 400, error: { message: "backendQueryError" } });
+            reject({code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
         });
     });
 }

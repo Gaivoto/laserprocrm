@@ -13,7 +13,7 @@ async function getAllUsers(access_token, refresh_token) {
             let users = [];
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else {
                 dbUser.getAllUsers().then(value2 => {
 
@@ -27,13 +27,13 @@ async function getAllUsers(access_token, refresh_token) {
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } });
+            reject({ code: 401, error: { message: "Sessão expirou." } });
         });
     });
 }
@@ -47,9 +47,9 @@ async function createUser(access_token, refresh_token, body) {
             let info = value1;
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(!body.username || !body.password) {
-                reject({ code: 400, error: { message: "emptyFields" } });
+                reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
                 dbUser.getAllUsers().then(value2 => {
                     
@@ -60,7 +60,7 @@ async function createUser(access_token, refresh_token, body) {
                     });
 
                     if (existe) {
-                        reject({ code: 400, error: { message: "fieldTaken" } });
+                        reject({ code: 400, error: { message: "O nome de utilizador deve ser único." } });
                     } else {
 
                         var existe2 = false;
@@ -80,19 +80,19 @@ async function createUser(access_token, refresh_token, body) {
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }
@@ -105,9 +105,9 @@ async function toggleUser(access_token, refresh_token, id, estado) {
             let info = value;
             
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(estado != 'Ativo' && estado != 'Inativo') {
-                reject({ code: 400, error: { message: "invalidState" } });
+                reject({ code: 400, error: { message: "Estado inválido." } });
             } else {
                 dbUser.getAllUsers().then(value2 => {
 
@@ -118,7 +118,7 @@ async function toggleUser(access_token, refresh_token, id, estado) {
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noUser" } });
+                        reject({ code: 404, error: { message: "Este utiilizador não foi encontrado." } });
                     } else {
                         dbUser.toggleUser(id, estado).then(value3 => {
                             info.message = "Utilizador alterado com sucesso.";
@@ -126,19 +126,19 @@ async function toggleUser(access_token, refresh_token, id, estado) {
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }
@@ -152,9 +152,9 @@ async function editUser(access_token, refresh_token, id, body) {
             let info = value;
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(!body.username || !body.password) {
-                reject({ code: 400, error: { message: "emptyFields" } });
+                reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
 
                 dbUser.getAllUsers().then(value2 => {
@@ -166,7 +166,7 @@ async function editUser(access_token, refresh_token, id, body) {
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noUser" } });
+                        reject({ code: 404, error: { message: "Este utiilizador não foi encontrado." } });
                     } else {
 
                         let existe2 = false;
@@ -176,7 +176,7 @@ async function editUser(access_token, refresh_token, id, body) {
                         });
 
                         if(existe2) {
-                            reject({ code: 400, error: { message: "fieldTaken" } });
+                            reject({ code: 400, error: { message: "O nome de utilizador deve ser único." } });
                         } else {
                             dbUser.editUser(body, id).then(value3 => {
                                 info.message = "Utilizador alterado com sucesso.";
@@ -184,20 +184,20 @@ async function editUser(access_token, refresh_token, id, body) {
                             })
                             .catch(error => {
                                 console.log(error);
-                                reject({ code: 400, error: { message: "backendQueryError" } });
+                                reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                             });
                         }
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }
@@ -211,9 +211,9 @@ async function createAdm(access_token, refresh_token, body) {
             let info = value1;
 
             if(info.user.tipo != "superadm") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(!body.username || !body.password) {
-                reject({ code: 400, error: { message: "emptyFields" } });
+                reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
                 dbUser.getAllUsers().then(value2 => {
                     
@@ -224,7 +224,7 @@ async function createAdm(access_token, refresh_token, body) {
                     });
 
                     if (existe) {
-                        reject({ code: 400, error: { message: "fieldTaken" } });
+                        reject({ code: 400, error: { message: "O nome de utilizador deve ser único." } });
                     } else {
 
                         var existe2 = false;
@@ -244,19 +244,19 @@ async function createAdm(access_token, refresh_token, body) {
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }
@@ -270,9 +270,9 @@ async function toggleAdm(access_token, refresh_token, id, estado) {
             let info = value;
             
             if(info.user.tipo != "superadm") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(estado != 'Ativo' && estado != 'Inativo') {
-                reject({ code: 400, error: { message: "invalidState" } });
+                reject({ code: 400, error: { message: "Estado inválido." } });
             } else {
                 dbUser.getAllUsers().then(value2 => {
 
@@ -283,7 +283,7 @@ async function toggleAdm(access_token, refresh_token, id, estado) {
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noUser" } });
+                        reject({ code: 404, error: { message: "Este utiilizador não foi encontrado." } });
                     } else {
                         dbUser.toggleUser(id, estado).then(value3 => {
                             info.message = "Utilizador alterado com sucesso.";
@@ -291,19 +291,19 @@ async function toggleAdm(access_token, refresh_token, id, estado) {
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }
@@ -317,9 +317,9 @@ async function editAdm(access_token, refresh_token, id, body) {
             let info = value;
 
             if(info.user.tipo != "superadm") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(!body.username || !body.password) {
-                reject({ code: 400, error: { message: "emptyFields" } });
+                reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
 
                 dbUser.getAllUsers().then(value2 => {
@@ -331,7 +331,7 @@ async function editAdm(access_token, refresh_token, id, body) {
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noUser" } });
+                        reject({ code: 404, error: { message: "Este utiilizador não foi encontrado." } });
                     } else {
 
                         let existe2 = false;
@@ -341,7 +341,7 @@ async function editAdm(access_token, refresh_token, id, body) {
                         });
 
                         if(existe2) {
-                            reject({ code: 400, error: { message: "fieldTaken" } });
+                            reject({ code: 400, error: { message: "O nome de utilizador deve ser único." } });
                         } else {
                             dbUser.editUser(body, id).then(value3 => {
                                 info.message = "Utilizador alterado com sucesso.";
@@ -349,20 +349,20 @@ async function editAdm(access_token, refresh_token, id, body) {
                             })
                             .catch(error => {
                                 console.log(error);
-                                reject({ code: 400, error: { message: "backendQueryError" } });
+                                reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                             });
                         }
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }

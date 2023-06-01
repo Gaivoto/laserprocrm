@@ -175,14 +175,13 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent } from "vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import MainMenuConfigs from "@/core/config/CleanMainMenuConfig";
 import { headerMenuIcons } from "@/core/helpers/config";
 import { version } from "@/core/helpers/documentation";
 
-export default defineComponent({
+export default {
   name: "KTMenu",
   components: {},
   data() {
@@ -218,5 +217,5 @@ export default defineComponent({
     if(this.$store.getters.getUser.tipo == 'user') this.menuConfig = MainMenuConfigs.UserMainMenuConfig;
     else this.menuConfig = MainMenuConfigs.AdmMainMenuConfig;
   }
-});
+}
 </script>

@@ -163,7 +163,7 @@
   </div>
 
   <ExportCustomerModal></ExportCustomerModal>
-  <AddCustomerModal></AddCustomerModal>
+  <AddFornecedorModal></AddFornecedorModal>
 </template>
 
 <script lang="ts">
@@ -171,7 +171,7 @@ import { getAssetPath } from "@/core/helpers/assets";
 import { onMounted, ref } from "vue";
 import Datatable from "@/components/kt-datatable/KTDataTable.vue";
 import type { Sort } from "@/components/kt-datatable//table-partials/models";
-import AddCustomerModal from "@/components/modals/AddCustomerModal.vue";
+import AddFornecedorModal from "@/components/modals/AddFornecedorModal.vue";
 import type { ICustomer } from "@/core/data/customers";
 import customers from "@/core/data/customers";
 import arraySort from "array-sort";
@@ -293,5 +293,12 @@ export default {
       getAssetPath,
     };
   },
+  created() {
+    if(!this.$store.getters.getUser.id) {
+      this.$router.push({ name: "login" });
+    } else if(this.$store.getters.getUser.type == "user") {
+      this.$router.push({ name: "dashboard" });
+    }
+  }
 }
 </script>

@@ -29,6 +29,15 @@ export default {
   name: "sign-in",
   components: {
   },
+  created() {
+    if(this.$store.getters.getUser.id) {
+      this.$router.push({ name: "dashboard"});
+    } else {
+      window.addEventListener('keydown', (e) => {
+        if(e.key == 'Enter') this.login();
+      });
+    }
+  },
   methods: {
     login() {
       if(this.$refs.loginUsername.value != "" && this.$refs.loginPassword.value != "") {
@@ -53,7 +62,7 @@ export default {
             } else console.log(error);
         });
       } else {
-        this.$emit("open-modal", "usernamePasswordEmpty");
+        this.$emit("open-modal", "Preencha todos os campos.");
       }
     }
   }

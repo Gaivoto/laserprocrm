@@ -9,7 +9,7 @@
       <div class="d-flex flex-center flex-column flex-lg-row-fluid">
         <!--begin::Wrapper-->
         <div class="w-lg-500px p-10">
-          <router-view></router-view>
+          <router-view v-on:open-modal="openModal"></router-view>
         </div>
         <!--end::Wrapper-->
       </div>
@@ -102,6 +102,11 @@ import { useBodyStore } from "@/stores/body";
 export default defineComponent({
   name: "auth-layout",
   components: {},
+  methods: {
+    openModal(info) {
+      this.$emit("open-modal", info)
+    }
+  },
   setup() {
     const store = useBodyStore();
 

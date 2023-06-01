@@ -24,12 +24,12 @@ async function getAllMateriais(access_token, refresh_token) {
             })
             .catch(error => {
                 console.log(error);
-                reject({ code: 400, error: { message: "backendQueryError" } });
+                reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
             });
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } });
+            reject({ code: 401, error: { message: "Sessão expirou." } });
         });
     });
 }
@@ -43,9 +43,9 @@ async function createMaterial(access_token, refresh_token, body) {
             let info = value1;
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(!body.tipo || !body.liga || !body.acabamento || !body.dimensoes) {
-                reject({ code: 400, error: { message: "emptyFields" } });
+                reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
                 dbMate.getAllMateriais().then(value2 => {
                     
@@ -56,7 +56,7 @@ async function createMaterial(access_token, refresh_token, body) {
                     })
 
                     if (existe) {
-                        reject({ code: 400, error: { message: "alreadyExists" } });
+                        reject({ code: 400, error: { message: "Este material já existe." } });
                     } else {
 
                         var existe2 = false;
@@ -76,19 +76,19 @@ async function createMaterial(access_token, refresh_token, body) {
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }
@@ -102,9 +102,9 @@ async function toggleMaterial(access_token, refresh_token, id, estado) {
             let info = value;
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(estado != 'Ativo' && estado != 'Inativo') {
-                reject({ code: 400, error: { message: "invalidState" } });
+                reject({ code: 400, error: { message: "Estado inválido." } });
             } else {
                 dbMate.getAllMateriais().then(value2 => {
 
@@ -115,7 +115,7 @@ async function toggleMaterial(access_token, refresh_token, id, estado) {
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noMaterial" } });
+                        reject({ code: 404, error: { message: "Este material não foi encontrado." } });
                     } else {
                         dbMate.toggleMaterial(id, estado).then(value3 => {
                             info.message = "Material alterado com sucesso.";
@@ -123,19 +123,19 @@ async function toggleMaterial(access_token, refresh_token, id, estado) {
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }
@@ -149,9 +149,9 @@ async function editMaterial(access_token, refresh_token, id, body) {
             let info = value;
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(!body.tipo || !body.liga || !body.acabamento || !body.dimensoes) {
-                reject({ code: 400, error: { message: "emptyFields" } });
+                reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
 
                 dbMate.getAllMateriais().then(value2 => {
@@ -163,7 +163,7 @@ async function editMaterial(access_token, refresh_token, id, body) {
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noMaterial" } });
+                        reject({ code: 404, error: { message: "Este material não foi encontrado." } });
                     } else {
 
                         let existe2 = false;
@@ -173,7 +173,7 @@ async function editMaterial(access_token, refresh_token, id, body) {
                         });
 
                         if(existe2) {
-                            reject({ code: 400, error: { message: "alreadyExists" } });
+                            reject({ code: 400, error: { message: "Este material já existe." } });
                         } else {
                             dbMate.editMaterial(body, id).then(value3 => {
                                 info.message = "Material alterado com sucesso.";
@@ -181,20 +181,20 @@ async function editMaterial(access_token, refresh_token, id, body) {
                             })
                             .catch(error => {
                                 console.log(error);
-                                reject({ code: 400, error: { message: "backendQueryError" } });
+                                reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                             });
                         }
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }

@@ -13,9 +13,9 @@ async function createPessoa(access_token, refresh_token, body) {
             let info = value1;
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(!body.idFornecedor || !body.contacto || !body.nome || !body.email || body.cargo == null) {
-                reject({ code: 400, error: { message: "emptyFields" } });
+                reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
                 dbForn.getAllFornecedores().then(value2 => {
 
@@ -26,7 +26,7 @@ async function createPessoa(access_token, refresh_token, body) {
                     });
 
                     if(!existe) {
-                        reject({ code: 404, error: { message: "noFornecedor" } });
+                        reject({ code: 404, error: { message: "Este fornecedor não foi encontrado." } });
                     } else {
                         dbPess.getAllPessoas().then(value3 => {
                     
@@ -37,7 +37,7 @@ async function createPessoa(access_token, refresh_token, body) {
                             })
         
                             if (existe2) {
-                                reject({ code: 400, error: { message: "emailContactTaken" } });
+                                reject({ code: 400, error: { message: "Os dados da pessoa de contacto devem ser únicos." } });
                             } else {
         
                                 var existe3 = false;
@@ -57,25 +57,25 @@ async function createPessoa(access_token, refresh_token, body) {
                                 })
                                 .catch(error => {
                                     console.log(error);
-                                    reject({ code: 400, error: { message: "backendQueryError" } });
+                                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                                 });
                             }
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }
@@ -89,9 +89,9 @@ async function togglePessoa(access_token, refresh_token, id, estado) {
             let info = value;
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(estado != 'Ativo' && estado != 'Inativo') {
-                reject({ code: 400, error: { message: "invalidState" } });
+                reject({ code: 400, error: { message: "Estado inválido." } });
             } else {
                 dbPess.getAllPessoas().then(value2 => {
 
@@ -102,7 +102,7 @@ async function togglePessoa(access_token, refresh_token, id, estado) {
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noPessoa" } });
+                        reject({ code: 404, error: { message: "Esta pessoa não foi encontrada." } });
                     } else {
                         dbPess.togglePessoa(id, estado).then(value3 => {
                             info.message = "Pessoa de contacto alterada com sucesso.";
@@ -110,19 +110,19 @@ async function togglePessoa(access_token, refresh_token, id, estado) {
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }
@@ -136,9 +136,9 @@ async function editPessoa(access_token, refresh_token, id, body) {
             let info = value;
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(!body.idFornecedor || !body.contacto || !body.nome || !body.email || body.cargo == null) {
-                reject({ code: 400, error: { message: "emptyFields" } });
+                reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
 
                 dbForn.getAllFornecedores().then(value2 => {
@@ -150,7 +150,7 @@ async function editPessoa(access_token, refresh_token, id, body) {
                     });
 
                     if(!existe) {
-                        reject({ code: 404, error: { message: "noFornecedor" } });
+                        reject({ code: 404, error: { message: "Este fornecedor não foi encontrado." } });
                     } else {
                         dbPess.getAllPessoas().then(value2 => {
 
@@ -161,7 +161,7 @@ async function editPessoa(access_token, refresh_token, id, body) {
                             })
         
                             if (!existe) {
-                                reject({ code: 404, error: { message: "noPessoa" } });
+                                reject({ code: 404, error: { message: "Esta pessoa não foi encontrada." } });
                             } else {
         
                                 let existe2 = false;
@@ -171,7 +171,7 @@ async function editPessoa(access_token, refresh_token, id, body) {
                                 });
         
                                 if(existe2) {
-                                    reject({ code: 400, error: { message: "emailContactTaken" } });
+                                    reject({ code: 400, error: { message: "Os dados da pessoa de contacto devem ser únicos." } });
                                 } else {
                                     dbPess.editPessoa(body, id).then(value3 => {
                                         info.message = "Pessoa de contacto alterada com sucesso.";
@@ -179,26 +179,26 @@ async function editPessoa(access_token, refresh_token, id, body) {
                                     })
                                     .catch(error => {
                                         console.log(error);
-                                        reject({ code: 400, error: { message: "backendQueryError" } });
+                                        reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                                     });
                                 }
                             }
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }

@@ -53,7 +53,7 @@ export default defineComponent({
       required: false,
       default: "asc",
     },
-    emptyTableText: { type: String, required: false, default: "No data found" },
+    emptyTableText: { type: String, required: false, default: "Não foram encontrados resultados para a pesquisa." },
     currentPage: { type: Number, required: false, default: 1 },
   },
   emits: [

@@ -35,12 +35,12 @@ async function getAllFornecedores(access_token, refresh_token) {
             })
             .catch(error => {
                 console.log(error);
-                reject({ code: 400, error: { message: "backendQueryError" } });
+                reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
             });
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } });
+            reject({ code: 401, error: { message: "Sessão expirou." } });
         });
     });
 }
@@ -54,9 +54,9 @@ async function createFornecedor(access_token, refresh_token, body) {
             let info = value1;
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(!body.nome || !body.contacto || !body.email || !body.morada || !body.nif) {
-                reject({ code: 400, error: { message: "emptyFields" } });
+                reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
                 dbForn.getAllFornecedores().then(value2 => {
                     
@@ -67,7 +67,7 @@ async function createFornecedor(access_token, refresh_token, body) {
                     })
 
                     if (existe) {
-                        reject({ code: 400, error: { message: "fieldTaken" } });
+                        reject({ code: 400, error: { message: "Os dados do fornecedor devem ser únicos." } });
                     } else {
 
                         var existe2 = false;
@@ -87,19 +87,19 @@ async function createFornecedor(access_token, refresh_token, body) {
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }
@@ -113,9 +113,9 @@ async function toggleFornecedor(access_token, refresh_token, id, estado) {
             let info = value;
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(estado != 'Ativo' && estado != 'Inativo') {
-                reject({ code: 400, error: { message: "invalidState" } });
+                reject({ code: 400, error: { message: "Estado inválido." } });
             } else {
                 dbForn.getAllFornecedores().then(value2 => {
 
@@ -126,7 +126,7 @@ async function toggleFornecedor(access_token, refresh_token, id, estado) {
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noFornecedor" } });
+                        reject({ code: 404, error: { message: "Este fornecedor não foi encontrado." } });
                     } else {
                         dbForn.toggleFornecedor(id, estado).then(value3 => {
                             info.message = "Fornecedor alterado com sucesso.";
@@ -134,19 +134,19 @@ async function toggleFornecedor(access_token, refresh_token, id, estado) {
                         })
                         .catch(error => {
                             console.log(error);
-                            reject({ code: 400, error: { message: "backendQueryError" } });
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }
@@ -160,9 +160,9 @@ async function editFornecedor(access_token, refresh_token, id, body) {
             let info = value;
 
             if(info.user.tipo == "user") {
-                reject({ code: 403, error: { message: "forbidden" } });
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(!body.nome || !body.contacto || !body.email || !body.morada || !body.nif) {
-                reject({ code: 400, error: { message: "emptyFields" } });
+                reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
 
                 dbForn.getAllFornecedores().then(value2 => {
@@ -174,7 +174,7 @@ async function editFornecedor(access_token, refresh_token, id, body) {
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "noFornecedor" } });
+                        reject({ code: 404, error: { message: "Este fornecedor não foi encontrado." } });
                     } else {
 
                         let existe2 = false;
@@ -184,7 +184,7 @@ async function editFornecedor(access_token, refresh_token, id, body) {
                         });
 
                         if(existe2) {
-                            reject({ code: 400, error: { message: "fieldTaken" } });
+                            reject({ code: 400, error: { message: "Os dados do fornecedor devem ser únicos." } });
                         } else {
                             dbForn.editFornecedor(body, id).then(value3 => {
                                 info.message = "Fornecedor alterado com sucesso.";
@@ -192,20 +192,20 @@ async function editFornecedor(access_token, refresh_token, id, body) {
                             })
                             .catch(error => {
                                 console.log(error);
-                                reject({ code: 400, error: { message: "backendQueryError" } });
+                                reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                             });
                         }
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    reject({ code: 400, error: { message: "backendQueryError" } });
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
         })
         .catch(error => {
             console.log(error);
-            reject({ code: 401, error: { message: "invalidToken" } })
+            reject({ code: 401, error: { message: "Sessão expirou." } })
         });
     });
 }

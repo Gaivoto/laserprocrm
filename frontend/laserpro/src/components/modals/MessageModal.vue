@@ -41,13 +41,13 @@ export default {
         width: 100%;
         height: 100%;
         background: rgba(60, 60, 60, 0.4);
-        z-index: 100;
+        z-index: 10000;
     }
 
     .modal-wrapper > div {
         background-color: var(--bs-page-bg);
-        width: 380px;
-        padding: 40px;
+        width: 428px;
+        padding: 64px;
         margin: auto;
         margin-top: 100px;
         border-radius: 8px;
