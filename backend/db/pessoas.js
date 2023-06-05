@@ -1,26 +1,23 @@
-const sql = require("mssql");
+const pg = require('pg');
 
-const config = {
+const pool = new pg.Pool({
+    host: process.env.DBHOST,
     user: process.env.DBUSER,
+    port: process.env.DBPORT,
     password: process.env.DBPW,
-    server: process.env.DBHOST,
-    database: process.env.DBNAME,
-    trustServerCertificate: true,
-    encrypt: true
-};
-
-sql.connect(config, function (err) {
-    if (err) throw err;
+    database: process.env.DBNAME
 });
 
 async function getAllPessoas() {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        const slct = `SELECT id, id_fornecedor, nome, contacto, email, cargo, estado FROM [Pessoas]`;
-        pool.query(slct, (err, res) => {
-            if (!err) {
-                resolve(res.recordset);
+        const slct = `SELECT id, id_fornecedor, nome, contacto, email, cargo, estado FROM "Pessoas"`;
+        client.query(slct, (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });
@@ -28,14 +25,16 @@ async function getAllPessoas() {
 }
 
 async function createPessoa(id, body) {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        const slct = `INSERT INTO Pessoas (id, id_fornecedor, nome, email, contacto, cargo, estado)
-         VALUES (@id, @id_fornecedor, @nome, @email, @contacto, @cargo, 'Ativo')`;
-        pool.input('id', sql.VarChar(50), id).input('id_fornecedor', sql.VarChar(50), body.idFornecedor).input('nome', sql.VarChar(200), body.nome).input('email', sql.VarChar(50), body.email).input('contacto', sql.VarChar(50), body.contacto).input('cargo', sql.VarChar(50), body.cargo).query(slct, (err, res) => {
-            if (!err) {
-                resolve(res.recordset);
+        const slct = `INSERT INTO "Pessoas" (id, id_fornecedor, nome, email, contacto, cargo, estado)
+         VALUES ($1, $2, $3, $4, $5, $6, 'Ativo')`;
+        client.query(slct, [id, body.idFornecedor, body.nome, body.email, body.contacto, body.cargo], (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });
@@ -43,13 +42,15 @@ async function createPessoa(id, body) {
 }
 
 async function togglePessoa(id, estado) {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        let slct = `UPDATE Pessoas SET [estado] = @estado WHERE [id] = @id`;
-        pool.input('estado', sql.VarChar(50), estado).input('id', sql.VarChar(50), id).query(slct, (err, res) => {
-            if (!err) {
-                resolve(res);
+        let slct = `UPDATE "Pessoas" SET estado = $1 WHERE id = $2`;
+        client.query(slct, [estado, id], (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });
@@ -57,13 +58,15 @@ async function togglePessoa(id, estado) {
 }
 
 async function editPessoa(body, id) {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        slct = `UPDATE Pessoas SET [nome] = @nome, [email] = @email, [contacto] = @contacto, [cargo] = @cargo, [id_fornecedor] = @idFornecedor WHERE [id] = @id`;
-        pool.input('nome', sql.VarChar(200), body.nome).input('email', sql.VarChar(50), body.email).input('contacto', sql.VarChar(50), body.contacto).input('cargo', sql.VarChar(50), body.cargo).input('idFornecedor', sql.VarChar(50), body.idFornecedor).input('id', sql.VarChar(50), id).query(slct, (err, res) => {
-            if (!err) {
-                resolve(res);
+        slct = `UPDATE "Pessoas" SET nome = $1, email = $2, contacto = $3, cargo = $4, id_fornecedor = $5 WHERE id = $6`;
+        client.query(slct, [body.nome, body.email, body.contacto, body.cargo, body.idFornecedor, id], (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });

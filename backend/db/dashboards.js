@@ -1,40 +1,39 @@
-const sql = require("mssql");
+const pg = require('pg');
 
-const config = {
+const pool = new pg.Pool({
+    host: process.env.DBHOST,
     user: process.env.DBUSER,
+    port: process.env.DBPORT,
     password: process.env.DBPW,
-    server: process.env.DBHOST,
-    database: process.env.DBNAME,
-    trustServerCertificate: true,
-    encrypt: true
-};
-
-sql.connect(config, function (err) {
-    if (err) throw err;
+    database: process.env.DBNAME
 });
 
 async function getAllDashboards() {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        const slct = `SELECT id, estado FROM [Dashboards]`;
-        pool.query(slct, (err, res) => {
-            if (!err) {
-                resolve(res.recordset);
+        client.query('SELECT id, estado FROM "Dashboards"', (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });
     });
 }
 
+
 async function toggleDashboard(id, estado) {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        let slct = `UPDATE Dashboards SET [estado] = @estado WHERE [id] = @id`;
-        pool.input('estado', sql.VarChar(50), estado).input('id', sql.VarChar(50), id).query(slct, (err, res) => {
-            if (!err) {
-                resolve(res);
+        let slct = `UPDATE "Dashboards" SET estado = $1 WHERE id = $2`;
+        client.query(slct, [estado, id], (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });

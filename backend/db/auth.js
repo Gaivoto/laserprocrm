@@ -1,25 +1,22 @@
-const sql = require("mssql");
+const pg = require('pg');
 
-const config = {
+const pool = new pg.Pool({
+    host: process.env.DBHOST,
     user: process.env.DBUSER,
+    port: process.env.DBPORT,
     password: process.env.DBPW,
-    server: process.env.DBHOST,
-    database: process.env.DBNAME,
-    trustServerCertificate: true,
-    encrypt: true
-};
-
-sql.connect(config, function (err) {
-    if (err) throw err;
+    database: process.env.DBNAME
 });
 
 async function authenticateUser(username, password) {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        pool.input('username', sql.VarChar(50), username).input('password', sql.VarChar(100), password).query(`SELECT * FROM [Users] WHERE [username] = @username AND [password] = @password`, (err, res) => {
-            if (!err) {
-                resolve(res.recordset);
+        client.query(`SELECT * FROM "Users" WHERE username = $1 AND password = $2`, [username, password], (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });
@@ -27,12 +24,14 @@ async function authenticateUser(username, password) {
 }
 
 async function createToken(token) {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        pool.input('token', sql.VarChar(300), token).query(`INSERT INTO [Tokens] ([token]) VALUES (@token)`, (err, res) => {
+        client.query(`INSERT INTO "Tokens" (token) VALUES ($1)`, [token], (err, res) => {
             if (!err) {
-                resolve('Token stored with success.');
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });
@@ -40,12 +39,14 @@ async function createToken(token) {
 }
 
 async function checkToken(token) {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        pool.input('token', sql.VarChar(300), token).query(`SELECT * FROM [Tokens] WHERE [token] = @token`, (err, res) => {
-            if (!err) {
-                resolve(res.recordset);
+        pool.query('SELECT * FROM "Tokens" WHERE token = $1', [token], (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });
@@ -53,12 +54,14 @@ async function checkToken(token) {
 }
 
 async function deleteToken(token) {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        pool.input('token', sql.VarChar(300), token).query(`DELETE FROM [Tokens] WHERE [token] = @token`, (err, res) => {
-            if (!err) {
-                resolve(res);
+        pool.query('DELETE FROM "Tokens" WHERE token = $1', [token], (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });

@@ -1,26 +1,23 @@
-const sql = require("mssql");
+const pg = require('pg');
 
-const config = {
+const pool = new pg.Pool({
+    host: process.env.DBHOST,
     user: process.env.DBUSER,
+    port: process.env.DBPORT,
     password: process.env.DBPW,
-    server: process.env.DBHOST,
-    database: process.env.DBNAME,
-    trustServerCertificate: true,
-    encrypt: true
-};
-
-sql.connect(config, function (err) {
-    if (err) throw err;
+    database: process.env.DBNAME
 });
 
 async function getAllMateriais() {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        const slct = `SELECT id, tipo, acabamento, dimensoes, liga, estado FROM [Materiais]`;
-        pool.query(slct, (err, res) => {
-            if (!err) {
-                resolve(res.recordset);
+        const slct = `SELECT id, tipo, acabamento, dimensoes, liga, estado FROM "Materiais"`;
+        client.query(slct, (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });
@@ -28,14 +25,16 @@ async function getAllMateriais() {
 }
 
 async function createMaterial(id, body) {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        const slct = `INSERT INTO Materiais (id, tipo, liga, acabamento, dimensoes, estado)
-         VALUES (@id, @tipo, @liga, @acabamento, @dimensoes, 'Ativo')`;
-        pool.input('id', sql.VarChar(50), id).input('tipo', sql.VarChar(50), body.tipo).input('liga', sql.VarChar(50), body.liga).input('acabamento', sql.VarChar(50), body.acabamento).input('dimensoes', sql.VarChar(50), body.dimensoes).query(slct, (err, res) => {
-            if (!err) {
-                resolve(res.recordset);
+        const slct = `INSERT INTO "Materiais" (id, tipo, liga, acabamento, dimensoes, estado)
+         VALUES ($1, $2, $3, $4, $5, 'Ativo')`;
+        client.query(slct, [id, body.tipo, body.liga, body.acabamento, body.dimensoes], (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });
@@ -43,13 +42,15 @@ async function createMaterial(id, body) {
 }
 
 async function toggleMaterial(id, estado) {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        let slct = `UPDATE Materiais SET [estado] = @estado WHERE [id] = @id`;
-        pool.input('estado', sql.VarChar(50), estado).input('id', sql.VarChar(50), id).query(slct, (err, res) => {
-            if (!err) {
-                resolve(res);
+        let slct = `UPDATE "Materiais" SET estado = $1 WHERE id = $2`;
+        client.query(slct, [estado, id], (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });
@@ -57,13 +58,15 @@ async function toggleMaterial(id, estado) {
 }
 
 async function editMaterial(body, id) {
-    const pool = new sql.Request();
+    const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        slct = `UPDATE Materiais SET [tipo] = @tipo, [liga] = @liga, [acabamento] = @acabamento, [dimensoes] = @dimensoes WHERE [id] = @id`;
-        pool.input('tipo', sql.VarChar(50), body.tipo).input('liga', sql.VarChar(50), body.liga).input('acabamento', sql.VarChar(50), body.acabamento).input('dimensoes', sql.VarChar(50), body.dimensoes).input('id', sql.VarChar(50), id).query(slct, (err, res) => {
-            if (!err) {
-                resolve(res);
+        slct = `UPDATE "Materiais" SET tipo = $1, liga = $2, acabamento = $3, dimensoes = $4 WHERE id = $5`;
+        client.query(slct, [body.tipo, body.liga, body.acabamento, body.dimensoes, id], (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
             } else {
+                client.release();
                 reject(err.message);
             }
         });
