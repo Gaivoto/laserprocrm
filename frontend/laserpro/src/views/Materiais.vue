@@ -129,7 +129,7 @@ export default {
         columnName: "Estado",
         columnLabel: "estado",
         sortEnabled: true,
-        columnWidth: 40,
+        columnWidth: 100,
       },
       {
         columnName: "Actions",
@@ -230,9 +230,13 @@ export default {
         value.data.materiais.forEach(m => this.materiaisFiltered.push(m));
       })
       .catch(error => {
-        if(error.code) {
+        if (error.code) {
           console.log(error.response.data);
           this.$emit("open-modal", error.response.data.message);
+          if(error.response.status == 401) {
+            this.$store.commit('resetUser');
+            this.$router.push({ name: "login" });
+          }
         } else console.log(error);
       });
     },
@@ -254,9 +258,13 @@ export default {
         this.$emit("open-modal", "Material criado com sucesso.");
       })
       .catch(error => {
-        if(error.code) {
+        if (error.code) {
           console.log(error.response.data);
           this.$emit("open-modal", error.response.data.message);
+          if(error.response.status == 401) {
+            this.$store.commit('resetUser');
+            this.$router.push({ name: "login" });
+          }
         } else console.log(error);
       });
     },
@@ -282,9 +290,13 @@ export default {
         });
       })
       .catch(error => {
-        if(error.code) {
+        if (error.code) {
           console.log(error.response.data);
           this.$emit("open-modal", error.response.data.message);
+          if(error.response.status == 401) {
+            this.$store.commit('resetUser');
+            this.$router.push({ name: "login" });
+          }
         } else console.log(error);
       });
     },
@@ -306,9 +318,13 @@ export default {
         this.$emit("open-modal", "Material alterado com sucesso.");
       })
       .catch(error => {
-        if(error.code) {
+        if (error.code) {
           console.log(error.response.data);
           this.$emit("open-modal", error.response.data.message);
+          if(error.response.status == 401) {
+            this.$store.commit('resetUser');
+            this.$router.push({ name: "login" });
+          }
         } else console.log(error);
       });
     },
@@ -378,7 +394,7 @@ export default {
     display: none;
   }
 
-  @media (max-width: 800px) {
+  @media (max-width: 900px) {
     .card-title {
       display: block !important;
     }

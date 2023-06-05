@@ -153,7 +153,7 @@ async function editUser(access_token, refresh_token, id, body) {
 
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
-            } else if(!body.username || !body.password) {
+            } else if(!body.username) {
                 reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
 
@@ -166,7 +166,7 @@ async function editUser(access_token, refresh_token, id, body) {
                     })
 
                     if (!existe) {
-                        reject({ code: 404, error: { message: "Este utiilizador não foi encontrado." } });
+                        reject({ code: 404, error: { message: "Este utilizador não foi encontrado." } });
                     } else {
 
                         let existe2 = false;
@@ -178,14 +178,25 @@ async function editUser(access_token, refresh_token, id, body) {
                         if(existe2) {
                             reject({ code: 400, error: { message: "O nome de utilizador deve ser único." } });
                         } else {
-                            dbUser.editUser(body, id).then(value3 => {
-                                info.message = "Utilizador alterado com sucesso.";
-                                resolve({ code: 200, info: info });
-                            })
-                            .catch(error => {
-                                console.log(error);
-                                reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
-                            });
+                            if(body.password) {
+                                dbUser.editUserPass(body, id).then(value3 => {
+                                    info.message = "Utilizador alterado com sucesso.";
+                                    resolve({ code: 200, info: info });
+                                })
+                                .catch(error => {
+                                    console.log(error);
+                                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
+                                });  
+                            } else {
+                                dbUser.editUser(body, id).then(value3 => {
+                                    info.message = "Utilizador alterado com sucesso.";
+                                    resolve({ code: 200, info: info });
+                                })
+                                .catch(error => {
+                                    console.log(error);
+                                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
+                                });    
+                            }
                         }
                     }
                 })
@@ -318,7 +329,7 @@ async function editAdm(access_token, refresh_token, id, body) {
 
             if(info.user.tipo != "superadm") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
-            } else if(!body.username || !body.password) {
+            } else if(!body.username) {
                 reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
 
@@ -343,14 +354,25 @@ async function editAdm(access_token, refresh_token, id, body) {
                         if(existe2) {
                             reject({ code: 400, error: { message: "O nome de utilizador deve ser único." } });
                         } else {
-                            dbUser.editUser(body, id).then(value3 => {
-                                info.message = "Utilizador alterado com sucesso.";
-                                resolve({ code: 200, info: info });
-                            })
-                            .catch(error => {
-                                console.log(error);
-                                reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
-                            });
+                            if(body.password) {
+                                dbUser.editUserPass(body, id).then(value3 => {
+                                    info.message = "Utilizador alterado com sucesso.";
+                                    resolve({ code: 200, info: info });
+                                })
+                                .catch(error => {
+                                    console.log(error);
+                                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
+                                });  
+                            } else {
+                                dbUser.editUser(body, id).then(value3 => {
+                                    info.message = "Utilizador alterado com sucesso.";
+                                    resolve({ code: 200, info: info });
+                                })
+                                .catch(error => {
+                                    console.log(error);
+                                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
+                                });    
+                            }
                         }
                     }
                 })

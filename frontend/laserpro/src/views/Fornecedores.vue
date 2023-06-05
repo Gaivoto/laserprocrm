@@ -142,7 +142,7 @@ export default {
         columnName: "Estado",
         columnLabel: "estado",
         sortEnabled: true,
-        columnWidth: 40,
+        columnWidth: 100,
       },
       {
         columnName: "Actions",
@@ -207,7 +207,6 @@ export default {
       }
 
       if(this.state != "Estado") {
-        console.log(this.state)
         this.fornecedoresFiltered = this.fornecedoresFiltered.filter(f => f.estado == this.state);
       }
     },
@@ -241,9 +240,13 @@ export default {
         value.data.fornecedores.forEach(f => this.fornecedoresFiltered.push(f));
       })
       .catch(error => {
-        if(error.code) {
+        if (error.code) {
           console.log(error.response.data);
           this.$emit("open-modal", error.response.data.message);
+          if(error.response.status == 401) {
+            this.$store.commit('resetUser');
+            this.$router.push({ name: "login" });
+          }
         } else console.log(error);
       });
     },
@@ -265,9 +268,13 @@ export default {
         this.$emit("open-modal", "Fornecedor criado com sucesso.");
       })
       .catch(error => {
-        if(error.code) {
+        if (error.code) {
           console.log(error.response.data);
           this.$emit("open-modal", error.response.data.message);
+          if(error.response.status == 401) {
+            this.$store.commit('resetUser');
+            this.$router.push({ name: "login" });
+          }
         } else console.log(error);
       });
     },
@@ -293,9 +300,13 @@ export default {
         });
       })
       .catch(error => {
-        if(error.code) {
+        if (error.code) {
           console.log(error.response.data);
           this.$emit("open-modal", error.response.data.message);
+          if(error.response.status == 401) {
+            this.$store.commit('resetUser');
+            this.$router.push({ name: "login" });
+          }
         } else console.log(error);
       });
     },
@@ -317,9 +328,13 @@ export default {
         this.$emit("open-modal", "Fornecedor alterado com sucesso.");
       })
       .catch(error => {
-        if(error.code) {
+        if (error.code) {
           console.log(error.response.data);
           this.$emit("open-modal", error.response.data.message);
+          if(error.response.status == 401) {
+            this.$store.commit('resetUser');
+            this.$router.push({ name: "login" });
+          }
         } else console.log(error);
       });
     },
@@ -389,7 +404,7 @@ export default {
     display: none;
   }
 
-  @media (max-width: 800px) {
+  @media (max-width: 900px) {
     .card-title {
       display: block !important;
     }

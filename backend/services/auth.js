@@ -40,10 +40,10 @@ async function login(username, password) {
 async function logout(refresh_token) {
     return new Promise((resolve, reject) => {
         dbAuth.deleteToken(refresh_token).then(value => {
-            if (value.rowsAffected[0] == 0) {
-                reject({ code: 401, error: { message: 'Sessão expirou.' } });
-            } else {
+            if (value.length == 0) {
                 resolve({ code: 200 });
+            } else {
+                reject({ code: 401, error: { message: 'Sessão expirou.' } });
             }
         })
         .catch(error => {

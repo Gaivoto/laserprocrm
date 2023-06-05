@@ -177,7 +177,6 @@ export default {
       }
     },
     alterarMaterial() {
-      console.log("66")
         this.formInfo.dimensoes = this.formInfo.comprimento + "x" + this.formInfo.largura + "x" + this.formInfo.espessura;
         if(this.verifyMaterialData()) this.$emit("alter-material", this.formInfo);
     }

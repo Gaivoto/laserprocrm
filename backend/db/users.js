@@ -11,7 +11,7 @@ const pool = new pg.Pool({
 async function getAllUsers() {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        const slct = `SELECT id, username, password, tipo, estado FROM "Users"`;
+        const slct = `SELECT id, username, tipo, estado FROM "Users"`;
         client.query(slct, (err, res) => {
             if(!err) {
                 client.release();
@@ -60,6 +60,22 @@ async function toggleUser(id, estado) {
 async function editUser(body, id) {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
+        slct = `UPDATE "Users" SET username = $1 WHERE id = $2`;
+        client.query(slct, [body.username, id], (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
+            } else {
+                client.release();
+                reject(err.message);
+            }
+        });
+    });
+}
+
+async function editUserPass(body, id) {
+    const client = await pool.connect();
+    return new Promise((resolve, reject) => {
         slct = `UPDATE "Users" SET username = $1, password = $2 WHERE id = $3`;
         client.query(slct, [body.username, body.password, id], (err, res) => {
             if(!err) {
@@ -94,6 +110,7 @@ module.exports = {
     getAllUsers: getAllUsers,
     createUser: createUser,
     editUser: editUser,
+    editUserPass: editUserPass,
     toggleUser: toggleUser,
     createAdm: createAdm
 }
