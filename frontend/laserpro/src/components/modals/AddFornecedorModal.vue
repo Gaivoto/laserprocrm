@@ -164,7 +164,6 @@ export default {
       }
     },
     createFornecedor() {
-      console.log("=")
       if(this.verifyFornecedorData()) this.$emit("create-fornecedor", this.formInfo);
     }
   }
