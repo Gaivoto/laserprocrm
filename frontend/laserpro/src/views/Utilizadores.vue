@@ -292,6 +292,7 @@ export default {
         data: info
       })
       .then(value => {
+        if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
         this.getAllUsers();
         this.$emit("open-modal", "Utiilizador criado com sucesso.");
       })
@@ -320,6 +321,7 @@ export default {
         data: info
       })
       .then(value => {
+        if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
         this.getAllUsers();
         this.$emit("open-modal", "Administrador criado com sucesso.");
       })
@@ -422,6 +424,7 @@ export default {
         data: info
       })
       .then(value => {
+        if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
         this.getAllUsers();
         this.$emit("open-modal", "Utilizador alterado com sucesso.");
       })
@@ -460,6 +463,7 @@ export default {
         data: info
       })
       .then(value => {
+        if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
         this.getAllUsers();
         this.$emit("open-modal", "Administrador alterado com sucesso.");
       })

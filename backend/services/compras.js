@@ -17,7 +17,7 @@ async function getAllCompras(access_token, refresh_token) {
             dbComp.getAllCompras().then(value2 => {
 
                 value2.forEach(c => {
-                    compras.push({ id: c.id, data: c.data, valor: c.valor, quantidade: c.quantidade, fornecedor: { id: c.idFornecedor, nome: c.nomeFornecedor, email: c.emailFornecedor, nif: c.nifFornecedor, morada: c.moradaFornecedor, contacto: c.contactoFornecedor }, material: { id: c.idMaterial, tipo: c.tipoMaterial, liga: c.ligaMaterial, acabamento: c.acabamentoMaterial, dimensoes: c.dimensoesMaterial } });
+                    compras.push({ id: c.id, data: c.data, valor: c.valor, quantidade: c.quantidade, fornecedor: { id: c.idfornecedor, nome: c.nomefornecedor, email: c.emailfornecedor, nif: c.niffornecedor, morada: c.moradafornecedor, contacto: c.contactofornecedor }, material: { id: c.idmaterial, tipo: c.tipomaterial, liga: c.ligamaterial, acabamento: c.acabamentomaterial, dimensoes: c.dimensoesmaterial } });
                 });
 
                 info.compras = compras;

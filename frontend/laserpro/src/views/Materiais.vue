@@ -254,6 +254,7 @@ export default {
         data: info
       })
       .then(value => {
+        if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
         this.getAllMateriais();
         this.$emit("open-modal", "Material criado com sucesso.");
       })
@@ -314,6 +315,7 @@ export default {
         data: info
       })
       .then(value => {
+        if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
         this.getAllMateriais();
         this.$emit("open-modal", "Material alterado com sucesso.");
       })

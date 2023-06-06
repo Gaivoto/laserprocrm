@@ -264,6 +264,7 @@ export default {
         data: info
       })
       .then(value => {
+        if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
         this.getAllFornecedores();
         this.$emit("open-modal", "Fornecedor criado com sucesso.");
       })
@@ -324,6 +325,7 @@ export default {
         data: info
       })
       .then(value => {
+        if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
         this.getAllFornecedores();
         this.$emit("open-modal", "Fornecedor alterado com sucesso.");
       })

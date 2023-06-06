@@ -63,7 +63,8 @@ async function editCompra(body, id) {
 async function deleteCompra(id) {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        let slct = `DELETE "Compras" WHERE id = $1`;
+        console.log("???")
+        let slct = `DELETE FROM "Compras" WHERE id = $1`;
         client.query(slct, [id], (err, res) => {
             if(!err) {
                 client.release();
