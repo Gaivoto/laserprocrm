@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="kt_modal_alter_compra" ref="alterCompraModalRef" tabindex="-1" aria-hidden="true" >
+  <div class="modal fade" id="kt_modal_alter_compra" ref="alterCompraModalRef" tabindex="-1" aria-hidden="true" v-on:click="closeSearches">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered mw-650px">
       <!--begin::Modal content-->
@@ -23,6 +23,49 @@
           <div class="modal-body py-10 px-lg-17">
             <!--begin::Scroll-->
             <div class="scroll-y me-n7 pe-7" id="kt_modal_alter_compra_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_customer_header" data-kt-scroll-wrappers="#kt_modal_add_customer_scroll" data-kt-scroll-offset="300px">
+              
+              <!--begin::Input group-->
+              <div class="fv-row mb-8">
+                <!--begin::Label-->
+                <label class="required fs-6 fw-semobold mb-2">Fornecedor</label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <div class="searchbar-container" v-on:click.stop>
+                  <div class="searchbar">
+                    <input type="text" ref="fornecedorSearchbar" v-model="formInfo.fornecedor" v-on:click="openFornecedores" v-on:input="openFornecedores" placeholder="Fornecedor">
+                  </div> 
+                  <div ref="fornecedorResults" class="searchbar-results" :class="{ 'd-none': !fornecedoresSearchOpen }">
+                    <div v-for="forn in this.fornecedoresFiltered" :key="forn.id" v-on:click="chooseFornecedor(forn.nome)">
+                      <p>{{ forn.nome }}</p>
+                    </div>
+                  </div>  
+                </div>
+                <!--end::Input-->
+              </div>
+              <!--end::Input group-->
+              
+              <!--begin::Input group-->
+              <div class="fv-row mb-8">
+                <!--begin::Label-->
+                <label class="required fs-6 fw-semobold mb-2">Material</label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <div class="searchbar-container" v-on:click.stop>
+                  <div class="searchbar">
+                    <input type="text" ref="materialSearchbar" v-model="formInfo.material" v-on:click="openMateriais" v-on:input="openMateriais" placeholder="Material">
+                  </div> 
+                  <div ref="materialResults" class="searchbar-results" :class="{ 'd-none': !materiaisSearchOpen }">
+                    <div v-for="mat in this.materiaisFiltered" :key="mat.id" v-on:click="chooseMaterial(mat.tipo + ' ' + mat.liga + ' ' + mat.acabamento + ' ' + mat.dimensoes)">
+                      <p>{{ mat.tipo + " " + mat.liga + " " + mat.acabamento + " " + mat.dimensoes }}</p>
+                    </div>
+                  </div>  
+                </div>
+                <!--end::Input-->
+              </div>
+              <!--end::Input group-->
+              
               <!--begin::Input group-->
               <div class="fv-row mb-8">
                 <!--begin::Label-->
@@ -31,7 +74,7 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="valor">
-                  <el-input v-model="formInfo.valor" type="number" placeholder="Preço"/>
+                  <el-input v-model="formInfo.valor" type="number" step="any" placeholder="Preço"/>
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -59,7 +102,7 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="quantidade">
-                  <el-input v-model="formInfo.quantidade" type="date"/>
+                  <el-input v-model="formInfo.dataUF" type="date"/>
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -73,6 +116,12 @@
           <div class="modal-footer flex-center">
 
             <!--begin::Button-->
+            <div v-on:click="reset" class="btn btn-light me-3" >
+              Repor
+            </div>
+            <!--end::Button-->
+
+            <!--begin::Button-->
             <div id="kt_modal_add_customer_cancel" class="btn btn-lg btn-primary" v-on:click="alterarCompra" >
               Alterar
               <KTIcon icon-name="arrow-right" icon-class="fs-2 me-2 me-0" class="override-mr0" />
@@ -80,6 +129,7 @@
             <!--end::Button-->
           </div>
           <!--end::Modal footer-->
+          
         </el-form>
         <!--end::Form-->
       </div>
@@ -102,18 +152,21 @@ export default {
   data() {
     return {
       formInfo: {
-        formInfo: {
         fornecedor: "",
         idFornecedor: "",
         material: "",
         idMaterial: "",
         valor: "",
         quantidade: "",
-        data: ""
+        data: "",
+        dataUF: ""
       },
       fornecedores: [],
-      materiais: []
-      }
+      materiais: [],
+      fornecedoresFiltered: [],
+      materiaisFiltered: [],
+      fornecedoresSearchOpen: false,
+      materiaisSearchOpen: false
     }
   },
   mounted() {
@@ -175,21 +228,22 @@ export default {
 
       this.fornecedores.forEach(f => {
         if(f.nome == this.formInfo.fornecedor) {
-          this.existeFor = true;
-          this.idFornecedor = f.id;
+          existeFor = true;
+          this.formInfo.idFornecedor = f.id;
         }
       });
 
       this.materiais.forEach(m => {
         if(m.tipo + " " + m.liga + " " + m.acabamento + " " + m.dimensoes == this.formInfo.material) {
-          this.existeMat = true;
-          this.idMaterial = m.id;
+          existeMat = true;
+          this.formInfo.idMaterial = m.id;
         }
       });
 
-      this.formInfo.data = this.formInfo.data.split("-")[2] + "-" + this.formInfo.data.split("-")[1] + "-" + this.formInfo.data.split("-")[0];
+      if(this.formInfo.dataUF.length > 0) this.formInfo.data = this.formInfo.dataUF.split("-")[2] + "-" + this.formInfo.dataUF.split("-")[1] + "-" + this.formInfo.dataUF.split("-")[0];
 
-      if(this.formInfo.fornecedor.length == 0 || this.formInfo.material.length == 0 || this.formInfo.quantidade.length == 0 || this.formInfo.valor.length == 0 || this.formInfo.data.length == 0) {
+      if(this.formInfo.fornecedor.length == 0 || this.formInfo.material.length == 0 || this.formInfo.quantidade.length == 0 || this.formInfo.valor.length == 0) {
+        console.log("aqui")
         this.$emit("open-modal", "Preencha todos os campos obrigatórios.");
         return false;
       } else if(this.formInfo.quantidade <= 0) {
@@ -205,16 +259,67 @@ export default {
         this.$emit("open-modal", "Introduza um material válido da lista.");
         return false;
       } else {
+        console.log(this.formInfo)
         return true;
       }
     },
     alterarCompra() {
       if(this.verifyCompraData()) this.$emit("alter-compra", this.formInfo);
+    },
+    filterFornecedores() {
+      let search = this.$refs.fornecedorSearchbar.value;
+      this.fornecedoresFiltered = [];
+      
+      this.fornecedores.forEach(f => {
+        if(f.nome.includes(search)) this.fornecedoresFiltered.push(f);
+      });
+    },
+    chooseFornecedor(forn) {
+      this.formInfo.fornecedor = forn;
+      this.fornecedoresSearchOpen = false;
+    },
+    openFornecedores() {
+      this.fornecedoresSearchOpen = true;
+      this.materiaisSearchOpen = false;
+      this.filterFornecedores();
+    },
+    filterMateriais() {
+      let search = this.$refs.materialSearchbar.value.split(" ");
+      this.materiaisFiltered = [];
+      
+      this.materiais.forEach(m => {
+        let check = true;
+        search.forEach(s => {
+          if(!(m.tipo.includes(s) || m.liga.includes(s) || m.acabamento.includes(s) || m.dimensoes.includes(s))) check = false;
+        });
+
+        if(check) this.materiaisFiltered.push(m);
+      });
+    },
+    chooseMaterial(mat) {
+      this.formInfo.material = mat;
+      this.materiaisSearchOpen = false;
+    },
+    openMateriais() {
+      this.materiaisSearchOpen = true;
+      this.fornecedoresSearchOpen = false;
+      this.filterMateriais();
+    },
+    closeSearches() {
+      this.fornecedoresSearchOpen = false;
+      this.materiaisSearchOpen = false;
+    },
+    reset() {
+      this.formInfo = {...this.info};
+      this.formInfo.dataUF = this.formInfo.data.split("-")[2] + "-" + this.formInfo.data.split("-")[1] + "-" + this.formInfo.data.split("-")[0];
     }
   },
   watch: {
     info: function(info) {
       this.formInfo = {...info};
+      this.formInfo.dataUF = this.formInfo.data.split("-")[2] + "-" + this.formInfo.data.split("-")[1] + "-" + this.formInfo.data.split("-")[0];
+      this.filterFornecedores();
+      this.filterMateriais();
     }
   },
 }
@@ -223,5 +328,68 @@ export default {
 <style scoped>
   .override-mr0 {
     margin-right: 0px !important;
+  }
+
+  .searchbar-container {
+    position: relative;
+  }
+
+  .searchbar {
+    padding: 1px 11px;
+    height: 32px;
+    border-radius: 0.475rem;
+    box-shadow: 0 0 0 1px var(--el-input-border-color,var(--el-border-color)) inset;
+  }
+
+  .searchbar input {
+    background: none;
+    border: none;
+    color: var(--light) !important;
+    width: 100%;
+    height: 30px;
+  }
+
+  .searchbar input:focus {
+    outline: none;
+  }
+
+  .searchbar-results {
+    position: absolute;
+    left: 0px;
+    top: 36px;
+    width: 100%;
+    max-height: 300px;
+    border-radius: 0px 0px 8px 8px;
+
+    overflow-y: scroll;
+
+    background-color: rgb(30, 30, 45);
+    opacity: 1 !important;
+    z-index: 1000;
+    box-shadow: 0 0 0 1px var(--el-input-border-color,var(--el-border-color)) inset;
+  }
+
+  .searchbar-results > div {
+    padding: 1px 11px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .searchbar-results > div:nth-child(2n) {
+    background-color: rgb(36, 36, 51);
+  }
+
+  .searchbar-results > div:nth-child(2n + 1) {
+    background-color: rgb(41, 41, 60);
+  }
+
+  .searchbar-results > div > p {
+    margin-bottom: 0px;
+  }
+
+  .searchbar-results::-webkit-scrollbar {
+    width: 0px;
   }
 </style>

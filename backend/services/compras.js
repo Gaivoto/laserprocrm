@@ -43,7 +43,7 @@ async function createCompra(access_token, refresh_token, body) {
 
         utils.validateToken(access_token, refresh_token).then(value1 => {
             let info = value1;
-
+            
             if(!body.valor || !body.quantidade || !body.data || !body.idFornecedor || !body.idMaterial || parseFloat(body.valor) <= 0 || parseFloat(body.quantidade) <= 0) {
                 reject({ code: 400, error: { message: "Preencha todos os campos." } });
             } else {
@@ -122,7 +122,7 @@ async function editCompra(access_token, refresh_token, id, body) {
 
         utils.validateToken(access_token, refresh_token).then(value => {
             let info = value;
-
+            
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else if(!body.valor || !body.quantidade || !body.data || !body.idFornecedor || !body.idMaterial || parseFloat(body.valor) <= 0 || parseFloat(body.quantidade) <= 0) {

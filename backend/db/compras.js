@@ -48,7 +48,7 @@ async function editCompra(body, id) {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
         slct = `UPDATE "Compras" SET valor = $1, quantidade = $2, data = $3, id_fornecedor = $4, id_material = $5 WHERE id = $6`;
-        client.query(slct, [body.valor, body.quantidade, body.valor, body.idForncedor, body.idMaterial, id], (err, res) => {
+        client.query(slct, [body.valor, body.quantidade, body.data, body.idFornecedor, body.idMaterial, id], (err, res) => {
             if(!err) {
                 client.release();
                 resolve(res.rows);

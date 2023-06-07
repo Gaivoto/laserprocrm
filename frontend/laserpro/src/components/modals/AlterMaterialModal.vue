@@ -115,6 +115,12 @@
           <div class="modal-footer flex-center">
 
             <!--begin::Button-->
+            <div v-on:click="reset" class="btn btn-light me-3" >
+              Repor
+            </div>
+            <!--end::Button-->
+
+            <!--begin::Button-->
             <div id="kt_modal_add_customer_cancel" class="btn btn-lg btn-primary" v-on:click="alterarMaterial" >
               Alterar
               <KTIcon icon-name="arrow-right" icon-class="fs-2 me-2 me-0" class="override-mr0" />
@@ -177,8 +183,11 @@ export default {
       }
     },
     alterarMaterial() {
-        this.formInfo.dimensoes = this.formInfo.comprimento + "x" + this.formInfo.largura + "x" + this.formInfo.espessura;
-        if(this.verifyMaterialData()) this.$emit("alter-material", this.formInfo);
+      this.formInfo.dimensoes = this.formInfo.comprimento + "x" + this.formInfo.largura + "x" + this.formInfo.espessura;
+      if(this.verifyMaterialData()) this.$emit("alter-material", this.formInfo);
+    },
+    reset() {
+      this.formInfo = {...this.info};
     }
   },
   watch: {

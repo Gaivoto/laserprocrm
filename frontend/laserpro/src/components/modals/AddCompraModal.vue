@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="kt_modal_add_compra" ref="addCompraModalRef" tabindex="-1" aria-hidden="true" >
+  <div class="modal fade" id="kt_modal_add_compra" ref="addCompraModalRef" tabindex="-1" aria-hidden="true" v-on:click="closeSearches">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered mw-650px">
       <!--begin::Modal content-->
@@ -34,14 +34,10 @@
                 <!--begin::Input-->
                 <div class="searchbar-container" v-on:click.stop>
                   <div class="searchbar">
-                    <input type="text" ref="fornecedorSearchbar" v-model="formInfo.fornecedor" v-on:click="openFornecedores" v-on:input="filterFornecedores" placeholder="Fornecedor">
+                    <input type="text" ref="fornecedorSearchbar" v-model="formInfo.fornecedor" v-on:click="openFornecedores" v-on:input="openFornecedores" placeholder="Fornecedor">
                   </div> 
                   <div ref="fornecedorResults" class="searchbar-results" :class="{ 'd-none': !fornecedoresSearchOpen }">
-                    <div class="no-results" v-if="this.noFornecedoresResult">
-                      <span class="material-icons search-icon">warning</span>
-                      <p>Não foram encontrados resultados para esta pesquisa.</p>    
-                    </div>
-                    <div v-for="forn in this.fornecedores" :key="forn.id" v-on:click="chooseFornecedor(forn.nome)">
+                    <div v-for="forn in this.fornecedoresFiltered" :key="forn.id" v-on:click="chooseFornecedor(forn.nome)">
                       <p>{{ forn.nome }}</p>
                     </div>
                   </div>  
@@ -57,9 +53,16 @@
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="fornecedor">
-                  <el-input v-model="formInfo.fornecedor" type="number" placeholder="Material"/>
-                </el-form-item>
+                <div class="searchbar-container" v-on:click.stop>
+                  <div class="searchbar">
+                    <input type="text" ref="materialSearchbar" v-model="formInfo.material" v-on:click="openMateriais" v-on:input="openMateriais" placeholder="Material">
+                  </div> 
+                  <div ref="materialResults" class="searchbar-results" :class="{ 'd-none': !materiaisSearchOpen }">
+                    <div v-for="mat in this.materiaisFiltered" :key="mat.id" v-on:click="chooseMaterial(mat.tipo + ' ' + mat.liga + ' ' + mat.acabamento + ' ' + mat.dimensoes)">
+                      <p>{{ mat.tipo + " " + mat.liga + " " + mat.acabamento + " " + mat.dimensoes }}</p>
+                    </div>
+                  </div>  
+                </div>
                 <!--end::Input-->
               </div>
               <!--end::Input group-->
@@ -67,7 +70,7 @@
               <!--begin::Input group-->
               <div class="fv-row mb-8">
                 <!--begin::Label-->
-                <label class="required fs-6 fw-semobold mb-2">Preço</label>
+                <label class="required fs-6 fw-semobold mb-2">Preço total</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
@@ -100,7 +103,7 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="quantidade">
-                  <el-input v-model="formInfo.data" type="date"/>
+                  <el-input v-model="formInfo.dataUF" type="date"/>
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -148,7 +151,8 @@ export default {
         idMaterial: "",
         valor: "",
         quantidade: "",
-        data: ""
+        data: "",
+        dataUF: ""
       },
       fornecedores: [],
       materiais: [],
@@ -227,27 +231,27 @@ export default {
 
       this.fornecedores.forEach(f => {
         if(f.nome == this.formInfo.fornecedor) {
-          this.existeFor = true;
-          this.idFornecedor = f.id;
+          existeFor = true;
+          this.formInfo.idFornecedor = f.id;
         }
       });
 
       this.materiais.forEach(m => {
         if(m.tipo + " " + m.liga + " " + m.acabamento + " " + m.dimensoes == this.formInfo.material) {
-          this.existeMat = true;
-          this.idMaterial = m.id;
+          existeMat = true;
+          this.formInfo.idMaterial = m.id;
         }
       });
 
-      this.formInfo.data = this.formInfo.data.split("-")[2] + "-" + this.formInfo.data.split("-")[1] + "-" + this.formInfo.data.split("-")[0];
+      if(this.formInfo.dataUF.length > 0) this.formInfo.data = this.formInfo.dataUF.split("-")[2] + "-" + this.formInfo.dataUF.split("-")[1] + "-" + this.formInfo.dataUF.split("-")[0];
       
-      if(this.formInfo.fornecedor.length == 0 || this.formInfo.material.length == 0 || this.formInfo.quantidade.length == 0 || this.formInfo.valor.length == 0 || this.formInfo.data.length == 0) {
+      if(this.formInfo.fornecedor.length == 0 || this.formInfo.material.length == 0 || this.formInfo.quantidade.length == 0 || this.formInfo.valor.length == 0) {
         this.$emit("open-modal", "Preencha todos os campos obrigatórios.");
         return false;
       } else if(this.formInfo.quantidade <= 0) {
         this.$emit("open-modal", "Introduza uma quantidade válida.");
         return false;
-      } else if(this.formInfo.valor < 0) {
+      } else if(this.formInfo.valor <= 0) {
         this.$emit("open-modal", "Introduza um preço válido.");
         return false;
       } else if(!existeFor) {
@@ -261,11 +265,15 @@ export default {
       }
     },
     createCompra() {
-      console.log(this.formInfo);
       if(this.verifyCompraData()) this.$emit("create-compra", this.formInfo);
     },
     filterFornecedores() {
-
+      let search = this.$refs.fornecedorSearchbar.value;
+      this.fornecedoresFiltered = [];
+      
+      this.fornecedores.forEach(f => {
+        if(f.nome.includes(search)) this.fornecedoresFiltered.push(f);
+      });
     },
     chooseFornecedor(forn) {
       this.formInfo.fornecedor = forn;
@@ -273,6 +281,34 @@ export default {
     },
     openFornecedores() {
       this.fornecedoresSearchOpen = true;
+      this.materiaisSearchOpen = false;
+      this.filterFornecedores();
+    },
+    filterMateriais() {
+      let search = this.$refs.materialSearchbar.value.split(" ");
+      this.materiaisFiltered = [];
+      
+      this.materiais.forEach(m => {
+        let check = true;
+        search.forEach(s => {
+          if(!(m.tipo.includes(s) || m.liga.includes(s) || m.acabamento.includes(s) || m.dimensoes.includes(s))) check = false;
+        });
+
+        if(check) this.materiaisFiltered.push(m);
+      });
+    },
+    chooseMaterial(mat) {
+      this.formInfo.material = mat;
+      this.materiaisSearchOpen = false;
+    },
+    openMateriais() {
+      this.materiaisSearchOpen = true;
+      this.fornecedoresSearchOpen = false;
+      this.filterMateriais();
+    },
+    closeSearches() {
+      this.fornecedoresSearchOpen = false;
+      this.materiaisSearchOpen = false;
     }
   }
 }
@@ -344,17 +380,5 @@ export default {
 
   .searchbar-results::-webkit-scrollbar {
     width: 0px;
-  }
-
-  .searchbar-results .no-results {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    padding: 16px;
-    gap: 16px;
-  }
-
-  .searchbar-results .no-results p {
-    margin: 0px;
   }
 </style>

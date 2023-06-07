@@ -96,11 +96,19 @@ export default {
         dimensoes: "",
         tipo: "",
         acabamento: ""
-      }
+      },
+      tableHeader: []
     }
   },
-  setup() {
-    const tableHeader = ref([
+  created() {
+    if(!this.$store.getters.getUser.id) {
+      this.$router.push({ name: "login" });
+    } else {
+      this.getAllMateriais();
+    }
+  },
+  mounted() {
+    let headerInfo = [
       {
         columnName: "Tipo",
         columnLabel: "tipo",
@@ -123,32 +131,26 @@ export default {
         columnName: "Dimensões",
         columnLabel: "dimensoes",
         sortEnabled: false,
-        columnWidth: 200,
+        columnWidth: 100,
       },
       {
         columnName: "Estado",
         columnLabel: "estado",
         sortEnabled: true,
         columnWidth: 100,
-      },
-      {
+      }
+    ]
+
+    if(this.$store.getters.getUser.tipo != 'user') {
+      headerInfo.push({
         columnName: "Actions",
         columnLabel: "actions",
         sortEnabled: false,
         columnWidth: 160,
-      },
-    ]);
-
-    return {
-      tableHeader
-    };
-  },
-  created() {
-    if(!this.$store.getters.getUser.id) {
-      this.$router.push({ name: "login" });
-    } else {
-      this.getAllMateriais();
+      });
     }
+
+    this.tableHeader = ref(headerInfo);
   },
   methods: {
     sort(sort) {

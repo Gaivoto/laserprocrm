@@ -64,12 +64,15 @@
         <template v-slot:preco="{ row: compra }">
           {{ compra.valor }} €
         </template>
+        <template v-slot:precokg="{ row: compra }">
+          {{ compra.precokg }} €/kg
+        </template>
         <template v-slot:data="{ row: compra }">
           {{ compra.data }}
         </template>
-        <template v-slot:actions="{ row: compra }">
-          <span title="Alterar Compra" v-if="this.$store.getters.getUser.tipo != 'user'" v-on:click="getCompraToEdit(compra.id)" data-bs-toggle="modal" data-bs-target="#kt_modal_alter_compra" class="material-icons">edit</span>
-          <span title="Apagar Compra" v-if="this.$store.getters.getUser.tipo != 'user'" v-on:click="this.confirmModalOpen = true; this.deleteId = compra.id" v-on:confirm-modal="deleteCompra(info)" class="material-icons">delete</span>
+        <template v-if="this.$store.getters.getUser.tipo != 'user'" v-slot:actions="{ row: compra }">
+          <span title="Alterar Compra" v-on:click="getCompraToEdit(compra.id)" data-bs-toggle="modal" data-bs-target="#kt_modal_alter_compra" class="material-icons">edit</span>
+          <span title="Apagar Compra" v-on:click="this.confirmModalOpen = true; this.deleteId = compra.id" v-on:confirm-modal="deleteCompra(info)" class="material-icons">delete</span>
         </template>
       </Datatable>
     </div>
@@ -114,22 +117,30 @@ export default {
         idFornecedor: "",
         idMaterial: ""
       },
-      deleteId: ""
+      deleteId: "",
+      tableHeader: []
     }
   },
-  setup() {
-    const tableHeader = ref([
+  created() {
+    if(!this.$store.getters.getUser.id) {
+      this.$router.push({ name: "login" });
+    } else {
+      this.getAllCompras();
+    }
+  },
+  mounted() {
+    let headerInfo = [
       {
         columnName: "Material",
         columnLabel: "material",
         sortEnabled: true,
-        columnWidth: 130,
+        columnWidth: 100,
       },
       {
         columnName: "Liga",
         columnLabel: "liga",
         sortEnabled: true,
-        columnWidth: 130,
+        columnWidth: 100,
       },
       {
         columnName: "Acabamento",
@@ -153,38 +164,38 @@ export default {
         columnName: "Quantidade",
         columnLabel: "quantidade",
         sortEnabled: true,
-        columnWidth: 130,
+        columnWidth: 100,
       },
       {
         columnName: "Preço",
         columnLabel: "preco",
         sortEnabled: true,
-        columnWidth: 130,
+        columnWidth: 100,
+      },
+      {
+        columnName: "Preço/Kg",
+        columnLabel: "precokg",
+        sortEnabled: true,
+        columnWidth: 100,
       },
       {
         columnName: "Data",
         columnLabel: "data",
         sortEnabled: true,
         columnWidth: 130,
-      },
-      {
+      }
+    ]
+
+    if(this.$store.getters.getUser.tipo != 'user') {
+      headerInfo.push({
         columnName: "Actions",
         columnLabel: "actions",
         sortEnabled: false,
-        columnWidth: 100,
-      },
-    ]);
-
-    return {
-      tableHeader
-    };
-  },
-  created() {
-    if(!this.$store.getters.getUser.id) {
-      this.$router.push({ name: "login" });
-    } else {
-      this.getAllCompras();
+        columnWidth: 70,
+      });
     }
+
+    this.tableHeader = ref(headerInfo);
   },
   methods: {
     sort(sort) {
@@ -208,6 +219,10 @@ export default {
         case "preco":
           if(sort.order == "asc") this.comprasFiltered.sort((a, b) => a.valor > b.valor ? 1 : b.valor > a.valor ? -1 : 0);
           else this.comprasFiltered.sort((a, b) => a.valor < b.valor ? 1 : b.valor < a.valor ? -1 : 0);
+          break;
+        case "precokg":
+          if(sort.order == "asc") this.comprasFiltered.sort((a, b) => a.precokg > b.precokg ? 1 : b.precokg > a.precokg ? -1 : 0);
+          else this.comprasFiltered.sort((a, b) => a.precokg < b.precokg ? 1 : b.precokg < a.precokg ? -1 : 0);
           break;
         case "quantidade":
           if(sort.order == "asc") this.comprasFiltered.sort((a, b) => a.quantidade > b.quantidade ? 1 : b.quantidade > a.quantidade ? -1 : 0);
@@ -331,6 +346,7 @@ export default {
       this.compras.forEach(c => {
         if(c.id == id) {
           this.editCompra = {
+            id: c.id,
             valor: c.valor,
             quantidade: c.quantidade,
             data: c.data,
@@ -355,8 +371,12 @@ export default {
       })
       .then(value => {
         if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
-        value.data.compras.forEach(c => this.compras.push(c));
-        value.data.compras.forEach(c => this.comprasFiltered.push(c));
+        value.data.compras.forEach(c =>{
+          c.valor = (Math.round(parseFloat(c.valor) * 100) / 100).toFixed(2);
+          c.precokg = (Math.round((parseFloat(c.valor) / parseFloat(c.quantidade)) * 100) / 100).toFixed(2);
+          this.compras.push(c);
+          this.comprasFiltered.push(c);
+        });
       })
       .catch(error => {
         if (error.code) {
