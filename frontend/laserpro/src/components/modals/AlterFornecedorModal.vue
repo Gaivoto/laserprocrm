@@ -126,12 +126,12 @@
 export default {
   name: "AlterFornecedorModal",
   components: {},
-    props: {
-        info: {
-            type: Object,
-            required: true,
-        },
+  props: {
+    info: {
+      type: Object,
+      required: true,
     },
+  },
   data() {
     return {
       formInfo: {
@@ -174,7 +174,6 @@ export default {
       }
     },
     alterarFornecedor() {
-      console.log(this.formInfo);
       if(this.verifyFornecedorData()) this.$emit("alter-fornecedor", this.formInfo);
     },
     reset() {
@@ -182,10 +181,10 @@ export default {
     }
   },
   watch: {
-        info: function(info) {
-            this.formInfo = {...info};
-        }
-    },
+    info: function(info) {
+      this.formInfo = {...info};
+    }
+  },
 }
 </script>
 

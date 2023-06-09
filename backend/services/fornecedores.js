@@ -13,7 +13,7 @@ async function getAllFornecedores(access_token, refresh_token) {
             let fornecedores = [];
 
             dbForn.getAllFornecedores().then(value2 => {
-
+                
                 value2.forEach(f => {
                     let existe = false;
 
@@ -21,10 +21,15 @@ async function getAllFornecedores(access_token, refresh_token) {
                         if(f.id == forn.id) existe = true; 
                     });
 
-                    if(!existe) fornecedores.push({ id: f.id, nome: f.nome, morada: f.morada, email: f.email, contacto: f.contacto, nif: f.nif, estado: f.estado, pessoas: [ { id: f.idPessoa, nome: f.nomePessoa, email: f.emailPessoa, cargo: f.cargoPessoa, contacto: f.contactoPessoa } ] });
-                    else {
+                    if(!existe) {
+                        if(f.idpessoa) {
+                            fornecedores.push({ id: f.id, nome: f.nome, morada: f.morada, email: f.email, contacto: f.contacto, nif: f.nif, estado: f.estado, pessoas: [ { id: f.idpessoa, nome: f.nomepessoa, email: f.emailpessoa, cargo: f.cargopessoa, contacto: f.contactopessoa, estado: f.estadopessoa } ] });
+                        } else {
+                            fornecedores.push({ id: f.id, nome: f.nome, morada: f.morada, email: f.email, contacto: f.contacto, nif: f.nif, estado: f.estado, pessoas: [] });
+                        }
+                    } else {
                         fornecedores.forEach(forn => {
-                            if(forn.id == f.id) forn.pessoas.push({ id: f.idPessoa, nome: f.nomePessoa, email: f.emailPessoa, cargo: f.cargoPessoa, contacto: f.contactoPessoa });
+                            if(forn.id == f.id) forn.pessoas.push({ id: f.idpessoa, nome: f.nomepessoa, email: f.emailpessoa, cargo: f.cargopessoa, contacto: f.contactopessoa, estado: f.estadopessoa });
                         })
                     }
                 });

@@ -106,7 +106,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { ref } from "vue";
 import Datatable from "@/components/kt-datatable/KTDataTable.vue";
 import AddUserModal from "@/components/modals/AddUserModal.vue";

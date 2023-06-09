@@ -1,7 +1,7 @@
 <template>
   <div>
       <router-view v-on:open-modal="this.openMessageModal"/>
-      <MessageModal v-if="this.messageModalOpen" v-bind:msg="this.modalMessage" v-on:close-modal="this.closeMessageModal" />  
+      <MessageModal :class="{ 'show': this.messageModalOpen }" v-bind:msg="this.modalMessage" v-on:close-modal="this.closeMessageModal" />  
   </div>
 </template>
 

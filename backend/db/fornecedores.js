@@ -11,7 +11,7 @@ const pool = new pg.Pool({
 async function getAllFornecedores() {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        const slct = `SELECT f.id as id, f.nome as nome, f.email as email, f.estado as estado, f.nif as nif, f.morada as morada, f.contacto as contacto, p.id as idPessoa, p.nome as nomePessoa, p.email AS emailPessoa, p.contacto as contactoPessoa, p.cargo as cargoPessoa FROM "Fornecedores" f LEFT JOIN "Pessoas" p ON f.id = p.id_fornecedor`;
+        const slct = `SELECT f.id as id, f.nome as nome, f.email as email, f.estado as estado, f.nif as nif, f.morada as morada, f.contacto as contacto, p.id as idPessoa, p.nome as nomePessoa, p.email AS emailPessoa, p.contacto as contactoPessoa, p.cargo as cargoPessoa, p.estado as estadoPessoa FROM "Fornecedores" f LEFT JOIN "Pessoas" p ON f.id = p.id_fornecedor`;
         client.query(slct, (err, res) => {
             if(!err) {
                 client.release();

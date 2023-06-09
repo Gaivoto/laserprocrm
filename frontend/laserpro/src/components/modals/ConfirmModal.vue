@@ -44,6 +44,7 @@ export default {
         border-radius: 8px;
         align-content: center;
         text-align: center;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
     }
 
     .modal-wrapper p {

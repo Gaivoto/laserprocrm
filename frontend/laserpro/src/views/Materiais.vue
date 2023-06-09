@@ -68,7 +68,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { ref } from "vue";
 import Datatable from "@/components/kt-datatable/KTDataTable.vue";
 import AddMaterialModal from "@/components/modals/AddMaterialModal.vue";
@@ -113,25 +113,25 @@ export default {
         columnName: "Tipo",
         columnLabel: "tipo",
         sortEnabled: true,
-        columnWidth: 135,
+        columnWidth: 160,
       },
       {
         columnName: "Liga",
         columnLabel: "liga",
         sortEnabled: true,
-        columnWidth: 135,
+        columnWidth: 160,
       },
       {
         columnName: "Acabamento",
         columnLabel: "acabamento",
         sortEnabled: true,
-        columnWidth: 160,
+        columnWidth: 170,
       },
       {
         columnName: "Dimensões",
         columnLabel: "dimensoes",
         sortEnabled: false,
-        columnWidth: 100,
+        columnWidth: 170,
       },
       {
         columnName: "Estado",

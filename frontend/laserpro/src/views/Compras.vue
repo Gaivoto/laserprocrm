@@ -84,7 +84,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { ref } from "vue";
 import Datatable from "@/components/kt-datatable/KTDataTable.vue";
 import AddCompraModal from "@/components/modals/AddCompraModal.vue";
@@ -191,7 +191,7 @@ export default {
         columnName: "Actions",
         columnLabel: "actions",
         sortEnabled: false,
-        columnWidth: 70,
+        columnWidth: 100,
       });
     }
 

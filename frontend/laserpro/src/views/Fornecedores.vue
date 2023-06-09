@@ -63,22 +63,25 @@
           <span title="Alterar Fornecedor" v-if="this.$store.getters.getUser.tipo != 'user'" v-on:click="getFornecedorToEdit(fornecedor.id)" data-bs-toggle="modal" data-bs-target="#kt_modal_alter_fornecedor" class="material-icons">edit</span>
           <span title="Ativar Fornecedor" v-if="fornecedor.estado == 'Inativo' && this.$store.getters.getUser.tipo != 'user'" v-on:click="toggleFornecedor(fornecedor.id, 'Ativo')" class="material-icons">check_circle</span>
           <span title="Desativar Fornecedor" v-if="fornecedor.estado == 'Ativo' && this.$store.getters.getUser.tipo != 'user'" v-on:click="toggleFornecedor(fornecedor.id, 'Inativo')" class="material-icons">cancel</span>
-          <span title="Ver Pessoas de Contacto" v-on:click="sort(fornecedor.id)" class="material-icons">group</span>
+          <span title="Ver Pessoas de Contacto" v-on:click="openPessoas(fornecedor.id, fornecedor.pessoas)" data-bs-toggle="modal" data-bs-target="#kt_modal_pessoas" class="material-icons">group</span>
         </template>
       </Datatable>
     </div>
     <AddFornecedorModal v-show="this.createModalOpen" v-on:create-fornecedor="createFornecedor" v-on:open-modal="openModal"></AddFornecedorModal>
     <AlterFornecedorModal v-show="this.alterModalOpen" v-bind:info="this.editFornecedor" v-on:alter-fornecedor="alterFornecedor" v-on:open-modal="openModal"></AlterFornecedorModal>
+    <PersonListModal v-show="this.pessoasModalOpen" v-on:open-modal="openModal" v-on:refresh-pessoas="getAllFornecedores" v-bind:info="this.pessoas" v-bind:idFornecedor="this.fornPessId"></PersonListModal>
     <button ref="hidemodal1" style="display: none" data-bs-toggle="modal" data-bs-target="#kt_modal_add_fornecedor"></button>
     <button ref="hidemodal2" style="display: none" data-bs-toggle="modal" data-bs-target="#kt_modal_alter_fornecedor"></button>
+    <button ref="hidemodal3" style="display: none" data-bs-toggle="modal" data-bs-target="#kt_modal_pessoas"></button>
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { ref } from "vue";
 import Datatable from "@/components/kt-datatable/KTDataTable.vue";
 import AddFornecedorModal from "@/components/modals/AddFornecedorModal.vue";
 import AlterFornecedorModal from "@/components/modals/AlterFornecedorModal.vue";
+import PersonListModal from "@/components/modals/PersonListModal.vue";
 import axios from "axios";
 
 export default {
@@ -86,16 +89,20 @@ export default {
   components: {
     Datatable,
     AddFornecedorModal,
-    AlterFornecedorModal
+    AlterFornecedorModal,
+    PersonListModal
   },
   data() {
     return {
       fornecedores: [],
       fornecedoresFiltered: [],
+      fornPessId: "",
+      pessoas: [],
       stateOpen: false,
       state: "Estado",
       createModalOpen: false,
       alterModalOpen: false,
+      pessoasModalOpen: false,
       editFornecedor: {
         id: "",
         nome: "",
@@ -118,7 +125,7 @@ export default {
         columnName: "Email",
         columnLabel: "email",
         sortEnabled: true,
-        columnWidth: 200,
+        columnWidth: 170,
       },
       {
         columnName: "Morada",
@@ -142,13 +149,13 @@ export default {
         columnName: "Estado",
         columnLabel: "estado",
         sortEnabled: true,
-        columnWidth: 100,
+        columnWidth: 80,
       },
       {
         columnName: "Actions",
         columnLabel: "actions",
         sortEnabled: false,
-        columnWidth: 160,
+        columnWidth: 130,
       },
     ]);
 
@@ -221,6 +228,14 @@ export default {
         if(f.id == id) this.editFornecedor = f;
       });
     },
+    openPessoas(id, pessoas){
+      this.pessoasModalOpen = true;
+      this.fornPessId = id;
+      this.pessoas = [];
+      pessoas.forEach(p => {
+        this.pessoas.push(p);
+      });
+    },
     getAllFornecedores() {
       this.fornecedores = [];
       this.fornecedoresFiltered = [];
@@ -238,6 +253,12 @@ export default {
         if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
         value.data.fornecedores.forEach(f => this.fornecedores.push(f));
         value.data.fornecedores.forEach(f => this.fornecedoresFiltered.push(f));
+        this.fornecedores.forEach(f => {
+          f.pessoas.sort((a, b) => a.id > b.id ? 1 : b.id > a.id ? -1 : 0)
+          if(f.id == this.fornPessId) {
+            this.pessoas = [...f.pessoas];
+          }
+        });
       })
       .catch(error => {
         if (error.code) {

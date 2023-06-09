@@ -35,13 +35,21 @@ export default {
 
 <style scoped>
     .modal-wrapper {
+        visibility: hidden;
         position: fixed;
         top: 0px;
         left: 0px;
         width: 100%;
         height: 100%;
+        opacity: 0;
         background: rgba(60, 60, 60, 0.4);
         z-index: 10000;
+    }
+
+    .modal-wrapper.show {
+        visibility: visible;
+        opacity: 1;
+        transition: all 0.1s ease-in;
     }
 
     .modal-wrapper > div {
@@ -53,6 +61,7 @@ export default {
         border-radius: 8px;
         align-content: center;
         text-align: center;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
     }
 
     .modal-wrapper p {
