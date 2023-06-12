@@ -1,5 +1,6 @@
 <template>
   <div class="w-lg-500px p-10">
+    <p class="title">Bem-vindo</p>
     <div class="form w-100" id="kt_login_signin_form">
       <div class="fv-row mb-10">
         <label class="form-label fs-6 fw-bold text-dark">Nome de utilizador</label>
@@ -68,3 +69,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .title {
+    margin-bottom: 24px;
+    color: var(--bs-primary);
+    font-weight: 600;
+    font-size: 30px;
+    font-family: Inter, Helvetica, "sans-serif";
+  }
+</style>
