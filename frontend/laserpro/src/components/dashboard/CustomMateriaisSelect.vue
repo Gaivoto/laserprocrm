@@ -42,7 +42,7 @@ export default {
                     if(m.id == mat) this.selected = m.tipo + " " + m.liga + " " + m.acabamento + " " + m.dimensoes;
                 });
             } else this.selected = mat;
-            this.$emit('change-gastos', mat);
+            this.$emit('choose-mat', mat);
         },
         filterMateriais() {
             if(this.$refs.searchbar.value != "Todos os materiais") {
@@ -76,14 +76,19 @@ export default {
         position: relative;
         width: 60%;
         min-width: 300px;
-        margin-bottom: 24px;
+        margin-bottom: 16px;
     }
 
     .searchbar {
-        padding: 2px 11px;
-        height: 36px;
+        padding-left: 1em;
+        height: 42px;
+        line-height: 42px;
         border-radius: 0.475rem;
-        box-shadow: 0px 0px 1px 2px var(--el-input-border-color,var(--el-border-color)) inset;
+        background-color: var(--bs-gray-100);
+        border-color: var(--bs-gray-100);
+        cursor: pointer;
+        color: var(--bs-gray-700);
+        margin-bottom: 8px;
     }
 
     .searchbar input {
@@ -91,8 +96,14 @@ export default {
         border: none;
         color: var(--light) !important;
         width: 100%;
-        height: 30px;
-        font-size: 15px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        background-color: var(--bs-gray-100);
+        border-color: var(--bs-gray-100);
+        color: var(--bs-gray-700);
+        border-radius: 0.475rem;
+        height: 42px;
+        line-height: 42px;
     }
 
     .searchbar input:focus {
@@ -102,38 +113,36 @@ export default {
     .searchbar-results {
         position: absolute;
         left: 0px;
-        top: 36px;
         width: 100%;
         max-height: 300px;
-        border-radius: 0px 0px 8px 8px;
 
         overflow-y: scroll;
 
         background-color: rgb(30, 30, 45);
         opacity: 1 !important;
         z-index: 1000;
-        box-shadow: 0 0 0 1px var(--el-input-border-color,var(--el-border-color)) inset;
+
+        color: var(--bs-gray-700);
+        background-color: var(--bs-gray-100);
+        left: 0;
+        right: 0;
     }
 
     .searchbar-results > div {
-        padding: 2px 11px;
-        height: 36px;
+        padding-left: 1em;
+        height: 43px;
         display: flex;
         align-items: center;
         cursor: pointer;
     }
 
-    .searchbar-results > div:nth-child(2n) {
-        background-color: rgb(36, 36, 51);
-    }
-
-    .searchbar-results > div:nth-child(2n + 1) {
-        background-color: rgb(41, 41, 60);
+    .searchbar-results > div:hover {
+        background-color: var(--bs-gray-300);
     }
 
     .searchbar-results > div > p {
         margin-bottom: 0px;
-        font-size: 15px;
+        font-size: 1.1rem;
         display: -webkit-box;
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;

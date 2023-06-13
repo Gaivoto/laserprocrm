@@ -285,7 +285,7 @@ export default {
     info: function(info) {
       this.pessoas = [...info];
     }
-  },
+  }
 }
 </script>
 

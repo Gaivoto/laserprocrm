@@ -1,7 +1,6 @@
 import {
   createRouter,
-  createWebHistory,
-  RouterView
+  createWebHistory
 } from "vue-router";
 
 const router = createRouter({
@@ -56,26 +55,7 @@ const router = createRouter({
             pageTitle: "Utilizadores",
             breadcrumbs: ["Utilizadores"],
           },
-        },/*
-        {
-          path: "/apps/subscriptions/subscription-list",
-          name: "apps-subscriptions-subscription-list",
-          component: () =>
-            import("@/views/apps/subscriptions/SubscriptionList.vue"),
-          meta: {
-            pageTitle: "Getting Started",
-            breadcrumbs: ["Apps", "Subscriptions"],
-          },
-        },
-        {
-          path: "/crafted/widgets/charts",
-          name: "widgets-charts",
-          component: () => import("@/views/crafted/widgets/Charts.vue"),
-          meta: {
-            pageTitle: "Charts",
-            breadcrumbs: ["Crafted", "Widgets"],
-          },
-        },*/
+        }
       ],
     },
     {
