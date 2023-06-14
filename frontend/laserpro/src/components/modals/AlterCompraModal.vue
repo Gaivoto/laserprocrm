@@ -359,7 +359,6 @@ export default {
     top: 36px;
     width: 100%;
     max-height: 300px;
-    border-radius: 0px 0px 8px 8px;
 
     overflow-y: scroll;
 
@@ -367,6 +366,7 @@ export default {
     opacity: 1 !important;
     z-index: 1000;
     box-shadow: 0 0 0 1px var(--el-input-border-color,var(--el-border-color)) inset;
+    border-top: 1px solid var(--el-border-color);
   }
 
   .searchbar-results > div {
@@ -375,14 +375,10 @@ export default {
     display: flex;
     align-items: center;
     cursor: pointer;
-  }
-
-  .searchbar-results > div:nth-child(2n) {
-    background-color: rgb(36, 36, 51);
-  }
-
-  .searchbar-results > div:nth-child(2n + 1) {
-    background-color: rgb(41, 41, 60);
+    background-color: var(--bs-gray-100);
+    border-left: 1px solid var(--el-border-color);
+    border-bottom: 1px solid var(--el-border-color);
+    border-right: 1px solid var(--el-border-color);
   }
 
   .searchbar-results > div > p {

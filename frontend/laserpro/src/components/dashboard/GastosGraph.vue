@@ -1,6 +1,6 @@
 <template>
     <div class="graph-wrapper">
-        <Bar :data="graphData" :options="this.chartOptions"/>    
+        <Bar :data="this.graphData" :options="this.chartOptions"/>    
     </div>
 </template>
 
@@ -31,7 +31,7 @@ export default {
                 labels: [],
                 datasets: [
                     {
-                        label: "Gastos",
+                        label: "Gastos (€)",
                         backgroundColor: ["#7239ea", "#777777", "#444444"],
                         data: []
                     }
@@ -66,8 +66,16 @@ export default {
     },
     methods: {
         resetGraph() {
-            this.graphData.labels = [];
-            this.graphData.datasets[0].data = [];
+            this.graphData =  {
+                labels: [],
+                datasets: [
+                    {
+                        label: "Gastos (€)",
+                        backgroundColor: ["#7239ea", "#777777", "#444444"],
+                        data: []
+                    }
+                ]
+            }
         },
         rearrangeInfo() {
             switch(this.dates.display) {
@@ -97,18 +105,28 @@ export default {
             }
         },
         setDatesDays() {
-            this.graphData.labels = [];
-            this.graphData.datasets[0].data = [];
-
             let inicio = new Date(this.dates.start);
             let fim = new Date(this.dates.end);
 
             let labels = [];
             let data = [];
+            let i = 0;
+
+            while(i < this.info.length && new Date(this.info[i].data.split("-")[1] + "-" + this.info[i].data.split("-")[0] + "-" + this.info[i].data.split("-")[2]) < inicio) {
+                i++;
+            }
 
             while(inicio <= fim) {
-                labels.push(inicio.getDate() + "/" + inicio.getMonth() + "/" + inicio.getFullYear());
-                data.push(8);
+                labels.push(inicio.getDate() + "/" + (inicio.getMonth() + 1) + "/" + inicio.getFullYear());
+
+                let valor = 0;
+
+                while(i < this.info.length && this.info[i].data.split("-")[2] == inicio.getFullYear() && this.info[i].data.split("-")[1] == (inicio.getMonth() + 1) && this.info[i].data.split("-")[0] == inicio.getDate()) {
+                    valor += parseFloat(this.info[i].valor);
+                    i++;
+                }
+
+                data.push(valor);
 
                 inicio.setDate(inicio.getDate() + 1);
             }
@@ -125,26 +143,37 @@ export default {
             }
         },
         setDatesWeeks() {
-            this.graphData.labels = [];
-            this.graphData.datasets[0].data = [];
-
             let inicio = new Date(this.dates.start);
             let fim = new Date(this.dates.end);
 
             let labels = [];
             let data = [];
+            let i = 0;
+
+            while(i < this.info.length && new Date(this.info[i].data.split("-")[1] + "-" + this.info[i].data.split("-")[0] + "-" + this.info[i].data.split("-")[2]) < inicio) {
+                i++;
+            }
 
             while(inicio <= fim) {
-                let weekStart = inicio.getDate() + "/" + inicio.getMonth();
+                let year = inicio.getFullYear();
+                let weekStart = inicio.getDate() + "/" + (inicio.getMonth() + 1);
 
                 while(inicio.getDay() != 0) {
                     inicio.setDate(inicio.getDate() + 1);
                 }
 
-                let weekEnd = inicio.getDate() + "/" + inicio.getMonth();
+                let weekEnd = inicio.getDate() + "/" + (inicio.getMonth() + 1);
 
                 labels.push(weekStart + " - " + weekEnd);
-                data.push(8);
+
+                let valor = 0;
+
+                while(i < this.info.length && new Date(this.info[i].data.split("-")[1] + "-" + this.info[i].data.split("-")[0] + "-" + this.info[i].data.split("-")[2]) >= new Date(weekStart.split("/")[1] + "-" + weekStart.split("/")[0] + "-" + year) && new Date(this.info[i].data.split("-")[1] + "-" + this.info[i].data.split("-")[0] + "-" + this.info[i].data.split("-")[2]) <= new Date(weekEnd.split("/")[1] + "-" + weekEnd.split("/")[0] + "-" + inicio.getFullYear())) {
+                    valor += parseFloat(this.info[i].valor);
+                    i++;
+                }
+
+                data.push(valor);
                 
                 inicio.setDate(inicio.getDate() + 1);
             }
@@ -161,21 +190,31 @@ export default {
             }
         },
         setDatesMonths() {
-            this.graphData.labels = [];
-            this.graphData.datasets[0].data = [];
-
             let inicio = new Date(this.dates.start);
             let fim = new Date(this.dates.end);
 
             let labels = [];
             let data = [];
+            let i = 0;
 
             inicio.setMonth(inicio.getMonth() + 1);
+
+            while(i < this.info.length && new Date(this.info[i].data.split("-")[1] + "-" + this.info[i].data.split("-")[0] + "-" + this.info[i].data.split("-")[2]) < inicio) {
+                i++;
+            }
 
             while(inicio <= fim) {
                 let label = inicio.toLocaleString('pt-PT', { month: 'long' });
                 labels.push(label[0].toUpperCase() + label.slice(1) + " " + inicio.getFullYear());
-                data.push(8);
+                
+                let valor = 0;
+
+                while(i < this.info.length && this.info[i].data.split("-")[2] == inicio.getFullYear() && this.info[i].data.split("-")[1] == (inicio.getMonth() + 1)) {
+                    valor += parseFloat(this.info[i].valor);
+                    i++;
+                }
+
+                data.push(valor);
 
                 inicio.setMonth(inicio.getMonth() + 1);
             }

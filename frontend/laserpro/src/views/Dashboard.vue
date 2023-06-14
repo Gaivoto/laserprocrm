@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <div class="selects">
-                    <CustomMateriaisSelect v-bind:materiais="this.materiais" v-on:change-gastos="changeGastos"/>
+                    <CustomMateriaisSelect v-bind:materiais="this.materiais" v-on:choose-mat="changeGastos"/>
                     <div class="custom-select">
                         <div class="selected" :class="{ open: dateGastosOpen }" v-on:click="dateGastosOpen=!dateGastosOpen">{{ this.gastosDates.display }}</div>
                         <div class="items" :class="{ selectHide: !dateGastosOpen }">
@@ -203,13 +203,15 @@ export default {
             })
             .then(value => {
                 this.compras = [...value.data.compras];
-                this.gastosList = [...value.data.compras];
-                this.comprasList = [...value.data.compras];
                 this.compras.sort((a, b) => {
                     let data1 = a.data.split("-")[1] + "-" + a.data.split("-")[0] + "-" + a.data.split("-")[2];
                     let data2 = b.data.split("-")[1] + "-" + b.data.split("-")[0] + "-" + b.data.split("-")[2];
                     return new Date(data1) < new Date(data2) ? 1 : new Date(data2) < new Date(data1) ? -1 : 0;
                 });
+                let copy = [...this.compras];
+                copy = copy.reverse();
+                this.gastosList = [...copy];
+                this.comprasList = [...copy];
                 this.ultimaCompra = {...this.compras[0]};
             })
             .catch(error => {
@@ -277,12 +279,14 @@ export default {
                 comprasMat.sort((a, b) => {
                     let data1 = a.data.split("-")[1] + "-" + a.data.split("-")[0] + "-" + a.data.split("-")[2];
                     let data2 = b.data.split("-")[1] + "-" + b.data.split("-")[0] + "-" + b.data.split("-")[2];
-                    return new Date(data1) < new Date(data2) ? 1 : new Date(data2) < new Date(data1) ? -1 : 0;
+                    return new Date(data1) > new Date(data2) ? 1 : new Date(data2) > new Date(data1) ? -1 : 0;
                 });
 
                 this.gastosList = [...comprasMat];
             } else {
-                this.gastosList = [...this.compras];
+                let copy = [...this.compras];
+                copy = copy.reverse();
+                this.gastosList = [...copy];
             }
         },
         changeCompras(mat) {
@@ -292,12 +296,14 @@ export default {
                 comprasMat.sort((a, b) => {
                     let data1 = a.data.split("-")[1] + "-" + a.data.split("-")[0] + "-" + a.data.split("-")[2];
                     let data2 = b.data.split("-")[1] + "-" + b.data.split("-")[0] + "-" + b.data.split("-")[2];
-                    return new Date(data1) < new Date(data2) ? 1 : new Date(data2) < new Date(data1) ? -1 : 0;
+                    return new Date(data1) > new Date(data2) ? 1 : new Date(data2) > new Date(data1) ? -1 : 0;
                 });
 
                 this.comprasList = [...comprasMat];
             } else {
-                this.comprasList = [...this.compras];
+                let copy = [...this.compras];
+                copy = copy.reverse();
+                this.comprasList = [...copy];
             }
         },
         changeUltima(mat) {
