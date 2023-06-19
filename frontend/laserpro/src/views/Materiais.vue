@@ -49,7 +49,7 @@
           {{ material.acabamento }}
         </template>
         <template v-slot:dimensoes="{ row: material }">
-          {{ material.dimensoes }}
+          {{ material.dimensoes }}mm
         </template>
         <template v-slot:estado="{ row: material }">
           {{ material.estado }}

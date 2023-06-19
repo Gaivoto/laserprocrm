@@ -12,10 +12,4 @@ router.put("/:id", cntrUser.editUser);
 
 router.put("/:id/toggle", cntrUser.toggleUser);
 
-router.post("/adms", cntrUser.createAdm);
-
-router.put("/adms/:id", cntrUser.editAdm);
-
-router.put("/adms/:id/toggle", cntrUser.toggleAdm);
-
 module.exports = router

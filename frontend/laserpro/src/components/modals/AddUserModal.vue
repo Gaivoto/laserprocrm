@@ -26,6 +26,27 @@
               <!--begin::Input group-->
               <div class="fv-row mb-8">
                 <!--begin::Label-->
+                <div class="tipo-label-wrapper">
+                  <label class="required fs-6 fw-semobold mb-2">Tipo</label>
+                  <span :title="this.helpText" class="material-icons">help</span>
+                </div>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <div class="custom-select">
+                  <div class="selected" :class="{ open: tipoOpen }" v-on:click="this.tipoOpen = !this.tipoOpen">{{ this.formInfo.tipo }}</div>
+                  <div class="items" :class="{ 'd-none': !tipoOpen }">
+                    <div v-if="this.$store.getters.getUser.tipo == 'superadm'" v-on:click="selectTipo('Administrador')">{{ "Administrador" }}</div>
+                    <div v-on:click="selectTipo('Utilizador')">{{ "Utilizador" }}</div>
+                  </div>
+                </div> 
+                <!--end::Input-->
+              </div>
+              <!--end::Input group-->
+              
+              <!--begin::Input group-->
+              <div class="fv-row mb-8">
+                <!--begin::Label-->
                 <label class="required fs-6 fw-semobold mb-2">Nome de utilizador</label>
                 <!--end::Label-->
 
@@ -102,7 +123,23 @@ export default {
       formInfo: {
         username: "",
         password: "",
-        passwordConf: ""
+        passwordConf: "",
+        tipo: "Utilizador"
+      },
+      tipoOpen: false,
+      help: {
+        user: `Utilizadores podem:
+              -Ver informações da dashboard definidas como visíveis pelos administradores
+              -Ver listagem de materiais, fornecedores e compras
+              -Registar compras`,
+        adm: `Administradores podem:
+              -Ver todas as informações da dashboard
+              -Definir informações da dashboard como visíveis/invisíveis para utilizadores normais
+              -Ver listagem de materiais, fornecedores, compras e utilizadores
+              -Registar compras, materiais e fornecedores
+              -Alterar registos de compras, materiais e fornecedores
+              -Ativar/desativar materiais e fornecedores
+              -Ativar/desativar e alterar dados de utilizadores normais`
       }
     }
   },
@@ -125,12 +162,35 @@ export default {
       }
     },
     createUser() {
+        let tipo = this.formInfo.tipo == "Administrador" ? 'adm' : 'user';
+
         let info = {
             username: this.formInfo.username,
-            password: this.formInfo.password
+            password: this.formInfo.password,
+            tipo: tipo
         }
 
-        if(this.verifyUserData()) this.$emit("create-user", info);
+        if(this.verifyUserData()) {
+          this.$emit("create-user", info);
+
+          this.formInfo = {
+            username: "",
+            password: "",
+            passwordConf: "",
+            tipo: "Utilizador"
+          }
+        }
+    },
+    selectTipo(tipo) {
+      this.formInfo.tipo = tipo;
+      this.tipoOpen = false;
+    }
+  },
+  computed: {
+    helpText() {
+      if(this.formInfo.tipo == "Utilizador") return this.help.user;
+      else if(this.formInfo.tipo == "Administrador") return this.help.adm;
+      return "";
     }
   }
 }
@@ -139,5 +199,70 @@ export default {
 <style scoped>
   .override-mr0 {
     margin-right: 0px !important;
+  }
+
+  .tipo-label-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tipo-label-wrapper span {
+    font-size: 18px;
+    cursor: help;
+  }
+
+  .custom-select {
+    position: relative;
+    text-align: left;
+    height: 32px;
+    line-height: 32px;
+    font-size: var(--el-font-size-base);
+    border-radius: 0.475rem;
+  }
+
+  .custom-select .selected {
+    background-color: var(--bs-modal-bg);
+    border-radius: 0.475rem;
+    color: var(--light);
+    border: 1px solid var(--el-border-color);
+    padding: 0px 11px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    color: var(--el-input-text-color);
+  }
+
+  .custom-select .selected:after {
+    position: absolute;
+    content: "";
+    top: 15px;
+    right: 1em;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-color: var(--bs-text-dark) transparent transparent transparent;
+  }
+
+  .custom-select .items {
+    color: var(--bs-gray-700);
+    position: absolute;
+    background-color: var(--bs-gray-100);
+    left: 0;
+    right: 0;
+    z-index: 1;
+    max-height: 300px;
+    border-radius: 0.475rem;
+  }
+
+  .custom-select .items div {
+    padding-left: 1em;
+    cursor: pointer;
+  }
+
+  .custom-select .items div:hover {
+    background-color: var(--bs-gray-300);
+  }
+
+  .selectHide {
+    display: none;
   }
 </style>

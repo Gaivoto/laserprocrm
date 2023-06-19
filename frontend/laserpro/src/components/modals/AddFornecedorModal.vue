@@ -164,7 +164,17 @@ export default {
       }
     },
     createFornecedor() {
-      if(this.verifyFornecedorData()) this.$emit("create-fornecedor", this.formInfo);
+      if(this.verifyFornecedorData()) {
+        this.$emit("create-fornecedor", this.formInfo);
+
+        this.formInfo = {
+          nome: "",
+          email: "",
+          contacto: "",
+          nif: "",
+          morada: ""
+        }
+      }
     }
   }
 }

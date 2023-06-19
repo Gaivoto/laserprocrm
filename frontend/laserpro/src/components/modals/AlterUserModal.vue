@@ -24,6 +24,27 @@
             <!--begin::Scroll-->
             <div class="scroll-y me-n7 pe-7" id="kt_modal_alter_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_customer_header" data-kt-scroll-wrappers="#kt_modal_add_customer_scroll" data-kt-scroll-offset="300px">
               <!--begin::Input group-->
+              <div class="fv-row mb-8" v-if="this.formInfo.tipo != 'superadm'">
+                <!--begin::Label-->
+                <div class="tipo-label-wrapper">
+                  <label class="required fs-6 fw-semobold mb-2">Tipo</label>
+                  <span :title="this.helpText" class="material-icons">help</span>
+                </div>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <div class="custom-select">
+                  <div class="selected" :class="{ open: tipoOpen }" v-on:click="this.tipoOpen = !this.tipoOpen">{{ this.formInfo.tipo }}</div>
+                  <div class="items" :class="{ 'd-none': !tipoOpen }">
+                    <div v-if="this.$store.getters.getUser.tipo == 'superadm'" v-on:click="selectTipo('Administrador')">{{ "Administrador" }}</div>
+                    <div v-on:click="selectTipo('Utilizador')">{{ "Utilizador" }}</div>
+                  </div>
+                </div> 
+                <!--end::Input-->
+              </div>
+              <!--end::Input group-->
+
+              <!--begin::Input group-->
               <div class="fv-row mb-8">
                 <!--begin::Label-->
                 <label class="required fs-6 fw-semobold mb-2">Nome de utilizador</label>
@@ -110,12 +131,32 @@ export default {
         id: "",
         username: "",
         password: "",
-        passwordConf: ""
+        passwordConf: "",
+        tipo: ""
+      },
+      tipoOpen: false,
+      help: {
+        user: `Utilizadores podem:
+              -Ver informações da dashboard definidas como visíveis pelos administradores
+              -Ver listagem de materiais, fornecedores e compras
+              -Registar compras`,
+        adm: `Administradores podem:
+              -Ver todas as informações da dashboard
+              -Definir informações da dashboard como visíveis/invisíveis para utilizadores normais
+              -Ver listagem de materiais, fornecedores, compras e utilizadores
+              -Registar compras, materiais e fornecedores
+              -Alterar registos de compras, materiais e fornecedores
+              -Ativar/desativar materiais e fornecedores
+              -Ativar/desativar e alterar dados de utilizadores normais`
       }
     }
   },
   mounted() {
     this.formInfo = this.info;
+
+    if(this.info.tipo == "user") this.formInfo.tipo = "Utilizador";
+    else if(this.info.tipo == "adm") this.formInfo.tipo = "Administrador";
+    else this.formInfo.tipo = "superadm";
   },
   methods: {
     verifyUserData() {
@@ -136,29 +177,119 @@ export default {
       }
     },
     alterarUser() {
-        let info = {
-            id: this.formInfo.id,
-            username: this.formInfo.username
-        }
-        
-        if(this.formInfo.password) info.password = this.formInfo.password;
+      let tipo;
+      if(this.formInfo.tipo == "Administrador") tipo = "adm";
+      else if(this.formInfo.tipo == "superadm") tipo = "superadm";
+      else tipo = "user";
 
-        if(this.verifyUserData()) this.$emit("alter-user", info);
+      let info = {
+        id: this.formInfo.id,
+        username: this.formInfo.username,
+        tipo: tipo
+      }
+      
+      if(this.formInfo.password) info.password = this.formInfo.password;
+
+      if(this.verifyUserData()) this.$emit("alter-user", info);
     },
     reset() {
       this.formInfo = {...this.info};
+
+      if(this.info.tipo == "user") this.formInfo.tipo = "Utilizador";
+      else if(this.info.tipo == "adm") this.formInfo.tipo = "Administrador";
+      else this.formInfo.tipo = "superadm";
+    },
+    selectTipo(tipo) {
+      this.formInfo.tipo = tipo;
+      this.tipoOpen = false;
     }
   },
   watch: {
-        info: function(info) {
-            this.formInfo = {...info};
-        }
-    },
+    info: function(info) {
+      this.formInfo = {...info};
+
+      if(this.info.tipo == "user") this.formInfo.tipo = "Utilizador";
+      else if(this.info.tipo == "adm") this.formInfo.tipo = "Administrador";
+      else this.formInfo.tipo = "superadm";
+    }
+  },
+  computed: {
+    helpText() {
+      if(this.formInfo.tipo == "Utilizador") return this.help.user;
+      else if(this.formInfo.tipo == "Administrador") return this.help.adm;
+      return "";
+    }
+  }
 }
 </script>
 
 <style scoped>
   .override-mr0 {
     margin-right: 0px !important;
+  }
+
+  .tipo-label-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tipo-label-wrapper span {
+    font-size: 18px;
+    cursor: help;
+  }
+
+  .custom-select {
+    position: relative;
+    text-align: left;
+    height: 32px;
+    line-height: 32px;
+    font-size: var(--el-font-size-base);
+    border-radius: 0.475rem;
+  }
+
+  .custom-select .selected {
+    background-color: var(--bs-modal-bg);
+    border-radius: 0.475rem;
+    color: var(--light);
+    border: 1px solid var(--el-border-color);
+    padding: 0px 11px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    color: var(--el-input-text-color);
+  }
+
+  .custom-select .selected:after {
+    position: absolute;
+    content: "";
+    top: 15px;
+    right: 1em;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-color: var(--bs-text-dark) transparent transparent transparent;
+  }
+
+  .custom-select .items {
+    color: var(--bs-gray-700);
+    position: absolute;
+    background-color: var(--bs-gray-100);
+    left: 0;
+    right: 0;
+    z-index: 1;
+    max-height: 300px;
+    border-radius: 0.475rem;
+  }
+
+  .custom-select .items div {
+    padding-left: 1em;
+    cursor: pointer;
+  }
+
+  .custom-select .items div:hover {
+    background-color: var(--bs-gray-300);
+  }
+
+  .selectHide {
+    display: none;
   }
 </style>

@@ -28,8 +28,8 @@ async function createUser(id, body) {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
         const slct = `INSERT INTO "Users" (id, username, password, tipo, estado)
-         VALUES ($1, $2, $3, 'user', 'Ativo')`;
-        client.query(slct, [id, body.username, body.password], (err, res) => {
+         VALUES ($1, $2, $3, $4, 'Ativo')`;
+        client.query(slct, [id, body.username, body.password, body.tipo], (err, res) => {
             if(!err) {
                 client.release();
                 resolve(res.rows);
@@ -60,8 +60,8 @@ async function toggleUser(id, estado) {
 async function editUser(body, id) {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        slct = `UPDATE "Users" SET username = $1 WHERE id = $2`;
-        client.query(slct, [body.username, id], (err, res) => {
+        slct = `UPDATE "Users" SET username = $1, tipo = $2 WHERE id = $3`;
+        client.query(slct, [body.username, body.tipo, id], (err, res) => {
             if(!err) {
                 client.release();
                 resolve(res.rows);
@@ -76,25 +76,8 @@ async function editUser(body, id) {
 async function editUserPass(body, id) {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        slct = `UPDATE "Users" SET username = $1, password = $2 WHERE id = $3`;
-        client.query(slct, [body.username, body.password, id], (err, res) => {
-            if(!err) {
-                client.release();
-                resolve(res.rows);
-            } else {
-                client.release();
-                reject(err.message);
-            }
-        });
-    });
-}
-
-async function createAdm(id, body) {
-    const client = await pool.connect();
-    return new Promise((resolve, reject) => {
-        const slct = `INSERT INTO "Users" (id, username, password, tipo, estado)
-         VALUES ($1, $2, $3, 'adm', 'Ativo')`;
-        client.query(slct, [id, body.username, body.password], (err, res) => {
+        slct = `UPDATE "Users" SET username = $1, password = $2, tipo = $3 WHERE id = $4`;
+        client.query(slct, [body.username, body.password, body.tipo, id], (err, res) => {
             if(!err) {
                 client.release();
                 resolve(res.rows);
@@ -111,6 +94,5 @@ module.exports = {
     createUser: createUser,
     editUser: editUser,
     editUserPass: editUserPass,
-    toggleUser: toggleUser,
-    createAdm: createAdm
+    toggleUser: toggleUser
 }

@@ -27,6 +27,7 @@
             <div class="custom-select">
               <div class="selected" :class="{ open: stateOpen }" v-on:click="stateOpen=!stateOpen; typeOpen = false">{{ this.state }}</div>
               <div class="items" :class="{ selectHide: !stateOpen }">
+                <div v-on:click="selectState('Todos')">{{ "Todos" }}</div>
                 <div v-on:click="selectState('Ativo')">{{ "Ativo" }}</div>
                 <div v-on:click="selectState('Inativo')">{{ "Inativo" }}</div>
               </div>
@@ -37,20 +38,6 @@
       </div>
       <!--begin::Card title-->
       <div class="create-wrapper" :class="{ 'superadm': this.$store.getters.getUser.tipo == 'superadm' }">
-        <!--begin::Card toolbar-->
-        <div class="card-toolbar" v-if="this.$store.getters.getUser.tipo == 'superadm'">
-          <!--begin::Toolbar-->
-          <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base" >
-            <!--begin::Add customer-->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_adm" data-backdrop="false" v-on:click="this.createAdmModalOpen = true">
-              <KTIcon icon-name="plus" icon-class="fs-2" />
-              Adicionar Administrador
-            </button>
-            <!--end::Add customer-->
-          </div>
-          <!--end::Toolbar-->
-        </div>
-        <!--end::Card toolbar-->
         <!--begin::Card toolbar-->
         <div class="card-toolbar" v-if="this.$store.getters.getUser.tipo != 'user'">
           <!--begin::Toolbar-->
@@ -79,30 +66,26 @@
           {{ user.estado }}
         </template>
         <template v-slot:actions="{ row: user }">
-          <div v-if="user.tipo == 'user'">
-            <span title="Alterar Utilizador" v-if="this.$store.getters.getUser.tipo != 'user'" v-on:click="getUserToEdit(user.id)" data-bs-toggle="modal" data-bs-target="#kt_modal_alter_user" class="material-icons">edit</span>
-            <span title="Ativar Utilizador" v-if="user.estado == 'Inativo' && this.$store.getters.getUser.tipo != 'user'" v-on:click="toggleUser(user.id, 'Ativo')" class="material-icons">check_circle</span>
-            <span title="Desativar Utilizador" v-if="user.estado == 'Ativo' && this.$store.getters.getUser.tipo != 'user'" v-on:click="toggleUser(user.id, 'Inativo')" class="material-icons">cancel</span>
+          <div v-if="user.tipo == 'superadm'">
+            <span title="Alterar Administrador" v-if="this.$store.getters.getUser.tipo == 'superadm'" v-on:click="getUserToEdit(user.id)" data-bs-toggle="modal" data-bs-target="#kt_modal_alter_user" class="material-icons">edit</span>
           </div>
           <div v-else-if="user.tipo == 'adm'">
-            <span title="Alterar Administrador" v-if="this.$store.getters.getUser.tipo == 'superadm'" v-on:click="getAdmToEdit(user.id)" data-bs-toggle="modal" data-bs-target="#kt_modal_alter_adm" class="material-icons">edit</span>
-            <span title="Ativar Administrador" v-if="user.estado == 'Inativo' && this.$store.getters.getUser.tipo == 'superadm'" v-on:click="toggleAdm(user.id, 'Ativo')" class="material-icons">check_circle</span>
-            <span title="Desativar Administrador" v-if="user.estado == 'Ativo' && this.$store.getters.getUser.tipo == 'superadm'" v-on:click="toggleAdm(user.id, 'Inativo')" class="material-icons">cancel</span>
+            <span title="Alterar Utilizador" v-if="this.$store.getters.getUser.tipo == 'superadm'" v-on:click="getUserToEdit(user.id)" data-bs-toggle="modal" data-bs-target="#kt_modal_alter_user" class="material-icons">edit</span>
+            <span title="Ativar Utilizador" v-if="user.estado == 'Inativo' && this.$store.getters.getUser.tipo == 'superadm'" v-on:click="toggleUser(user.id, 'Ativo', user.tipo)" class="material-icons">check_circle</span>
+            <span title="Desativar Utilizador" v-if="user.estado == 'Ativo' && this.$store.getters.getUser.tipo == 'superadm'" v-on:click="toggleUser(user.id, 'Inativo', user.tipo)" class="material-icons">cancel</span>
           </div>
           <div v-else>
-            <span title="Alterar Administrador" v-if="this.$store.getters.getUser.tipo == 'superadm'" v-on:click="getAdmToEdit(user.id)" data-bs-toggle="modal" data-bs-target="#kt_modal_alter_adm" class="material-icons">edit</span>
+            <span title="Alterar Utilizador" v-if="this.$store.getters.getUser.tipo != 'user'" v-on:click="getUserToEdit(user.id)" data-bs-toggle="modal" data-bs-target="#kt_modal_alter_user" class="material-icons">edit</span>
+            <span title="Ativar Utilizador" v-if="user.estado == 'Inativo' && this.$store.getters.getUser.tipo != 'user'" v-on:click="toggleUser(user.id, 'Ativo', user.tipo)" class="material-icons">check_circle</span>
+            <span title="Desativar Utilizador" v-if="user.estado == 'Ativo' && this.$store.getters.getUser.tipo != 'user'" v-on:click="toggleUser(user.id, 'Inativo', user.tipo)" class="material-icons">cancel</span>
           </div>
         </template>
       </Datatable>
     </div>
     <AddUserModal v-show="this.createUserModalOpen" v-on:create-user="createUser" v-on:open-modal="openModal"></AddUserModal>
     <AlterUserModal v-show="this.alterUserModalOpen" v-bind:info="this.editUser" v-on:alter-user="alterUser" v-on:open-modal="openModal"></AlterUserModal>
-    <AddAdmModal v-show="this.createAdmModalOpen" v-on:create-adm="createAdm" v-on:open-modal="openModal"></AddAdmModal>
-    <AlterAdmModal v-show="this.alterAdmModalOpen" v-bind:info="this.editAdm" v-on:alter-adm="alterAdm" v-on:open-modal="openModal"></AlterAdmModal>
     <button ref="hidemodal1" style="display: none" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user"></button>
     <button ref="hidemodal2" style="display: none" data-bs-toggle="modal" data-bs-target="#kt_modal_alter_user"></button>
-    <button ref="hidemodal3" style="display: none" data-bs-toggle="modal" data-bs-target="#kt_modal_add_adm"></button>
-    <button ref="hidemodal4" style="display: none" data-bs-toggle="modal" data-bs-target="#kt_modal_alter_adm"></button>
   </div>
 </template>
 
@@ -111,8 +94,6 @@ import { ref } from "vue";
 import Datatable from "@/components/kt-datatable/KTDataTable.vue";
 import AddUserModal from "@/components/modals/AddUserModal.vue";
 import AlterUserModal from "@/components/modals/AlterUserModal.vue";
-import AddAdmModal from "@/components/modals/AddAdmModal.vue";
-import AlterAdmModal from "@/components/modals/AlterAdmModal.vue";
 import axios from "axios";
 
 export default {
@@ -121,8 +102,6 @@ export default {
     Datatable,
     AddUserModal,
     AlterUserModal,
-    AddAdmModal,
-    AlterAdmModal
   },
   data() {
     return {
@@ -214,7 +193,7 @@ export default {
         this.users.forEach(u => this.usersFiltered.push(u));
       }
 
-      if(this.state != "Estado") {
+      if(this.state != "Estado" && this.state != "Todos") {
         this.usersFiltered = this.usersFiltered.filter(u => u.estado == this.state);
       }
 
@@ -240,12 +219,6 @@ export default {
       this.alterUserModalOpen = true;
       this.users.forEach(u => {
         if(u.id == id) this.editUser = u;
-      });
-    },
-    getAdmToEdit(id){
-      this.alterAdmModalOpen = true;
-      this.users.forEach(u => {
-        if(u.id == id) this.editAdm = u;
       });
     },
     getAllUsers() {
@@ -307,36 +280,7 @@ export default {
         } else console.log(error);
       });
     },
-    createAdm(info) {
-      this.createModalOpen = false;
-      this.$refs.hidemodal3.click();
-      
-      axios({
-        method: 'post',
-        url: `${import.meta.env.VITE_HOST}/users/adms`,
-        headers: {
-          Authorization: `Bearer ${this.$store.getters.getAccessToken}`,
-          refreshtoken: this.$store.getters.getRefreshToken,
-        },
-        data: info
-      })
-      .then(value => {
-        if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
-        this.getAllUsers();
-        this.$emit("open-modal", "Administrador criado com sucesso.");
-      })
-      .catch(error => {
-        if (error.code) {
-          console.log(error.response.data);
-          this.$emit("open-modal", error.response.data.message);
-          if(error.response.status == 401) {
-            this.$store.commit('resetUser');
-            this.$router.push({ name: "login" });
-          }
-        } else console.log(error);
-      });
-    },
-    toggleUser(id, estado) {
+    toggleUser(id, estado, tipo) {
       axios({
         method: 'put',
         url: `${import.meta.env.VITE_HOST}/users/${id}/toggle`,
@@ -345,39 +289,8 @@ export default {
           refreshtoken: this.$store.getters.getRefreshToken,
         },
         data: {
-          estado: estado
-        }
-      })
-      .then(value => {
-        if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);;
-        this.users.forEach(u => {
-          if(u.id == id) u.estado = estado;
-        });
-        this.usersFiltered.forEach(u => {
-          if(u.id == id) u.estado = estado;
-        });
-      })
-      .catch(error => {
-        if (error.code) {
-          console.log(error.response.data);
-          this.$emit("open-modal", error.response.data.message);
-          if(error.response.status == 401) {
-            this.$store.commit('resetUser');
-            this.$router.push({ name: "login" });
-          }
-        } else console.log(error);
-      });
-    },
-    toggleAdm(id, estado) {
-      axios({
-        method: 'put',
-        url: `${import.meta.env.VITE_HOST}/users/adms/${id}/toggle`,
-        headers: {
-          Authorization: `Bearer ${this.$store.getters.getAccessToken}`,
-          refreshtoken: this.$store.getters.getRefreshToken,
-        },
-        data: {
-          estado: estado
+          estado: estado,
+          tipo: tipo
         }
       })
       .then(value => {
@@ -427,45 +340,6 @@ export default {
         if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
         this.getAllUsers();
         this.$emit("open-modal", "Utilizador alterado com sucesso.");
-      })
-      .catch(error => {
-        if (error.code) {
-          console.log(error.response.data);
-          this.$emit("open-modal", error.response.data.message);
-          if(error.response.status == 401) {
-            this.$store.commit('resetUser');
-            this.$router.push({ name: "login" });
-          }
-        } else console.log(error);
-      });
-    },
-    alterAdm(info) {
-      this.createModalOpen = false;
-      this.$refs.hidemodal4.click();
-
-      this.editUser = {
-        id: "",
-        username: ""
-      }
-      
-      this.editAdm = {
-        id: "",
-        username: ""
-      }
-      
-      axios({
-        method: 'put',
-        url: `${import.meta.env.VITE_HOST}/users/adms/${info.id}`,
-        headers: {
-          Authorization: `Bearer ${this.$store.getters.getAccessToken}`,
-          refreshtoken: this.$store.getters.getRefreshToken,
-        },
-        data: info
-      })
-      .then(value => {
-        if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
-        this.getAllUsers();
-        this.$emit("open-modal", "Administrador alterado com sucesso.");
       })
       .catch(error => {
         if (error.code) {
@@ -544,7 +418,16 @@ export default {
     display: none;
   }
 
-  @media (max-width: 1250px) {
+  @media (max-width: 860px) {
+    .card-title {
+      display: block !important;
+    }
+
+    .custom-select {
+      margin-right: 16px;
+      margin-top: 16px;
+    }
+
     .create-wrapper.superadm {
       display: flex !important;
       margin-right: auto;
@@ -553,15 +436,9 @@ export default {
     }
   }
 
-  @media (max-width: 860px) {
-    .card-title {
-      display: block !important;
-    }
-
+  @media (max-width: 650px) {
     .custom-select {
       margin-left: 0px;
-      margin-right: 16px;
-      margin-top: 16px;
     }
   }
 

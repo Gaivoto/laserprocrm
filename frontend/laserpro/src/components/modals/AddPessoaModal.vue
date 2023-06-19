@@ -143,6 +143,7 @@ export default {
         createPessoa() {
             if(this.verifyPessoaData()) {
                 this.$emit("create-pessoa", this.formInfo);
+                
                 this.formInfo = {
                     nome: "",
                     email: "",
@@ -184,7 +185,7 @@ export default {
     }
 
     .modal-wrapper > div {
-        background-color: rgb(30, 30, 45);
+        background-color: var(--bs-modal-bg);
         width: 650px;
         padding: 16px;
         margin: auto;

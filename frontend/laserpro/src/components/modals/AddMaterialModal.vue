@@ -68,7 +68,7 @@
               <!--begin::Input group-->
               <div class="fv-row mb-8">
                 <!--begin::Label-->
-                <label class="required fs-6 fw-semobold mb-2">Comprimento</label>
+                <label class="required fs-6 fw-semobold mb-2">Comprimento (mm)</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
@@ -82,7 +82,7 @@
               <!--begin::Input group-->
               <div class="fv-row mb-8">
                 <!--begin::Label-->
-                <label class="required fs-6 fw-semobold mb-2">Largura</label>
+                <label class="required fs-6 fw-semobold mb-2">Largura (mm)</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
@@ -96,7 +96,7 @@
               <!--begin::Input group-->
               <div class="fv-row mb-8">
                 <!--begin::Label-->
-                <label class="required fs-6 fw-semobold mb-2">Espessura</label>
+                <label class="required fs-6 fw-semobold mb-2">Espessura (mm)</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
@@ -174,7 +174,18 @@ export default {
     },
     createMaterial() {
         this.formInfo.dimensoes = this.formInfo.comprimento + "x" + this.formInfo.largura + "x" + this.formInfo.espessura;
-        if(this.verifyMaterialData()) this.$emit("create-material", this.formInfo);
+        if(this.verifyMaterialData()) {
+          this.$emit("create-material", this.formInfo);
+
+          this.formInfo = {
+            tipo: "",
+            liga: "",
+            acabamento: "",
+            comprimento: "",
+            largura: "",
+            espessura: ""
+          }
+        }
     }
   }
 }

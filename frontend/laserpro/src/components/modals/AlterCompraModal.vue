@@ -69,7 +69,7 @@
               <!--begin::Input group-->
               <div class="fv-row mb-8">
                 <!--begin::Label-->
-                <label class="required fs-6 fw-semobold mb-2">Preço</label>
+                <label class="required fs-6 fw-semobold mb-2">Preço (€)</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
@@ -83,7 +83,7 @@
               <!--begin::Input group-->
               <div class="fv-row mb-8">
                 <!--begin::Label-->
-                <label class="required fs-6 fw-semobold mb-2">Quantidade</label>
+                <label class="required fs-6 fw-semobold mb-2">Quantidade (kg)</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
