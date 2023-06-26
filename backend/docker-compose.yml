@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  database:
+    image: postgres:14.5
+    container_name: database
+    networks:
+      - default
+    env_file:
+      - .docker.env
+    ports:
+      - "5434:5432"
+
+  api:
+    build: .
+    networks:
+      - default
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    environment:
+        - DATABASE_HOST=database
+    depends_on:
+      - database
+
+networks:
+  default:
+    driver: bridge
+    name: gc-network

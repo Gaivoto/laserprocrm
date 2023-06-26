@@ -1,5 +1,6 @@
 const utils = require('../utils/index.js');
 const uuid = require('uuid');
+const bcrypt = require('bcrypt');
 
 const dbUser = require('../db/users.js');
 
@@ -18,7 +19,7 @@ async function getAllUsers(access_token, refresh_token) {
                 dbUser.getAllUsers().then(value2 => {
 
                     value2.forEach(u => {
-                        users.push({ id: u.id, tipo: u.tipo, username: u.username, password: u.password, estado: u.estado });
+                        users.push({ id: u.id, tipo: u.tipo, username: u.username, estado: u.estado });
                     });
     
                     info.users = users;
@@ -53,7 +54,7 @@ async function createUser(access_token, refresh_token, body) {
             } else if(body.tipo == "adm" && info.user.tipo != "superadm") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else {
-                dbUser.getAllUsers().then(value2 => {
+                dbUser.getAllUsers().then(async value2 => {
                     
                     let existe = false;
 
@@ -75,6 +76,8 @@ async function createUser(access_token, refresh_token, body) {
                                 if (u.id == id) existe2 = true;
                             });
                         } while (existe2)
+
+                        body.password = await bcrypt.hash(body.password, 10);
 
                         dbUser.createUser(id, body).then(value => {
                             info.message = "Utilizador criado com sucesso.";
@@ -163,7 +166,7 @@ async function editUser(access_token, refresh_token, id, body) {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
             } else {
 
-                dbUser.getAllUsers().then(value2 => {
+                dbUser.getAllUsers().then(async value2 => {
 
                     let existe = false;
                             
@@ -185,6 +188,9 @@ async function editUser(access_token, refresh_token, id, body) {
                             reject({ code: 400, error: { message: "O nome de utilizador deve ser único." } });
                         } else {
                             if(body.password) {
+
+                                body.password = await bcrypt.hash(body.password, 10);
+
                                 dbUser.editUserPass(body, id).then(value3 => {
                                     info.message = "Utilizador alterado com sucesso.";
                                     resolve({ code: 200, info: info });

@@ -8,10 +8,10 @@ const pool = new pg.Pool({
     database: process.env.DBNAME
 });
 
-async function authenticateUser(username, password) {
+async function authenticateUser(username) {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        client.query(`SELECT * FROM "Users" WHERE username = $1 AND password = $2`, [username, password], (err, res) => {
+        client.query(`SELECT * FROM "Users" WHERE username = $1`, [username], (err, res) => {
             if(!err) {
                 client.release();
                 resolve(res.rows);
