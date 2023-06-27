@@ -11,7 +11,7 @@ import { useConfigStore } from "@/stores/config";
 import { useThemeStore } from "@/stores/theme";
 import { themeConfigValue } from "@/core/helpers/config";
 import { initializeComponents } from "@/core/plugins/keenthemes";
-import MessageModal from "@/components/modals/MessageModal.vue";
+import MessageModal from "./components/modals/MessageModal.vue";
  
 export default {
   name: "app",

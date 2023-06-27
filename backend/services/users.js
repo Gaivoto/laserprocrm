@@ -15,7 +15,10 @@ async function getAllUsers(access_token, refresh_token) {
 
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
+                utils.createErrorLog(`Tentativa de leitura de utilizadores falhada por falta de permissão. Apenas administradores e super-administradores podem efetuar esta operação`, value.user, 403);
             } else {
+                utils.createLog(value.user, 'Leitura', 'Users', null);
+
                 dbUser.getAllUsers().then(value2 => {
 
                     value2.forEach(u => {
@@ -28,6 +31,7 @@ async function getAllUsers(access_token, refresh_token) {
                 })
                 .catch(error => {
                     console.log(error);
+                    utils.createErrorLog(error, value.user, 400);
                     reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
@@ -49,10 +53,13 @@ async function createUser(access_token, refresh_token, body) {
 
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
+                utils.createErrorLog(`Tentativa de criação de utilizador tipo user falhada por falta de permissão. Apenas administradores e super-administradores podem efetuar esta operação`, value1.user, 403);
             } else if(!body.username || !body.password || !body.tipo) {
                 reject({ code: 400, error: { message: "Preencha todos os campos." } });
+                utils.createErrorLog(`Tentativa de criação de utilizador tipo ${body.tipo} falhada por dados inválidos (campos vazios)`, value1.user, 400);
             } else if(body.tipo == "adm" && info.user.tipo != "superadm") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
+                utils.createErrorLog(`Tentativa de criação de utilizador tipo adm falhada por falta de permissão. Apenas super-administradores podem efetuar esta operação`, value1.user, 403);
             } else {
                 dbUser.getAllUsers().then(async value2 => {
                     
@@ -64,6 +71,7 @@ async function createUser(access_token, refresh_token, body) {
 
                     if (existe) {
                         reject({ code: 400, error: { message: "O nome de utilizador deve ser único." } });
+                        utils.createErrorLog(`Tentativa de criação de utilizador tipo ${body.tipo} falhada por dados inválidos (nome de utilizador não único)`, value1.user, 400);
                     } else {
 
                         var existe2 = false;
@@ -79,18 +87,22 @@ async function createUser(access_token, refresh_token, body) {
 
                         body.password = await bcrypt.hash(body.password, 10);
 
+                        utils.createLog(value1.user, 'Criação', 'Users', id);
+
                         dbUser.createUser(id, body).then(value => {
                             info.message = "Utilizador criado com sucesso.";
                             resolve({ code: 201, info: info });
                         })
                         .catch(error => {
                             console.log(error);
+                            utils.createErrorLog(error, value1.user, 400);
                             reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
+                    utils.createErrorLog(error, value1.user, 400);
                     reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
@@ -111,10 +123,13 @@ async function toggleUser(access_token, refresh_token, id, body) {
             
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
+                utils.createErrorLog(`Tentativa de modificação (toggle) de utilizador tipo user (id: '${id}') falhada por falta de permissão. Apenas administradores e super-administradores podem efetuar esta operação`, value.user, 403);
             } else if(body.tipo == "adm" && info.user.tipo != "superadm") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
+                utils.createErrorLog(`Tentativa de modificação (toggle) de utilizador tipo adm (id: '${id}') falhada por falta de permissão. Apenas super-administradores podem efetuar esta operação`, value.user, 403);
             } else if(body.estado != 'Ativo' && body.estado != 'Inativo') {
                 reject({ code: 400, error: { message: "Estado inválido." } });
+                utils.createErrorLog(`Tentativa de modificação (toggle) de utilizador tipo ${body.tipo} (id: '${id}') falhada por dados inválidos (estado inválido)`, value.user, 400);
             } else {
                 dbUser.getAllUsers().then(value2 => {
 
@@ -126,19 +141,25 @@ async function toggleUser(access_token, refresh_token, id, body) {
 
                     if (!existe) {
                         reject({ code: 404, error: { message: "Este utiilizador não foi encontrado." } });
+                        utils.createErrorLog(`Tentativa de modificação (toggle) de utilizador tipo ${body.tipo} (id: '${id}') falhada por dados inválidos (utilizador não encontrado)`, value.user, 404);
                     } else {
+                        let action = body.estado == 'Ativo' ? 'Modificação (ativar)' : 'Modificação (desativar)';
+                        utils.createLog(value.user, action, 'Users', id);
+
                         dbUser.toggleUser(id, body.estado).then(value3 => {
                             info.message = "Utilizador alterado com sucesso.";
                             resolve({ code: 200, info: info });
                         })
                         .catch(error => {
                             console.log(error);
+                            utils.createErrorLog(error, value.user, 400);
                             reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                         });
                     }
                 })
                 .catch(error => {
                     console.log(error);
+                    utils.createErrorLog(error, value.user, 400);
                     reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
@@ -160,10 +181,13 @@ async function editUser(access_token, refresh_token, id, body) {
 
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
+                utils.createErrorLog(`Tentativa de modificação de utilizador tipo user (id: '${id}') falhada por falta de permissão. Apenas administradores e super-administradores podem efetuar esta operação`, value.user, 403);
             } else if(!body.username || !body.tipo) {
                 reject({ code: 400, error: { message: "Preencha todos os campos." } });
+                utils.createErrorLog(`Tentativa de modificação de utilizador tipo: ${body.tipo} (id: '${id}') falhada por dados inválidos (campos vazios)`, value.user, 400);
             } else if(body.tipo == "adm" && info.user.tipo != "superadm") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
+                utils.createErrorLog(`Tentativa de modificação de utilizador tipo adm (id: '${id}') falhada por falta de permissão. Apenas super-administradores podem efetuar esta operação`, value.user, 403);
             } else {
 
                 dbUser.getAllUsers().then(async value2 => {
@@ -176,6 +200,7 @@ async function editUser(access_token, refresh_token, id, body) {
 
                     if (!existe) {
                         reject({ code: 404, error: { message: "Este utilizador não foi encontrado." } });
+                        utils.createErrorLog(`Tentativa de modificação de utilizador tipo ${body.tipo} (id: '${id}') falhada por dados inválidos (utilizador não encontrado)`, value.user, 404);
                     } else {
 
                         let existe2 = false;
@@ -186,7 +211,10 @@ async function editUser(access_token, refresh_token, id, body) {
 
                         if(existe2) {
                             reject({ code: 400, error: { message: "O nome de utilizador deve ser único." } });
+                            utils.createErrorLog(`Tentativa de modificação de utilizador tipo ${body.tipo} (id: '${id}') falhada por dados inválidos (nome de utilizador não único)`, value.user, 400);
                         } else {
+                            utils.createLog(value.user, 'Modificação', 'Users', id);
+
                             if(body.password) {
 
                                 body.password = await bcrypt.hash(body.password, 10);
@@ -197,6 +225,7 @@ async function editUser(access_token, refresh_token, id, body) {
                                 })
                                 .catch(error => {
                                     console.log(error);
+                                    utils.createErrorLog(error, value.user, 400);
                                     reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                                 });  
                             } else {
@@ -206,6 +235,7 @@ async function editUser(access_token, refresh_token, id, body) {
                                 })
                                 .catch(error => {
                                     console.log(error);
+                                    utils.createErrorLog(error, value.user, 400);
                                     reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                                 });    
                             }
@@ -214,6 +244,7 @@ async function editUser(access_token, refresh_token, id, body) {
                 })
                 .catch(error => {
                     console.log(error);
+                    utils.createErrorLog(error, value.user, 400);
                     reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
                 });
             }
