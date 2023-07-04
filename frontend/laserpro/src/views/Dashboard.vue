@@ -23,6 +23,7 @@
                             <div v-on:click="selectDateGastos(12, 'Últimos 12 meses')">{{ "Últimos 12 meses" }}</div>
                             <div v-on:click="selectDateGastos(24, 'Últimos 24 meses')">{{ "Últimos 24 meses" }}</div>
                         </div>
+                        <div v-if="dateGastosOpen" class="select-closer" v-on:click="dateGastosOpen = false"></div>
                     </div> 
                 </div>
                 <GastosGraph v-bind:info="this.gastosList" v-bind:dates="this.gastosDates"/>
@@ -53,6 +54,7 @@
                             <div v-on:click="selectDateCompras(12, 'Últimos 12 meses')">{{ "Últimos 12 meses" }}</div>
                             <div v-on:click="selectDateCompras(24, 'Últimos 24 meses')">{{ "Últimos 24 meses" }}</div>
                         </div>
+                        <div v-if="dateComprasOpen" class="select-closer" v-on:click="dateComprasOpen = false"></div>
                     </div> 
                 </div>
                 <ComprasGraph v-bind:info="this.comprasList" v-bind:dates="this.comprasDates"/>
@@ -654,7 +656,7 @@ export default {
         background-color: var(--bs-gray-100);
         left: 0;
         right: 0;
-        z-index: 1;
+        z-index: 1000;
         max-height: 300px;
         border-radius: 0.475rem;
     }
@@ -670,5 +672,15 @@ export default {
 
     .selectHide {
         display: none;
+    }
+
+    .select-closer {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        z-index: 999;
     }
 </style>
