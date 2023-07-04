@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="kt_modal_add_material" ref="addMaterialModalRef" tabindex="-1" aria-hidden="true" >
+  <div class="modal fade" id="kt_modal_add_material" ref="addMaterialModalRef" tabindex="-1" aria-hidden="true" v-on:click="reset">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered mw-650px">
       <!--begin::Modal content-->
@@ -11,8 +11,8 @@
           <!--end::Modal title-->
 
           <!--begin::Close-->
-          <div id="kt_modal_add_material_close" data-bs-dismiss="modal" class="btn btn-icon btn-sm btn-active-icon-primary">
-            <KTIcon icon-name="cross" icon-class="fs-1" />
+          <div id="kt_modal_add_material_close" data-bs-dismiss="modal" class="btn btn-icon btn-sm btn-active-icon-primary" v-on:click="reset">
+            <KTIcon id="kt_modal_add_material_close_btn" icon-name="cross" icon-class="fs-1" />
           </div>
           <!--end::Close-->
         </div>
@@ -31,7 +31,7 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="tipo">
-                  <el-input v-model="formInfo.tipo" type="text" placeholder="Tipo" />
+                  <el-input v-model="formInfo.tipo" type="text" placeholder="Tipo" v-on:input="this.formInfo.tipo = this.formInfo.tipo.toUpperCase()" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -45,7 +45,7 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="liga">
-                  <el-input v-model="formInfo.liga" type="text"  placeholder="Liga"/>
+                  <el-input v-model="formInfo.liga" type="text" placeholder="Liga" v-on:input="this.formInfo.liga = this.formInfo.liga.toUpperCase()"/>
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -59,7 +59,7 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="acabamento">
-                  <el-input v-model="formInfo.acabamento" type="text" placeholder="Acabamento"/>
+                  <el-input v-model="formInfo.acabamento" type="text" placeholder="Acabamento" v-on:input="this.formInfo.acabamento = this.formInfo.acabamento.toUpperCase()"/>
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -186,6 +186,18 @@ export default {
             espessura: ""
           }
         }
+    },
+    reset(event) {
+      if(event.target.id == "kt_modal_add_material" || event.target.id == "kt_modal_add_material_close" || event.target.id == "kt_modal_add_material_close_btn" || event.target.parentElement.id == "kt_modal_add_material_close_btn") {
+        this.formInfo = {
+          tipo: "",
+          liga: "",
+          acabamento: "",
+          comprimento: "",
+          largura: "",
+          espessura: ""
+        }
+      }
     }
   }
 }

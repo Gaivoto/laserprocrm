@@ -92,3 +92,10 @@ export default defineComponent({
   },
 });
 </script>
+
+
+<style scoped>
+  .header {
+    z-index: 1001;
+  }
+</style>

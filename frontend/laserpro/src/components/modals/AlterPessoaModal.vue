@@ -29,7 +29,7 @@
 
                             <!--begin::Input-->
                             <el-form-item prop="nome">
-                                <el-input v-model="formInfo.nome" type="text" placeholder="Nome" />
+                                <el-input v-model="formInfo.nome" type="text" placeholder="Nome" v-on:input="this.formInfo.nome = this.formInfo.nome.toUpperCase()"/>
                             </el-form-item>
                             <!--end::Input-->
                         </div>
@@ -71,7 +71,7 @@
 
                             <!--begin::Input-->
                             <el-form-item prop="cargo">
-                                <el-input v-model="formInfo.cargo" type="text" placeholder="Cargo"/>
+                                <el-input v-model="formInfo.cargo" type="text" placeholder="Cargo" v-on:input="this.formInfo.cargo = this.formInfo.cargo.toUpperCase()"/>
                             </el-form-item>
                             <!--end::Input-->
                         </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="kt_modal_add_fornecedor" ref="addFornecedorModalRef" tabindex="-1" aria-hidden="true" >
+  <div class="modal fade" id="kt_modal_add_fornecedor" ref="addFornecedorModalRef" tabindex="-1" aria-hidden="true" v-on:click="reset">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered mw-650px">
       <!--begin::Modal content-->
@@ -11,8 +11,8 @@
           <!--end::Modal title-->
 
           <!--begin::Close-->
-          <div id="kt_modal_add_fornecedor_close" data-bs-dismiss="modal" class="btn btn-icon btn-sm btn-active-icon-primary">
-            <KTIcon icon-name="cross" icon-class="fs-1" />
+          <div id="kt_modal_add_fornecedor_close" data-bs-dismiss="modal" class="btn btn-icon btn-sm btn-active-icon-primary" v-on:click="reset">
+            <KTIcon id="kt_modal_add_fornecedor_close_btn" icon-name="cross" icon-class="fs-1" />
           </div>
           <!--end::Close-->
         </div>
@@ -31,7 +31,7 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="nome">
-                  <el-input v-model="formInfo.nome" type="text" placeholder="Nome" />
+                  <el-input v-model="formInfo.nome" type="text" placeholder="Nome" v-on:input="this.formInfo.nome = this.formInfo.nome.toUpperCase()" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -73,7 +73,7 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="morada">
-                  <el-input v-model="formInfo.morada" type="text" placeholder="Morada"/>
+                  <el-input v-model="formInfo.morada" type="text" placeholder="Morada" v-on:input="this.formInfo.morada = this.formInfo.morada.toUpperCase()"/>
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -167,6 +167,17 @@ export default {
       if(this.verifyFornecedorData()) {
         this.$emit("create-fornecedor", this.formInfo);
 
+        this.formInfo = {
+          nome: "",
+          email: "",
+          contacto: "",
+          nif: "",
+          morada: ""
+        }
+      }
+    },
+    reset(event) {
+      if(event.target.id == "kt_modal_add_fornecedor" || event.target.id == "kt_modal_add_fornecedor_close" || event.target.id == "kt_modal_add_fornecedor_close_btn" || event.target.parentElement.id == "kt_modal_add_fornecedor_close_btn") {
         this.formInfo = {
           nome: "",
           email: "",

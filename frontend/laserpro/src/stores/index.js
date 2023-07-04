@@ -29,10 +29,9 @@ const store = new Vuex.Store({
     mutations: {
         setUser(state, user){
             state.user = { id: user.id, username: user.username, tipo: Crypto.AES.encrypt(user.tipo, import.meta.env.VITE_CRYPTO_KEY).toString() }
-            console.log(state.user.tipo)
         },
         setAccessToken(state, token){
-            state.tokens.accessToken = token
+            state.tokens.accessToken = token;
         },
         setRefreshToken(state, token){
             state.tokens.refreshToken = token;

@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="kt_modal_add_user" ref="addUserModalRef" tabindex="-1" aria-hidden="true" >
+  <div class="modal fade" id="kt_modal_add_user" ref="addUserModalRef" tabindex="-1" aria-hidden="true" v-on:click="reset">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered mw-650px">
       <!--begin::Modal content-->
@@ -11,8 +11,8 @@
           <!--end::Modal title-->
 
           <!--begin::Close-->
-          <div id="kt_modal_add_user_close" data-bs-dismiss="modal" class="btn btn-icon btn-sm btn-active-icon-primary">
-            <KTIcon icon-name="cross" icon-class="fs-1" />
+          <div id="kt_modal_add_user_close" data-bs-dismiss="modal" class="btn btn-icon btn-sm btn-active-icon-primary" v-on:click="reset">
+            <KTIcon id="kt_modal_add_user_close_btn" icon-name="cross" icon-class="fs-1" />
           </div>
           <!--end::Close-->
         </div>
@@ -184,6 +184,18 @@ export default {
     selectTipo(tipo) {
       this.formInfo.tipo = tipo;
       this.tipoOpen = false;
+    },
+    reset(event) {
+      if(event.target.id == "kt_modal_add_user" || event.target.id == "kt_modal_add_user_close" || event.target.id == "kt_modal_add_user_close_btn" || event.target.parentElement.id == "kt_modal_add_user_close_btn") {
+        this.formInfo = {
+          username: "",
+          password: "",
+          passwordConf: "",
+          tipo: "Utilizador"
+        }
+
+        this.tipoOpen = false;
+      }
     }
   },
   computed: {

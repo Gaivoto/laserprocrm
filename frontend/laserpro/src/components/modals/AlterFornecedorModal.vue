@@ -31,7 +31,7 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="nome">
-                  <el-input v-model="formInfo.nome" type="text" />
+                  <el-input v-model="formInfo.nome" type="text" v-on:input="this.formInfo.nome = this.formInfo.nome.toUpperCase()" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -73,7 +73,7 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="morada">
-                  <el-input v-model="formInfo.morada" type="text"/>
+                  <el-input v-model="formInfo.morada" type="text" v-on:input="this.formInfo.morada = this.formInfo.morada.toUpperCase()"/>
                 </el-form-item>
                 <!--end::Input-->
               </div>

@@ -21,6 +21,7 @@
               v-if="item.route"
               :class="{ 'show here': currentActive(item.route) }"
               class="menu-item py-3"
+              :title="item.heading"
             >
               <router-link
                 v-if="item.route"

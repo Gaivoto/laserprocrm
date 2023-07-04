@@ -14,9 +14,11 @@
           <div class="custom-select">
             <div class="selected" :class="{ open: stateOpen }" v-on:click="stateOpen=!stateOpen">{{ this.state }}</div>
             <div class="items" :class="{ selectHide: !stateOpen }">
+              <div v-on:click="selectState('Todos')">{{ "Todos" }}</div>
               <div v-on:click="selectState('Ativo')">{{ "Ativo" }}</div>
               <div v-on:click="selectState('Inativo')">{{ "Inativo" }}</div>
             </div>
+            <div v-if="stateOpen" class="select-closer" v-on:click="stateOpen = false"></div>
           </div>    
         </div>
         <!--end::Filter-->
@@ -213,7 +215,7 @@ export default {
         this.fornecedores.forEach(f => this.fornecedoresFiltered.push(f));
       }
 
-      if(this.state != "Estado") {
+      if(this.state != "Estado" && this.state != "Todos") {
         this.fornecedoresFiltered = this.fornecedoresFiltered.filter(f => f.estado == this.state);
       }
     },
@@ -409,7 +411,7 @@ export default {
     background-color: var(--bs-gray-100);
     left: 0;
     right: 0;
-    z-index: 1;
+    z-index: 1000;
     max-height: 300px;
     border-radius: 0.475rem;
   }
@@ -425,6 +427,16 @@ export default {
 
   .selectHide {
     display: none;
+  }
+
+  .select-closer {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 999;
   }
 
   @media (max-width: 900px) {

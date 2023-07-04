@@ -16,9 +16,10 @@
               <div class="selected" :class="{ open: typeOpen }" v-on:click="typeOpen=!typeOpen; stateOpen = false">{{ this.type }}</div>
               <div class="items" :class="{ selectHide: !typeOpen }">
                 <div v-on:click="selectType('Todos')">{{ "Todos" }}</div>
-                <div v-on:click="selectType('user')">{{ "Utilizadores" }}</div>
-                <div v-on:click="selectType('admin')">{{ "Administradores" }}</div>
+                <div v-on:click="selectType('Utilizadores')">{{ "Utilizadores" }}</div>
+                <div v-on:click="selectType('Administradores')">{{ "Administradores" }}</div>
               </div>
+              <div v-if="typeOpen" class="select-closer" v-on:click="typeOpen = false"></div>
             </div>    
           </div>
           <!--end::Filter-->
@@ -31,7 +32,8 @@
                 <div v-on:click="selectState('Ativo')">{{ "Ativo" }}</div>
                 <div v-on:click="selectState('Inativo')">{{ "Inativo" }}</div>
               </div>
-            </div>    
+            </div>
+            <div v-if="stateOpen" class="select-closer" v-on:click="stateOpen = false"></div>    
           </div>
           <!--end::Filter-->
         </div>
@@ -198,7 +200,7 @@ export default {
       }
 
       if(this.type != "Todos") {
-        if(this.type == "user") {
+        if(this.type == "Utilizadores") {
           this.usersFiltered = this.usersFiltered.filter(u => u.tipo == "user");
         } else {
           this.usersFiltered = this.usersFiltered.filter(u => u.tipo != "user");
@@ -400,7 +402,7 @@ export default {
     background-color: var(--bs-gray-100);
     left: 0;
     right: 0;
-    z-index: 1;
+    z-index: 1000;
     max-height: 300px;
     border-radius: 0.475rem;
   }
@@ -416,6 +418,16 @@ export default {
 
   .selectHide {
     display: none;
+  }
+
+  .select-closer {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 999;
   }
 
   @media (max-width: 860px) {

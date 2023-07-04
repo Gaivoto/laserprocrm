@@ -31,7 +31,7 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="tipo">
-                  <el-input v-model="formInfo.tipo" type="text" placeholder="Tipo" />
+                  <el-input v-model="formInfo.tipo" type="text" placeholder="Tipo" v-on:input="this.formInfo.tipo = this.formInfo.tipo.toUpperCase()" />
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -45,7 +45,7 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="liga">
-                  <el-input v-model="formInfo.liga" type="text"  placeholder="Liga"/>
+                  <el-input v-model="formInfo.liga" type="text"  placeholder="Liga" v-on:input="this.formInfo.liga = this.formInfo.liga.toUpperCase()"/>
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -59,7 +59,7 @@
 
                 <!--begin::Input-->
                 <el-form-item prop="acabamento">
-                  <el-input v-model="formInfo.acabamento" type="text" placeholder="Acabamento"/>
+                  <el-input v-model="formInfo.acabamento" type="text" placeholder="Acabamento" v-on:input="this.formInfo.acabamento = this.formInfo.acabamento.toUpperCase()"/>
                 </el-form-item>
                 <!--end::Input-->
               </div>

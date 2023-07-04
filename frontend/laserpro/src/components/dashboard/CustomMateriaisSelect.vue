@@ -1,7 +1,7 @@
 <template>
     <div class="searchbar-container" v-on:click.stop>
         <div class="searchbar">
-            <input type="text" ref="searchbar" v-model="selected" v-on:click="openSelect" v-on:input="openSelect">
+            <input type="text" ref="searchbar" v-model="selected" v-on:click="openSelectClick" v-on:input="openSelect">
         </div> 
         <div ref="result" class="searchbar-results" :class="{ 'd-none': !selectOpen }">
             <div v-on:click="chooseMaterial('Todos os materiais')">
@@ -10,7 +10,8 @@
             <div v-for="mat in this.materiaisFiltered" :key="mat.id" v-on:click="chooseMaterial(mat.id)">
                 <p>{{ mat.tipo + " " + mat.liga + " " + mat.acabamento + " " + mat.dimensoes }}</p>
             </div>
-        </div>  
+        </div>
+        <div v-if="selectOpen" class="select-closer" v-on:click="closeSelect"></div>
     </div>
 </template>
 
@@ -27,10 +28,21 @@ export default {
         return {
             selectOpen: false,
             selected: "Todos os materiais",
-            materiaisFiltered: []
+            materiaisFiltered: [],
+            isToReset: false,
+            tempSelect: ""
         }
     },
     methods: {
+        openSelectClick() {
+            this.isToReset = true;
+            this.tempSelect = this.selected;
+
+            this.selected = "";
+            this.$refs.searchbar.value = "";
+            this.selectOpen = true;
+            this.filterMateriais();
+        },
         openSelect() {
             this.selectOpen = true;
             this.filterMateriais();
@@ -43,9 +55,12 @@ export default {
                 });
             } else this.selected = mat;
             this.$emit('choose-mat', mat);
+
+            this.isToReset = false;
+            this.tempSelect = "";
         },
         filterMateriais() {
-            if(this.$refs.searchbar.value != "Todos os materiais") {
+            if(this.$refs.searchbar.value != "Todos os materiais" && this.$refs.searchbar.value != "") {
                 let search = this.$refs.searchbar.value.split(" ");
                 this.materiaisFiltered = [];
                 
@@ -60,6 +75,10 @@ export default {
             } else {
                 this.materiaisFiltered = [...this.materiais];
             }
+        },
+        closeSelect() {
+            if(this.isToReset) this.selected = this.tempSelect;
+            this.selectOpen = false;
         }
     },
     watch: {
@@ -151,5 +170,15 @@ export default {
 
     .searchbar-results::-webkit-scrollbar {
         width: 0px;
+    }
+
+    .select-closer {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        z-index: 999;
     }
 </style>

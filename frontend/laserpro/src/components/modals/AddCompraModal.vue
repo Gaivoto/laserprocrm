@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="kt_modal_add_compra" ref="addCompraModalRef" tabindex="-1" aria-hidden="true" v-on:click="closeSearches">
+  <div class="modal fade" id="kt_modal_add_compra" ref="addCompraModalRef" tabindex="-1" aria-hidden="true" v-on:click="reset">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered mw-650px">
       <!--begin::Modal content-->
@@ -12,8 +12,8 @@
           
 
           <!--begin::Close-->
-          <div id="kt_modal_add_compra_close" data-bs-dismiss="modal" class="btn btn-icon btn-sm btn-active-icon-primary">
-            <KTIcon icon-name="cross" icon-class="fs-1" />
+          <div id="kt_modal_add_compra_close" data-bs-dismiss="modal" class="btn btn-icon btn-sm btn-active-icon-primary" v-on:click="reset">
+            <KTIcon id="kt_modal_add_compra_close_btn" icon-name="cross" icon-class="fs-1" />
           </div>
           <!--end::Close-->
         </div>
@@ -278,6 +278,9 @@ export default {
           data: "",
           dataUF: ""
         }
+
+        this.fornecedoresSearchOpen = false;
+        this.materiaisSearchOpen = false;
       }
     },
     filterFornecedores() {
@@ -319,7 +322,20 @@ export default {
       this.fornecedoresSearchOpen = false;
       this.filterMateriais();
     },
-    closeSearches() {
+    reset(event) {
+      if(event.target.id == "kt_modal_add_compra" || event.target.id == "kt_modal_add_compra_close" || event.target.id == "kt_modal_add_compra_close_btn" || event.target.parentElement.id == "kt_modal_add_compra_close_btn") {
+        this.formInfo = {
+          fornecedor: "",
+          idFornecedor: "",
+          material: "",
+          idMaterial: "",
+          valor: "",
+          quantidade: "",
+          data: "",
+          dataUF: ""
+        }
+      }
+
       this.fornecedoresSearchOpen = false;
       this.materiaisSearchOpen = false;
     }

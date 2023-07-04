@@ -74,11 +74,11 @@ function createErrorLog(error, user, code) {
     fs.access(file, fs.constants.W_OK, (err) => {
         if(err) {
             fs.writeFile(file, content, error => {
-                if(err) console.log(error);
+                if(error) console.log(error);
             });
         } else {
             fs.appendFile(file, content, error => {
-                if(err) console.log(error);
+                if(error) console.log(error);
             });
         }
     });

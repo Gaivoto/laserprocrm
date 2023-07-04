@@ -21,6 +21,7 @@
               <div v-on:click="selectRange('Últimos 12 Meses')">{{ "Últimos 12 Meses" }}</div>
               <div v-on:click="selectRange('Últimos 24 Meses')">{{ "Últimos 24 Meses" }}</div>
             </div>
+            <div v-if="rangeOpen" class="select-closer" v-on:click="rangeOpen = false"></div>
           </div>    
         </div>
         <!--end::Filter-->
@@ -482,7 +483,6 @@ export default {
       this.$emit("open-modal", msg);
     },
     closeConfirmModal() {
-      console.log("22")
       this.confirmModalOpen = false;
     }
   }
@@ -530,9 +530,9 @@ export default {
     background-color: var(--bs-gray-100);
     left: 0;
     right: 0;
-    z-index: 1;
     max-height: 300px;
     border-radius: 0.475rem;
+    z-index: 1000;
   }
 
   .custom-select .items div {
@@ -546,6 +546,16 @@ export default {
 
   .selectHide {
     display: none;
+  }
+
+  .select-closer {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 999;
   }
 
   @media (max-width: 900px) {
