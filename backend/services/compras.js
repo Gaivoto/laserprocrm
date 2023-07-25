@@ -19,7 +19,7 @@ async function getAllCompras(access_token, refresh_token) {
                 utils.createLog(value.user, 'Leitura', 'Compras', null);
 
                 value2.forEach(c => {
-                    compras.push({ id: c.id, data: c.data, valor: c.valor, quantidade: c.quantidade, fornecedor: { id: c.idfornecedor, nome: c.nomefornecedor, email: c.emailfornecedor, nif: c.niffornecedor, morada: c.moradafornecedor, contacto: c.contactofornecedor }, material: { id: c.idmaterial, tipo: c.tipomaterial, liga: c.ligamaterial, acabamento: c.acabamentomaterial, dimensoes: c.dimensoesmaterial } });
+                    compras.push({ id: c.id, data: c.data, valor: c.valor, quantidade: c.quantidade, fornecedor: { id: c.idfornecedor, nome: c.nomefornecedor, email: c.emailfornecedor, nif: c.niffornecedor, morada: c.moradafornecedor, contacto: c.contactofornecedor }, material: { id: c.idmaterial, produto: c.produtomaterial, material: c.materialmaterial, tipo: c.tipomaterial, subtipo: c.subtipomaterial, liga: c.ligamaterial, dimensoes: c.dimensoesmaterial } });
                 });
 
                 info.compras = compras;

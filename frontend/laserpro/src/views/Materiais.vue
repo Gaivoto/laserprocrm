@@ -41,14 +41,20 @@
     </div>
     <div class="card-body pt-0">
       <Datatable @on-sort="sort" :data="this.materiaisFiltered" :header="tableHeader" :enable-items-per-page-dropdown="true" class="datatable">
+        <template v-slot:produto="{ row: material }">
+          {{ material.produto }}
+        </template>
+        <template v-slot:material="{ row: material }">
+          {{ material.material }}
+        </template>
         <template v-slot:tipo="{ row: material }">
           {{ material.tipo }}
         </template>
+        <template v-slot:subtipo="{ row: material }">
+          {{ material.subtipo }}
+        </template>
         <template v-slot:liga="{ row: material }">
           {{ material.liga }}
-        </template>
-        <template v-slot:acabamento="{ row: material }">
-          {{ material.acabamento }}
         </template>
         <template v-slot:dimensoes="{ row: material }">
           {{ material.dimensoes }}mm
@@ -97,7 +103,9 @@ export default {
         liga: "",
         dimensoes: "",
         tipo: "",
-        acabamento: ""
+        subtipo: "",
+        material: "",
+        produto: ""
       },
       tableHeader: []
     }
@@ -112,22 +120,34 @@ export default {
   mounted() {
     let headerInfo = [
       {
+        columnName: "Produto",
+        columnLabel: "produto",
+        sortEnabled: true,
+        columnWidth: 140,
+      },
+      {
+        columnName: "Material",
+        columnLabel: "material",
+        sortEnabled: true,
+        columnWidth: 140,
+      },
+      {
         columnName: "Tipo",
         columnLabel: "tipo",
         sortEnabled: true,
-        columnWidth: 160,
+        columnWidth: 140,
+      },
+      {
+        columnName: "Subtipo",
+        columnLabel: "subtipo",
+        sortEnabled: true,
+        columnWidth: 140,
       },
       {
         columnName: "Liga",
         columnLabel: "liga",
         sortEnabled: true,
-        columnWidth: 160,
-      },
-      {
-        columnName: "Acabamento",
-        columnLabel: "acabamento",
-        sortEnabled: true,
-        columnWidth: 170,
+        columnWidth: 140,
       },
       {
         columnName: "Dimensões",
@@ -139,7 +159,7 @@ export default {
         columnName: "Estado",
         columnLabel: "estado",
         sortEnabled: true,
-        columnWidth: 100,
+        columnWidth: 80,
       }
     ]
 
@@ -157,6 +177,14 @@ export default {
   methods: {
     sort(sort) {
       switch(sort.label) {
+        case "produto":
+          if(sort.order == "asc") this.materiaisFiltered.sort((a, b) => a.produto > b.produto ? 1 : b.produto > a.produto ? -1 : 0);
+          else this.materiaisFiltered.sort((a, b) => a.produto < b.produto ? 1 : b.produto < a.produto ? -1 : 0);
+          break;
+        case "material":
+          if(sort.order == "asc") this.materiaisFiltered.sort((a, b) => a.material > b.material ? 1 : b.material > a.material ? -1 : 0);
+          else this.materiaisFiltered.sort((a, b) => a.material < b.material ? 1 : b.material < a.material ? -1 : 0);
+          break;
         case "tipo":
           if(sort.order == "asc") this.materiaisFiltered.sort((a, b) => a.tipo > b.tipo ? 1 : b.tipo > a.tipo ? -1 : 0);
           else this.materiaisFiltered.sort((a, b) => a.tipo < b.tipo ? 1 : b.tipo < a.tipo ? -1 : 0);
@@ -165,9 +193,9 @@ export default {
           if(sort.order == "asc") this.materiaisFiltered.sort((a, b) => a.liga > b.liga ? 1 : b.liga > a.liga ? -1 : 0);
           else this.materiaisFiltered.sort((a, b) => a.liga < b.liga ? 1 : b.liga < a.liga ? -1 : 0);
           break;
-        case "acabamento":
-          if(sort.order == "asc") this.materiaisFiltered.sort((a, b) => a.acabamento > b.acabamento ? 1 : b.acabamento > a.acabamento ? -1 : 0);
-          else this.materiaisFiltered.sort((a, b) => a.acabamento < b.acabamento ? 1 : b.acabamento < a.acabamento ? -1 : 0);
+        case "subtipo":
+          if(sort.order == "asc") this.materiaisFiltered.sort((a, b) => a.subtipo > b.subtipo ? 1 : b.subtipo > a.subtipo ? -1 : 0);
+          else this.materiaisFiltered.sort((a, b) => a.subtipo < b.subtipo ? 1 : b.subtipo < a.subtipo ? -1 : 0);
           break;
         case "estado":
           if(sort.order == "asc") this.materiaisFiltered.sort((a, b) => a.estado > b.estado ? 1 : b.estado > a.estado ? -1 : 0);
@@ -181,13 +209,12 @@ export default {
 
       if(search != "") {
         this.materiais.forEach(m => {
-          let check = true;
+          let check = false;
           search.forEach(s => {
-            if(!(m.tipo.includes(s) || m.liga.includes(s) || m.acabamento.includes(s) || m.dimensoes.includes(s))) {
-              check = false;
+            if(m.tipo.includes(s) || m.liga.includes(s) || m.subtipo.includes(s) || m.dimensoes.includes(s) || m.material.includes(s) || m.produto.includes(s)) {
+              check = true;
             }
           });
-
           if(check) this.materiaisFiltered.push(m);
         });
       } else {
@@ -209,9 +236,42 @@ export default {
         if(m.id == id){
           this.editMaterial = m;
           let dimensoes = this.editMaterial.dimensoes.split("x");
-          this.editMaterial.comprimento = dimensoes[0];
-          this.editMaterial.largura = dimensoes[1];
-          this.editMaterial.espessura = dimensoes[2];
+
+          switch(this.editMaterial.produto) {
+            case "TUBULAR":
+              if(dimensoes.length == 3) {
+                this.editMaterial.comprimento = dimensoes[0];
+                this.editMaterial.dimensaoA = dimensoes[1];
+                this.editMaterial.espessura = dimensoes[2];
+              } else {
+                this.editMaterial.comprimento = dimensoes[0];
+                this.editMaterial.dimensaoA = dimensoes[1];
+                this.editMaterial.dimensaoB = dimensoes[2];
+                this.editMaterial.espessura = dimensoes[3];
+              }
+              break;
+            case "CHAPA":
+                this.editMaterial.comprimento = dimensoes[0];
+                this.editMaterial.largura = dimensoes[1];
+                this.editMaterial.espessura = dimensoes[2];
+              break;
+            case "CANTONEIRA":
+              if(dimensoes.length == 3) {
+                this.editMaterial.comprimento = dimensoes[0];
+                this.editMaterial.dimensaoA = dimensoes[1];
+                this.editMaterial.espessura = dimensoes[2];
+              } else {
+                this.editMaterial.comprimento = dimensoes[0];
+                this.editMaterial.dimensaoA = dimensoes[1];
+                this.editMaterial.dimensaoB = dimensoes[2];
+                this.editMaterial.espessura = dimensoes[3];
+              }
+              break;
+            case "PERFIL":
+              this.editMaterial.comprimento = dimensoes[0];
+              this.editMaterial.altura = dimensoes[1];
+              break;
+          }
         }
       });
     },

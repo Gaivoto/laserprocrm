@@ -58,8 +58,8 @@
                     <input type="text" ref="materialSearchbar" v-model="formInfo.material" v-on:click="openMateriais" v-on:input="openMateriais" placeholder="Material">
                   </div> 
                   <div ref="materialResults" class="searchbar-results" :class="{ 'd-none': !materiaisSearchOpen }">
-                    <div v-for="mat in this.materiaisFiltered" :key="mat.id" v-on:click="chooseMaterial(mat.tipo + ' ' + mat.liga + ' ' + mat.acabamento + ' ' + mat.dimensoes)">
-                      <p>{{ mat.tipo + " " + mat.liga + " " + mat.acabamento + " " + mat.dimensoes }}</p>
+                    <div v-for="mat in this.materiaisFiltered" :key="mat.id" v-on:click="chooseMaterial(mat)">
+                      <p>{{ this.getMatInfo(mat) }}</p>
                     </div>
                   </div>  
                 </div>
@@ -237,7 +237,11 @@ export default {
       });
 
       this.materiais.forEach(m => {
-        if(m.tipo + " " + m.liga + " " + m.acabamento + " " + m.dimensoes == this.formInfo.material) {
+        let info = m.produto + " " + m.material + " " + m.tipo;
+        if(m.subtipo != "") info += " " + m.subtipo;
+        info += " " + m.liga + " " + m.dimensoes;
+
+        if(info == this.formInfo.material) {
           existeMat = true;
           this.formInfo.idMaterial = m.id;
         }
@@ -307,14 +311,16 @@ export default {
       this.materiais.forEach(m => {
         let check = true;
         search.forEach(s => {
-          if(!(m.tipo.includes(s) || m.liga.includes(s) || m.acabamento.includes(s) || m.dimensoes.includes(s))) check = false;
+          if(!(m.tipo.includes(s) || m.subtipo.includes(s) || m.liga.includes(s) || m.dimensoes.includes(s) || m.produto.includes(s) || m.material.includes(s))) check = false;
         });
 
         if(check) this.materiaisFiltered.push(m);
       });
     },
     chooseMaterial(mat) {
-      this.formInfo.material = mat;
+      this.formInfo.material = mat.produto + " " + mat.material + " " + mat.tipo;
+      if(mat.subtipo != "") this.formInfo.material += " " + mat.subtipo;
+      this.formInfo.material += " " + mat.liga + " " + mat.dimensoes;
       this.materiaisSearchOpen = false;
     },
     openMateriais() {
@@ -338,6 +344,13 @@ export default {
 
       this.fornecedoresSearchOpen = false;
       this.materiaisSearchOpen = false;
+    },
+    getMatInfo(mat) {
+      let info = mat.produto + " " + mat.material + " " + mat.tipo;
+      if(mat.subtipo != "") info += " " + mat.subtipo;
+      info += " " + mat.liga + " " + mat.dimensoes;
+
+      return info;
     }
   }
 }

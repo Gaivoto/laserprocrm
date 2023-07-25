@@ -8,7 +8,7 @@
                 <p>Todos os materiais</p>
             </div>
             <div v-for="mat in this.materiaisFiltered" :key="mat.id" v-on:click="chooseMaterial(mat.id)">
-                <p>{{ mat.tipo + " " + mat.liga + " " + mat.acabamento + " " + mat.dimensoes }}</p>
+                <p>{{ this.getMatInfo(mat) }}</p>
             </div>
         </div>
         <div v-if="selectOpen" class="select-closer" v-on:click="closeSelect"></div>
@@ -51,7 +51,11 @@ export default {
             this.selectOpen = false;
             if(mat != "Todos os materiais"){
                 this.materiais.forEach(m => {
-                    if(m.id == mat) this.selected = m.tipo + " " + m.liga + " " + m.acabamento + " " + m.dimensoes;
+                    if(m.id == mat) {
+                        this.selected = m.produto + " " + m.material + " " + m.tipo;
+                        if(m.subtipo != "") this.selected += " " + m.subtipo;
+                        this.selected += " " + m.liga + " " + m.dimensoes;
+                    }
                 });
             } else this.selected = mat;
             this.$emit('choose-mat', mat);
@@ -65,9 +69,9 @@ export default {
                 this.materiaisFiltered = [];
                 
                 this.materiais.forEach(m => {
-                    let check = true;
+                    let check = false;
                     search.forEach(s => {
-                        if(!(m.tipo.includes(s) || m.liga.includes(s) || m.acabamento.includes(s) || m.dimensoes.includes(s))) check = false;
+                        if(m.tipo.includes(s) || m.liga.includes(s) || m.subtipo.includes(s) || m.dimensoes.includes(s) || m.produto.includes(s) || m.material.includes(s)) check = true;
                     });
 
                     if(check) this.materiaisFiltered.push(m);
@@ -79,6 +83,13 @@ export default {
         closeSelect() {
             if(this.isToReset) this.selected = this.tempSelect;
             this.selectOpen = false;
+        },
+        getMatInfo(mat) {
+            let info = mat.produto + " " + mat.material + " " + mat.tipo;
+            if(mat.subtipo != "") info += " " + mat.subtipo;
+            info += " " + mat.liga + " " + mat.dimensoes;
+
+            return info;
         }
     },
     watch: {
@@ -93,7 +104,7 @@ export default {
 <style scoped>
     .searchbar-container {
         position: relative;
-        width: 60%;
+        width: 100%;
         min-width: 300px;
         margin-bottom: 16px;
     }
@@ -132,7 +143,7 @@ export default {
     .searchbar-results {
         position: absolute;
         left: 0px;
-        width: 100%;
+        width: 600px;
         max-height: 300px;
 
         overflow-y: scroll;

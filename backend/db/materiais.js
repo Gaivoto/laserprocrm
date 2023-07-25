@@ -11,7 +11,7 @@ const pool = new pg.Pool({
 async function getAllMateriais() {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        const slct = `SELECT id, tipo, acabamento, dimensoes, liga, estado FROM "Materiais"`;
+        const slct = `SELECT id, produto, material, tipo, subtipo, liga, dimensoes, estado FROM "Materiais"`;
         client.query(slct, (err, res) => {
             if(!err) {
                 client.release();
@@ -27,9 +27,9 @@ async function getAllMateriais() {
 async function createMaterial(id, body) {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        const slct = `INSERT INTO "Materiais" (id, tipo, liga, acabamento, dimensoes, estado)
-         VALUES ($1, $2, $3, $4, $5, 'Ativo')`;
-        client.query(slct, [id, body.tipo, body.liga, body.acabamento, body.dimensoes], (err, res) => {
+        const slct = `INSERT INTO "Materiais" (id, produto, material, tipo, subtipo, liga, dimensoes, estado)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, 'Ativo')`;
+        client.query(slct, [id, body.produto, body.material, body.tipo, body.subtipo, body.liga, body.dimensoes], (err, res) => {
             if(!err) {
                 client.release();
                 resolve(res.rows);
@@ -60,8 +60,8 @@ async function toggleMaterial(id, estado) {
 async function editMaterial(body, id) {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        slct = `UPDATE "Materiais" SET tipo = $1, liga = $2, acabamento = $3, dimensoes = $4 WHERE id = $5`;
-        client.query(slct, [body.tipo, body.liga, body.acabamento, body.dimensoes, id], (err, res) => {
+        slct = `UPDATE "Materiais" SET produto = $1, material = $2, tipo = $3, subtipo = $4, liga = $5, dimensoes = $6 WHERE id = $7`;
+        client.query(slct, [body.produto, body.material, body.tipo, body.subtipo, body.liga, body.dimensoes, id], (err, res) => {
             if(!err) {
                 client.release();
                 resolve(res.rows);

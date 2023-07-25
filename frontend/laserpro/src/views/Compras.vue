@@ -44,29 +44,32 @@
     </div>
     <div class="card-body pt-0">
       <Datatable @on-sort="sort" :data="this.comprasFiltered" :header="tableHeader" :enable-items-per-page-dropdown="true" class="datatable">
+        <template v-slot:produto="{ row: compra }">
+          {{ compra.material.produto }}
+        </template>
         <template v-slot:material="{ row: compra }">
-          {{ compra.material.tipo }}
+          {{ compra.material.material }}
+        </template>
+        <template v-slot:tipo="{ row: compra }">
+          {{ compra.material.tipo }} {{ compra.material.subtipo }}
         </template>
         <template v-slot:liga="{ row: compra }">
           {{ compra.material.liga }}
         </template>
-        <template v-slot:acabamento="{ row: compra }">
-          {{ compra.material.acabamento }}
-        </template>
         <template v-slot:dimensoes="{ row: compra }">
-          {{ compra.material.dimensoes }}
+          {{ compra.material.dimensoes }}mm
         </template>
         <template v-slot:fornecedor="{ row: compra }">
           {{ compra.fornecedor.nome }}
         </template>
         <template v-slot:quantidade="{ row: compra }">
-          {{ compra.quantidade }} kg
+          {{ compra.quantidade }}kg
         </template>
         <template v-slot:preco="{ row: compra }">
-          {{ compra.valor }} €
+          {{ compra.valor }}€
         </template>
         <template v-slot:precokg="{ row: compra }">
-          {{ compra.precokg }} €/kg
+          {{ compra.precokg }}€/kg
         </template>
         <template v-slot:data="{ row: compra }">
           {{ compra.data }}
@@ -132,8 +135,20 @@ export default {
   mounted() {
     let headerInfo = [
       {
+        columnName: "Produto",
+        columnLabel: "produto",
+        sortEnabled: true,
+        columnWidth: 100,
+      },
+      {
         columnName: "Material",
         columnLabel: "material",
+        sortEnabled: true,
+        columnWidth: 100,
+      },
+      {
+        columnName: "Tipo",
+        columnLabel: "tipo",
         sortEnabled: true,
         columnWidth: 100,
       },
@@ -142,12 +157,6 @@ export default {
         columnLabel: "liga",
         sortEnabled: true,
         columnWidth: 100,
-      },
-      {
-        columnName: "Acabamento",
-        columnLabel: "acabamento",
-        sortEnabled: true,
-        columnWidth: 130,
       },
       {
         columnName: "Dimensões",
@@ -159,13 +168,13 @@ export default {
         columnName: "Fornecedor",
         columnLabel: "fornecedor",
         sortEnabled: true,
-        columnWidth: 130,
+        columnWidth: 120,
       },
       {
         columnName: "Quantidade",
         columnLabel: "quantidade",
         sortEnabled: true,
-        columnWidth: 100,
+        columnWidth: 110,
       },
       {
         columnName: "Preço",
@@ -183,7 +192,7 @@ export default {
         columnName: "Data",
         columnLabel: "data",
         sortEnabled: true,
-        columnWidth: 130,
+        columnWidth: 110,
       }
     ]
 
@@ -202,16 +211,20 @@ export default {
     sort(sort) {
       switch(sort.label) {
         case "material":
-          if(sort.order == "asc") this.comprasFiltered.sort((a, b) => a.material.tipo > b.material.tipo ? 1 : b.material.tipo > a.material.tipo ? -1 : 0);
-          else this.comprasFiltered.sort((a, b) => a.material.tipo < b.material.tipo ? 1 : b.material.tipo < a.material.tipo ? -1 : 0);
+          if(sort.order == "asc") this.comprasFiltered.sort((a, b) => a.material.material > b.material.material ? 1 : b.material.material > a.material.material ? -1 : 0);
+          else this.comprasFiltered.sort((a, b) => a.material.material < b.material.material ? 1 : b.material.material < a.material.material ? -1 : 0);
           break;
         case "liga":
           if(sort.order == "asc") this.comprasFiltered.sort((a, b) => a.material.liga > b.material.liga ? 1 : b.material.liga > a.material.liga ? -1 : 0);
           else this.comprasFiltered.sort((a, b) => a.material.liga < b.material.liga ? 1 : b.material.liga < a.material.liga ? -1 : 0);
           break;
-        case "acabamento":
-          if(sort.order == "asc") this.comprasFiltered.sort((a, b) => a.material.acabamento > b.material.acabamento ? 1 : b.material.acabamento > a.material.acabamento ? -1 : 0);
-          else this.comprasFiltered.sort((a, b) => a.material.acabamento < b.material.acabamento ? 1 : b.material.acabamento < a.material.acabamento ? -1 : 0);
+        case "produto":
+          if(sort.order == "asc") this.comprasFiltered.sort((a, b) => a.material.produto > b.material.produto ? 1 : b.material.produto > a.material.produto ? -1 : 0);
+          else this.comprasFiltered.sort((a, b) => a.material.produto < b.material.produto ? 1 : b.material.produto < a.material.produto ? -1 : 0);
+          break;
+        case "tipo":
+          if(sort.order == "asc") this.comprasFiltered.sort((a, b) => a.material.tipo > b.material.tipo ? 1 : b.material.tipo > a.material.tipo ? -1 : 0);
+          else this.comprasFiltered.sort((a, b) => a.material.tipo < b.material.tipo ? 1 : b.material.tipo < a.material.tipo ? -1 : 0);
           break;
         case "fornecedor":
           if(sort.order == "asc") this.comprasFiltered.sort((a, b) => a.fornecedor.nome > b.fornecedor.nome ? 1 : b.fornecedor.nome > a.fornecedor.nome ? -1 : 0);
@@ -252,10 +265,10 @@ export default {
 
       if(search != "") {
         this.compras.forEach(c => {
-          let check = true;
+          let check = false;
           search.forEach(s => {
-            if(!(c.material.tipo.includes(s) || c.material.liga.includes(s) || c.material.acabamento.includes(s) || c.material.dimensoes.includes(s) || c.fornecedor.nome.includes(s))){
-              check = false;
+            if(c.material.material.includes(s) || c.material.tipo.includes(s) || c.material.liga.includes(s) || c.material.produto.includes(s) || c.material.dimensoes.includes(s) || c.fornecedor.nome.includes(s)){
+              check = true;
             }
           });
 
@@ -351,9 +364,12 @@ export default {
             valor: c.valor,
             quantidade: c.quantidade,
             data: c.data,
-            fornecedor: c.fornecedor.nome,
-            material: c.material.tipo + " " + c.material.liga + " " + c.material.acabamento + " " + c.material.dimensoes
+            fornecedor: c.fornecedor.nome
           }
+
+          this.editCompra.material = c.material.produto + " " + c.material.material + " " + c.material.tipo;
+          if(c.material.subtipo != "") this.editCompra.material += " " + c.material.subtipo;
+          this.editCompra.material += " " + c.material.liga + " " + c.material.dimensoes;
         }
       });
     },

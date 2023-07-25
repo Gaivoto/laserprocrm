@@ -1,9 +1,11 @@
 <template>
     <div class="section-wrapper">
         <div v-if="this.ultimaCompra.valor">
+            <pre><span>Produto:</span>   {{ this.ultimaCompra.material.produto }}</pre>
+            <pre><span>Material:</span>   {{ this.ultimaCompra.material.material }}</pre>
             <pre><span>Tipo:</span>   {{ this.ultimaCompra.material.tipo }}</pre>
+            <pre v-if="this.ultimaCompra.material.subtipo != ''"><span>Subtipo:</span>   {{ this.ultimaCompra.material.subtipo }}</pre>
             <pre><span>Liga:</span>   {{ this.ultimaCompra.material.liga }}</pre>
-            <pre><span>Acabamento:</span>   {{ this.ultimaCompra.material.acabamento }}</pre>
             <pre><span>Dimensões:</span>   {{ this.ultimaCompra.material.dimensoes }}</pre>
             <pre><span>Fornecedor:</span>   {{ this.ultimaCompra.fornecedor.nome }}</pre>
             <pre><span>Data:</span>   {{ this.ultimaCompra.data }}</pre>

@@ -17,7 +17,7 @@ async function getAllMateriais(access_token, refresh_token) {
                 utils.createLog(value.user, 'Leitura', 'Materiais', null);
 
                 value2.forEach(m => {
-                    materiais.push({ id: m.id, tipo: m.tipo, liga: m.liga, acabamento: m.acabamento, dimensoes: m.dimensoes, estado: m.estado });
+                    materiais.push({ id: m.id, produto: m.produto, material: m.material, tipo: m.tipo, subtipo: m.subtipo, liga: m.liga, dimensoes: m.dimensoes, estado: m.estado });
                 });
 
                 info.materiais = materiais;
@@ -44,11 +44,11 @@ async function createMaterial(access_token, refresh_token, body) {
 
         utils.validateToken(access_token, refresh_token).then(value1 => {
             let info = value1;
-
+            
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
                 utils.createErrorLog(`Tentativa de criação de material falhada por falta de permissão. Apenas administradores e super-administradores podem efetuar esta operação`, value1.user, 403);
-            } else if(!body.tipo || !body.liga || !body.acabamento || !body.dimensoes) {
+            } else if(!body.tipo || !body.liga || !body.dimensoes || !body.produto || !body.material) {
                 reject({ code: 400, error: { message: "Preencha todos os campos." } });
                 utils.createErrorLog(`Tentativa de criação de material falhada por dados inválidos (campos vazios)`, value1.user, 400);
             } else {
@@ -57,7 +57,7 @@ async function createMaterial(access_token, refresh_token, body) {
                     let existe = false;
 
                     value2.forEach(m => {
-                        if(m.tipo == body.tipo && m.liga == body.liga && m.acabamento == body.acabamento && m.dimensoes == body.dimensoes) existe = true;
+                        if(m.produto == body.produto && m.material == body.material && m.tipo == body.tipo && m.subtipo == body.subtipo && m.liga == body.liga && m.dimensoes == body.dimensoes) existe = true;
                     })
 
                     if (existe) {
@@ -171,7 +171,7 @@ async function editMaterial(access_token, refresh_token, id, body) {
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
                 utils.createErrorLog(`Tentativa de modificação de material (id: '${id}') falhada por falta de permissão. Apenas administradores e super-administradores podem efetuar esta operação`, value.user, 403);
-            } else if(!body.tipo || !body.liga || !body.acabamento || !body.dimensoes) {
+            } else if(!body.tipo || !body.liga || !body.subtipo || !body.dimensoes || !body.produto || !body.material) {
                 reject({ code: 400, error: { message: "Preencha todos os campos." } });
                 utils.createErrorLog(`Tentativa de modificação de material (id: '${id}') falhada por dados inválidos (campos vazios)`, value.user, 400);
             } else {
@@ -192,7 +192,7 @@ async function editMaterial(access_token, refresh_token, id, body) {
                         let existe2 = false;
 
                         value2.forEach(m => {
-                            if(m.id != id && (m.tipo == body.tipo && m.liga == body.liga && m.acabamento == body.acabamento && m.dimensoes == body.dimensoes && m.nif == body.nif)) existe2 = true;
+                            if(m.id != id && (m.produto == body.produto && m.material == body.material && m.tipo == body.tipo && m.subtipo == body.subtipo && m.liga == body.liga && m.dimensoes == body.dimensoes)) existe2 = true;
                         });
 
                         if(existe2) {

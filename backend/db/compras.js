@@ -13,7 +13,7 @@ async function getAllCompras() {
     return new Promise((resolve, reject) => {
         const slct = `SELECT c.id as id, c.valor as valor, c.data as data, c.quantidade as quantidade,
         f.id as idFornecedor, f.nome as nomeFornecedor, f.email as emailFornecedor, f.morada as moradaFornecedor, f.contacto as contactoFornecedor, f.nif as nifFornecedor,
-        m.id as idMaterial, m.liga as ligaMaterial, m.tipo as tipoMaterial, m.acabamento as acabamentoMaterial, m.dimensoes as dimensoesMaterial
+        m.id as idMaterial, m.liga as ligaMaterial, m.tipo as tipoMaterial, m.subtipo as subtipoMaterial, m.dimensoes as dimensoesMaterial, m.material as materialMaterial, m.produto as produtoMaterial
         FROM "Compras" c LEFT JOIN "Fornecedores" f ON c.id_fornecedor = f.id LEFT JOIN "Materiais" m ON c.id_material = m.id`;
         client.query(slct, (err, res) => {
             if(!err) {
@@ -63,7 +63,6 @@ async function editCompra(body, id) {
 async function deleteCompra(id) {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        console.log("???")
         let slct = `DELETE FROM "Compras" WHERE id = $1`;
         client.query(slct, [id], (err, res) => {
             if(!err) {

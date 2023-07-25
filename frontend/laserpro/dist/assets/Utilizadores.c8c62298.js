@@ -1,4 +1,4 @@
-import{_ as y,j as f,k as l,l as n,m as s,A as i,w as h,p as u,x as m,v as c,J as b,a7 as O,a8 as z,r as T,z as $,a4 as A,af as C}from"./index.3bb9d953.js";import{D as x}from"./KTDataTable.bb4a32f7.js";import"./assets.5373c0a7.js";const V={name:"AddUserModal",components:{},data(){return{formInfo:{username:"",password:"",passwordConf:"",tipo:"Utilizador"},tipoOpen:!1,help:{user:`Utilizadores podem:
+import{_ as y,j as f,k as l,l as n,m as s,A as i,w as h,p as u,x as m,v as c,J as b,a7 as O,a8 as z,r as T,z as $,a4 as A,af as C}from"./index.ce57f93c.js";import{D as x}from"./KTDataTable.7689e812.js";import"./assets.64907595.js";const V={name:"AddUserModal",components:{},data(){return{formInfo:{username:"",password:"",passwordConf:"",tipo:"Utilizador"},tipoOpen:!1,help:{user:`Utilizadores podem:
               -Ver informa\xE7\xF5es da dashboard definidas como vis\xEDveis pelos administradores
               -Ver listagem de materiais, fornecedores e compras
               -Registar compras`,adm:`Administradores podem:
