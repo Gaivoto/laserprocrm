@@ -48,7 +48,7 @@ async function createMaterial(access_token, refresh_token, body) {
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
                 utils.createErrorLog(`Tentativa de criação de material falhada por falta de permissão. Apenas administradores e super-administradores podem efetuar esta operação`, value1.user, 403);
-            } else if(!body.tipo || !body.liga || !body.dimensoes || !body.produto || !body.material) {
+            } else if(!body.tipo || !body.dimensoes || !body.produto || !body.material) {
                 reject({ code: 400, error: { message: "Preencha todos os campos." } });
                 utils.createErrorLog(`Tentativa de criação de material falhada por dados inválidos (campos vazios)`, value1.user, 400);
             } else {
@@ -171,7 +171,7 @@ async function editMaterial(access_token, refresh_token, id, body) {
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
                 utils.createErrorLog(`Tentativa de modificação de material (id: '${id}') falhada por falta de permissão. Apenas administradores e super-administradores podem efetuar esta operação`, value.user, 403);
-            } else if(!body.tipo || !body.liga || !body.subtipo || !body.dimensoes || !body.produto || !body.material) {
+            } else if(!body.tipo || !body.dimensoes || !body.produto || !body.material) {
                 reject({ code: 400, error: { message: "Preencha todos os campos." } });
                 utils.createErrorLog(`Tentativa de modificação de material (id: '${id}') falhada por dados inválidos (campos vazios)`, value.user, 400);
             } else {

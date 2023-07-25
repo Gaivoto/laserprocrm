@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="kt_modal_alter_material" ref="alterMaterialModalRef" tabindex="-1" aria-hidden="true" >
+  <div class="modal fade" id="kt_modal_alter_material" ref="alterMaterialModalRef" tabindex="-1" aria-hidden="true" v-on:click="reset">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered mw-650px">
       <!--begin::Modal content-->
@@ -11,7 +11,7 @@
           <!--end::Modal title-->
 
           <!--begin::Close-->
-          <div id="kt_modal_alter_material_close" data-bs-dismiss="modal" class="btn btn-icon btn-sm btn-active-icon-primary">
+          <div id="kt_modal_alter_material_close" data-bs-dismiss="modal" class="btn btn-icon btn-sm btn-active-icon-primary" v-on:click="reset">
             <KTIcon icon-name="cross" icon-class="fs-1" />
           </div>
           <!--end::Close-->
@@ -32,20 +32,11 @@
                 <!--begin::Input-->
                 <div class="searchbar-container" v-on:click.stop>
                   <div class="searchbar">
-                    <p type="text" ref="produtosSearchbar" v-on:click="this.produtosSearchOpen = true" placeholder="Produto">{{ this.formInfo.produto }}</p>
+                    <p type="text" ref="produtosSearchbar" v-on:click="this.openProdutos">{{ this.formInfo.produto }}</p>
                   </div> 
                   <div ref="produtosResults" class="searchbar-results" :class="{ 'd-none': !produtosSearchOpen }">
-                    <div v-on:click="chooseProduto('CHAPA')">
-                      <p>CHAPA</p>
-                    </div>
-                    <div v-on:click="chooseProduto('PERFIL')">
-                      <p>PERFIL</p>
-                    </div>
-                    <div v-on:click="chooseProduto('CANTONEIRA')">
-                      <p>CANTONEIRA</p>
-                    </div>
-                    <div v-on:click="chooseProduto('TUBULAR')">
-                      <p>TUBULAR</p>
+                    <div v-for="prod in this.getProdutos" v-bind:key="prod" v-on:click="chooseProduto(prod)">
+                      {{ prod }}
                     </div>
                   </div>  
                 </div>
@@ -60,9 +51,16 @@
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="material">
-                  <el-input v-model="formInfo.material" type="text" placeholder="Material" v-on:input="this.formInfo.material = this.formInfo.material.toUpperCase()" />
-                </el-form-item>
+                <div class="searchbar-container" v-on:click.stop>
+                  <div class="searchbar">
+                    <p type="text" ref="materiaisSearchbar" v-on:click="this.openMateriais">{{ this.formInfo.material }}</p>
+                  </div> 
+                  <div ref="materiaisResults" class="searchbar-results" :class="{ 'd-none': !materiaisSearchOpen }">
+                    <div v-for="mat in this.getMateriais" v-bind:key="mat" v-on:click="chooseMaterial(mat)">
+                      {{ mat }}
+                    </div>
+                  </div>  
+                </div>
                 <!--end::Input-->
               </div>
               <!--end::Input group-->
@@ -74,9 +72,16 @@
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="tipo">
-                  <el-input v-model="formInfo.tipo" type="text" placeholder="Tipo" v-on:input="this.formInfo.tipo = this.formInfo.tipo.toUpperCase()" />
-                </el-form-item>
+                <div class="searchbar-container" v-on:click.stop>
+                  <div class="searchbar">
+                    <p type="text" ref="tiposSearchbar" v-on:click="this.openTipos">{{ this.formInfo.tipo }}</p>
+                  </div> 
+                  <div ref="tiposResults" class="searchbar-results" :class="{ 'd-none': !tiposSearchOpen }">
+                    <div v-for="tipo in this.getTipos" v-bind:key="tipo" v-on:click="chooseTipo(tipo)">
+                      {{ tipo }}
+                    </div>
+                  </div>  
+                </div>
                 <!--end::Input-->
               </div>
               <!--end::Input group-->
@@ -88,23 +93,37 @@
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="subtipo">
-                  <el-input v-model="formInfo.subtipo" type="text" placeholder="Subtipo" v-on:input="this.formInfo.subtipo = this.formInfo.subtipo.toUpperCase()" />
-                </el-form-item>
+                <div class="searchbar-container" v-on:click.stop>
+                  <div class="searchbar">
+                    <p type="text" ref="subtiposSearchbar" v-on:click="this.openSubtipos">{{ this.formInfo.subtipo }}</p>
+                  </div> 
+                  <div ref="subtiposResults" class="searchbar-results" :class="{ 'd-none': !subtiposSearchOpen }">
+                    <div v-for="sub in this.getSubtipos" v-bind:key="sub" v-on:click="chooseSubtipo(sub)">
+                      {{ sub }}
+                    </div>
+                  </div>  
+                </div>
                 <!--end::Input-->
               </div>
               <!--end::Input group-->
 
               <!--begin::Input group-->
-              <div class="fv-row mb-8">
+              <div class="fv-row mb-8" v-if="this.getLigas.length > 0 || this.formInfo.tipo == ''">
                 <!--begin::Label-->
                 <label class="required fs-6 fw-semobold mb-2">Liga</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <el-form-item prop="liga">
-                  <el-input v-model="formInfo.liga" type="text" placeholder="Liga" v-on:input="this.formInfo.liga = this.formInfo.liga.toUpperCase()"/>
-                </el-form-item>
+                <div class="searchbar-container" v-on:click.stop>
+                  <div class="searchbar">
+                    <p type="text" ref="ligasSearchbar" v-on:click="this.openLigas">{{ this.formInfo.liga }}</p>
+                  </div> 
+                  <div ref="ligasResults" class="searchbar-results" :class="{ 'd-none': !ligasSearchOpen }">
+                    <div v-for="liga in this.getLigas" v-bind:key="liga" v-on:click="chooseLiga(liga)">
+                      {{ liga }}
+                    </div>
+                  </div>  
+                </div>
                 <!--end::Input-->
               </div>
               <!--end::Input group-->
@@ -247,28 +266,255 @@ export default {
         dimensaoA: "",
         dimensaoB: ""
       },
-      produtosSearchOpen: false
+      produtosSearchOpen: false,
+      materiaisSearchOpen: false,
+      tiposSearchOpen: false,
+      subtiposSearchOpen: false,
+      ligasSearchOpen: false,
+      materialInfo: [
+        {
+          produto: "CHAPA",
+          materiais: [
+            {
+              material: "AÇO",
+              tipos: [
+                {
+                  tipo: "BRUTO",
+                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                },
+                {
+                  tipo: "ZINCOR",
+                  ligas: []
+                },
+                {
+                  tipo: "GALVA",
+                  ligas: []
+                },
+                {
+                  tipo: "LACADO",
+                  ligas: []
+                },
+                {
+                  tipo: "ANTIDERRAPANTE",
+                  ligas: []
+                },
+                {
+                  tipo: "OUTRO",
+                  ligas: []
+                }
+              ]
+            },
+            {
+              material: "INOX",
+              tipos: [
+                {
+                  tipo: "2B",
+                  ligas: ["304", "316", "OUTRO"]
+                },
+                {
+                  tipo: "LÂMINA A QUENTE",
+                  ligas: ["304", "316", "OUTRO"]
+                },
+                {
+                  tipo: "ESCOVADO",
+                  ligas: ["304", "316", "OUTRO"]
+                },
+                {
+                  tipo: "POLIDO",
+                  ligas: ["304", "316", "OUTRO"]
+                }
+              ]
+            },
+            {
+              material: "ALUMÍNIO",
+              tipos: [
+                {
+                  tipo: "BRUTO",
+                  ligas: ["1050", "1754"]
+                },
+                {
+                  tipo: "LACADO",
+                  ligas: []
+                },
+                {
+                  tipo: "ANTIDERRAPANTE",
+                  ligas: []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          produto: "PERFIL",
+          materiais: [
+            {
+              material: "AÇO",
+              tipos: [
+                {
+                  tipo: "IPE",
+                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                },
+                {
+                  tipo: "HEA",
+                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                },
+                {
+                  tipo: "HEB",
+                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                },
+                {
+                  tipo: "HEM",
+                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                },
+                {
+                  tipo: "UPN",
+                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          produto: "CATONEIRA",
+          materiais: [
+            {
+              material: "AÇO",
+              tipos: [
+                {
+                  tipo: "ABAS IGUAIS",
+                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                },
+                {
+                  tipo: "ABAS DESIGUAIS",
+                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          produto: "TUBULAR",
+          materiais: [
+            {
+              material: "AÇO",
+              tipos: [
+                {
+                  tipo: "BRUTO",
+                  ligas: ["S235", "S275", "S355", "OUTRO"],
+                  subtipos: ["QUADRADO", "REDONDO", "RETANGULO", "OUTRO"]
+                },
+                {
+                  tipo: "GALVA",
+                  ligas: [],
+                  subtipos: ["QUADRADO", "REDONDO", "RETANGULO", "OUTRO"]
+                }
+              ]
+            },
+            {
+              material: "INOX",
+              tipos: [
+                {
+                  tipo: "BRUTO",
+                  ligas: ["304", "316", "OUTRO"],
+                  subtipos: ["QUADRADO", "REDONDO", "RETANGULO", "OUTRO"]
+                },
+                {
+                  tipo: "ESCOVADO",
+                  ligas: ["304", "316", "OUTRO"],
+                  subtipos: ["QUADRADO", "REDONDO", "RETANGULO", "OUTRO"]
+                },
+                {
+                  tipo: "POLIDO",
+                  ligas: ["304", "316", "OUTRO"],
+                  subtipos: ["QUADRADO", "REDONDO", "RETANGULO", "OUTRO"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   },
   mounted() {
     this.formInfo = this.info;
   },
+  computed: {
+    getProdutos() {
+      let produtos = [];
+
+      this.materialInfo.forEach(prod => produtos.push(prod.produto));
+
+      return produtos;
+    },
+    getMateriais() {
+      let materiais = [];
+
+      this.materialInfo.forEach(prod => {
+        if(prod.produto == this.formInfo.produto) {
+          prod.materiais.forEach(mat => materiais.push(mat.material));
+        }
+      });
+
+      return materiais;
+    },
+    getTipos() {
+      let tipos = [];
+
+      this.materialInfo.forEach(prod => {
+        if(prod.produto == this.formInfo.produto) {
+          prod.materiais.forEach(mat => {
+            if(mat.material == this.formInfo.material) {
+              mat.tipos.forEach(tipo => tipos.push(tipo.tipo));
+            }
+          });
+        }
+      });
+
+      return tipos;
+    },
+    getLigas() {
+      let ligas = [];
+
+      this.materialInfo.forEach(prod => {
+        if(prod.produto == this.formInfo.produto) {
+          prod.materiais.forEach(mat => {
+            if(mat.material == this.formInfo.material) {
+              mat.tipos.forEach(tipo => {
+                if(tipo.tipo == this.formInfo.tipo) {
+                  tipo.ligas.forEach(liga => ligas.push(liga));
+                }
+              });
+            }
+          });
+        }
+      });
+
+      return ligas;
+    },
+    getSubtipos() {
+      let subtipos = [];
+
+      this.materialInfo.forEach(prod => {
+        if(prod.produto == this.formInfo.produto && this.formInfo.produto == "TUBULAR") {
+          prod.materiais.forEach(mat => {
+            if(mat.material == this.formInfo.material) {
+              mat.tipos.forEach(tipo => {
+                if(tipo.tipo == this.formInfo.tipo) {
+                  tipo.subtipos.forEach(sub => subtipos.push(sub));
+                }
+              });
+            }
+          });
+        }
+      });
+
+      return subtipos;
+    }
+  },
   methods: {
     verifyMaterialData() {
-      if(this.formInfo.produto.length == 0 || this.formInfo.material.length == 0 || this.formInfo.liga.length == 0 || this.formInfo.tipo.length == 0) {
+      if(this.formInfo.produto.length == 0 || this.formInfo.material.length == 0 || this.formInfo.tipo.length == 0 || (this.formInfo.liga.length == 0 && this.getLigas.length > 0)) {
         this.$emit("open-modal", "Preencha todos os campos obrigatórios.");
-        return false;
-      } else if(this.formInfo.material.length > 50) {
-        this.$emit("open-modal", "O tipo não pode exceder 50 caracteres.");
-        return false;
-      } else if(this.formInfo.tipo.length > 50) {
-        this.$emit("open-modal", "O tipo não pode exceder 50 caracteres.");
-        return false;
-      } else if(this.formInfo.subtipo.length > 50) {
-        this.$emit("open-modal", "O tipo não pode exceder 50 caracteres.");
-        return false;
-      } else if(this.formInfo.liga.length > 200) {
-        this.$emit("open-modal", "A liga não pode exceder 200 caracteres.");
         return false;
       } else {
         switch(this.formInfo.produto) {
@@ -339,11 +585,20 @@ export default {
           this.$emit("create-material", this.formInfo);
 
           this.produtosSearchOpen = false;
+          this.materiaisSearchOpen = false;
+          this.ligasSearchOpen = false;
+          this.tiposSearchOpen = false;
+          this.subtiposSearchOpen = false;
         }
     },
     chooseProduto(prod) {
       this.formInfo.produto = prod;
       this.produtosSearchOpen = false;
+      
+      this.formInfo.material = "";
+      this.formInfo.tipo = "";
+      this.formInfo.subtipo = "";
+      this.formInfo.liga = "";
 
       this.formInfo.espessura = "";
       this.formInfo.largura = "";
@@ -352,8 +607,74 @@ export default {
       this.formInfo.dimensaoA = "";
       this.formInfo.dimensaoB = "";
     },
-    reset() {
-      this.formInfo = {...this.info};
+    chooseMaterial(mat) {
+      this.formInfo.material = mat;
+      this.materiaisSearchOpen = false;
+
+      this.formInfo.tipo = "";
+      this.formInfo.subtipo = "";
+      this.formInfo.liga = "";
+    },
+    chooseTipo(tipo) {
+      this.formInfo.tipo = tipo;
+      this.tiposSearchOpen = false;
+
+      this.formInfo.subtipo = "";
+      this.formInfo.liga = "";
+    },
+    chooseSubtipo(sub) {
+      this.formInfo.subtipo = sub;
+      this.subtiposSearchOpen = false;
+    },
+    chooseLiga(liga) {
+      this.formInfo.liga = liga;
+      this.ligasSearchOpen = false;
+    },
+    reset(event) {
+      if(event.target.id == "kt_modal_alter_material" || event.target.id == "kt_modal_alter_material_close" || event.target.id == "kt_modal_alter_material_close_btn" || event.target.parentElement.id == "kt_modal_alter_material_close_btn") {
+        this.formInfo = {...this.info};
+
+        this.produtosSearchOpen = false;
+        this.materiaisSearchOpen = false;
+        this.ligasSearchOpen = false;
+        this.tiposSearchOpen = false;
+        this.subtiposSearchOpen = false;
+      }
+    },
+    openProdutos() {
+      this.produtosSearchOpen = true;
+      this.materiaisSearchOpen = false;
+      this.tiposSearchOpen = false;
+      this.subtiposSearchOpen = false;
+      this.ligasSearchOpen = false;
+    },
+    openMateriais() {
+      this.produtosSearchOpen = false;
+      this.materiaisSearchOpen = true;
+      this.tiposSearchOpen = false;
+      this.subtiposSearchOpen = false;
+      this.ligasSearchOpen = false;
+    },
+    openTipos() {
+      this.produtosSearchOpen = false;
+      this.materiaisSearchOpen = false;
+      this.tiposSearchOpen = true;
+      this.subtiposSearchOpen = false;
+      this.ligasSearchOpen = false;
+    },
+    openSubtipos() {
+      this.produtosSearchOpen = false;
+      this.materiaisSearchOpen = false;
+      this.tiposSearchOpen = false;
+      this.subtiposSearchOpen = true;
+      this.ligasSearchOpen = false;
+    },
+    openLigas() {
+      this.produtosSearchOpen = false;
+      this.materiaisSearchOpen = false;
+      this.tiposSearchOpen = false;
+      this.subtiposSearchOpen = false;
+      this.ligasSearchOpen = true;
     }
   },
   watch: {
