@@ -12,4 +12,6 @@ router.put("/:id", cntrMate.editMaterial);
 
 router.put("/:id/toggle", cntrMate.toggleMaterial);
 
+router.delete("/:id", cntrMate.deleteMaterial);
+
 module.exports = router

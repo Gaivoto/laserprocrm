@@ -36,9 +36,19 @@ async function toggleMaterial(req, res) {
     });
 }
 
+async function deleteMaterial(req, res) {
+    serMate.deleteMaterial(req.headers['authorization'], req.headers.refreshtoken, req.params.id).then(value => {
+        res.status(value.code).send(value.info)
+    })
+    .catch(error => {
+        res.status(error.code).send(error.error);
+    });
+}
+
 module.exports = {
     getAllMateriais: getAllMateriais,
     createMaterial: createMaterial,
     editMaterial: editMaterial,
-    toggleMaterial: toggleMaterial
+    toggleMaterial: toggleMaterial,
+    deleteMaterial: deleteMaterial
 }

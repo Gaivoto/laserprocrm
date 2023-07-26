@@ -13,11 +13,28 @@ async function getAllMateriais(access_token, refresh_token) {
             let materiais = [];
 
             dbMate.getAllMateriais().then(value2 => {
-
                 utils.createLog(value.user, 'Leitura', 'Materiais', null);
 
                 value2.forEach(m => {
-                    materiais.push({ id: m.id, produto: m.produto, material: m.material, tipo: m.tipo, subtipo: m.subtipo, liga: m.liga, dimensoes: m.dimensoes, estado: m.estado });
+                    let existe = false;
+
+                    materiais.forEach(mat => {
+                        if(mat.id == m.id) existe = true;
+                    });
+
+                    if(existe) {
+                        if(m.count) {
+                            materiais.forEach(mat => {
+                                if(mat.id == m.id) mat.delete = false;
+                            });
+                        }
+                    } else {
+                        if(m.count) {
+                            materiais.push({ id: m.id, produto: m.produto, material: m.material, tipo: m.tipo, subtipo: m.subtipo, liga: m.liga, dimensoes: m.dimensoes, estado: m.estado, delete: false });
+                        } else {
+                            materiais.push({ id: m.id, produto: m.produto, material: m.material, tipo: m.tipo, subtipo: m.subtipo, liga: m.liga, dimensoes: m.dimensoes, estado: m.estado, delete: true });
+                        }
+                    }
                 });
 
                 info.materiais = materiais;
@@ -228,9 +245,63 @@ async function editMaterial(access_token, refresh_token, id, body) {
     });
 }
 
+async function deleteMaterial(access_token, refresh_token, id) {
+    return new Promise((resolve, reject) => {
+
+        if(access_token) access_token = access_token.split(" ")[1];
+
+        utils.validateToken(access_token, refresh_token).then(value => {
+            let info = value;
+
+            if(info.user.tipo != "superadm") {
+                reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
+                utils.createErrorLog(`Tentativa de modificação de material (id: '${id}') falhada por falta de permissão. Apenas administradores e super-administradores podem efetuar esta operação`, value.user, 403);
+            } else {
+
+                dbMate.getAllMateriais().then(value2 => {
+
+                    let existe = false;
+                            
+                    value2.forEach(m => {
+                        if(m.id == id) existe = true;
+                    })
+
+                    if (!existe) {
+                        reject({ code: 404, error: { message: "Este material não foi encontrado." } });
+                        utils.createErrorLog(`Tentativa de modificação de material (id: '${id}') falhada por dados inválidos (material não encontrado)`, value.user, 404);
+                    } else {
+                        dbMate.deleteMaterial(id).then(value3 => {
+
+                            utils.createLog(value.user, 'Eliminação', 'Materiais', id);
+
+                            info.message = "Material eliminado com sucesso.";
+                            resolve({ code: 200, info: info });
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            utils.createErrorLog(error, value.user, 400);
+                            reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                    utils.createErrorLog(error, value.user, 400);
+                    reject({ code: 400, error: { message: "Ocorreu um problema. Tente novamente mais tarde." } });
+                });
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            reject({ code: 401, error: { message: "Sessão expirou." } })
+        });
+    });
+}
+
 module.exports = {
     getAllMateriais: getAllMateriais,
     createMaterial: createMaterial,
     editMaterial: editMaterial,
-    toggleMaterial: toggleMaterial
+    toggleMaterial: toggleMaterial,
+    deleteMaterial: deleteMaterial
 }

@@ -87,6 +87,20 @@
               <!--end::Input group-->
 
               <!--begin::Input group-->
+              <div class="fv-row mb-8" v-if="this.formInfo.tipo == 'OUTRO'">
+                <!--begin::Label-->
+                <label class="required fs-6 fw-semobold mb-2">Tipo</label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="tipo">
+                  <el-input type="text" placeholder="Tipo" v-model="this.formInfo.tipoOutro" v-on:input="this.formInfo.tipoOutro = this.formInfo.tipoOutro.toUpperCase()"/>
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <!--end::Input group-->
+
+              <!--begin::Input group-->
               <div class="fv-row mb-8" v-if="this.formInfo.produto == 'TUBULAR' || this.formInfo.produto == 'PERFIL'">
                 <!--begin::Label-->
                 <label class="required fs-6 fw-semobold mb-2">Subtipo</label>
@@ -108,6 +122,20 @@
               <!--end::Input group-->
 
               <!--begin::Input group-->
+              <div class="fv-row mb-8" v-if="this.formInfo.subtipo == 'OUTRO'">
+                <!--begin::Label-->
+                <label class="required fs-6 fw-semobold mb-2">Subtipo</label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="subtipo">
+                  <el-input type="text" placeholder="Subtipo" v-model="this.formInfo.subtipoOutro" v-on:input="this.formInfo.subtipoOutro = this.formInfo.subtipoOutro.toUpperCase()"/>
+                </el-form-item>
+                <!--end::Input-->
+              </div>
+              <!--end::Input group-->
+
+              <!--begin::Input group-->
               <div class="fv-row mb-8" v-if="this.getLigas.length > 0 || this.formInfo.tipo == ''">
                 <!--begin::Label-->
                 <label class="required fs-6 fw-semobold mb-2">Liga</label>
@@ -124,6 +152,20 @@
                     </div>
                   </div>  
                 </div>
+                <!--end::Input-->
+              </div>
+              <!--end::Input group-->
+
+              <!--begin::Input group-->
+              <div class="fv-row mb-8" v-if="this.formInfo.liga == 'OUTRO'">
+                <!--begin::Label-->
+                <label class="required fs-6 fw-semobold mb-2">Liga</label>
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <el-form-item prop="liga">
+                  <el-input type="text" placeholder="Liga" v-model="this.formInfo.ligaOutro" v-on:input="this.formInfo.ligaOutro = this.formInfo.ligaOutro.toUpperCase()"/>
+                </el-form-item>
                 <!--end::Input-->
               </div>
               <!--end::Input group-->
@@ -243,8 +285,11 @@ export default {
         produto: "",
         material: "",
         tipo: "",
+        tipoOutro: "",
         subtipo: "",
+        subtipoOutro: "",
         liga: "",
+        ligaOutro: "",
         comprimento: "",
         largura: "",
         espessura: "",
@@ -266,27 +311,31 @@ export default {
               tipos: [
                 {
                   tipo: "BRUTO",
-                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                  ligas: ["S235", "S275", "S355", "OUTRO", "N/A"]
                 },
                 {
                   tipo: "ZINCOR",
-                  ligas: []
+                  ligas: ["N/A"]
+                },
+                {
+                  tipo: "CORTEN",
+                  ligas: ["N/A"]
                 },
                 {
                   tipo: "GALVA",
-                  ligas: []
+                  ligas: ["N/A"]
                 },
                 {
                   tipo: "LACADO",
-                  ligas: []
+                  ligas: ["N/A"]
                 },
                 {
                   tipo: "ANTIDERRAPANTE",
-                  ligas: []
+                  ligas: ["N/A"]
                 },
                 {
                   tipo: "OUTRO",
-                  ligas: []
+                  ligas: ["N/A"]
                 }
               ]
             },
@@ -295,19 +344,19 @@ export default {
               tipos: [
                 {
                   tipo: "2B",
-                  ligas: ["304", "316", "OUTRO"]
+                  ligas: ["304", "316", "OUTRO", "N/A"]
                 },
                 {
                   tipo: "LÂMINA A QUENTE",
-                  ligas: ["304", "316", "OUTRO"]
+                  ligas: ["304", "316", "OUTRO", "N/A"]
                 },
                 {
                   tipo: "ESCOVADO",
-                  ligas: ["304", "316", "OUTRO"]
+                  ligas: ["304", "316", "OUTRO", "N/A"]
                 },
                 {
                   tipo: "POLIDO",
-                  ligas: ["304", "316", "OUTRO"]
+                  ligas: ["304", "316", "OUTRO", "N/A"]
                 }
               ]
             },
@@ -316,15 +365,15 @@ export default {
               tipos: [
                 {
                   tipo: "BRUTO",
-                  ligas: ["1050", "1754"]
+                  ligas: ["1050", "1754", "N/A"]
                 },
                 {
                   tipo: "LACADO",
-                  ligas: []
+                  ligas: ["N/A"]
                 },
                 {
                   tipo: "ANTIDERRAPANTE",
-                  ligas: []
+                  ligas: ["N/A"]
                 }
               ]
             }
@@ -338,27 +387,27 @@ export default {
               tipos: [
                 {
                   tipo: "IPE",
-                  ligas: ["S235", "S275", "S355", "OUTRO"],
+                  ligas: ["S235", "S275", "S355", "OUTRO", "N/A"],
                   subtipos: ["80", "100", "120", "140", "160", "180", "200", "220", "240", "270", "300", "330", "360", "400", "450", "500", "550", "600", "OUTRO"]
                 },
                 {
                   tipo: "HEA",
-                  ligas: ["S235", "S275", "S355", "OUTRO"],
+                  ligas: ["S235", "S275", "S355", "OUTRO", "N/A"],
                   subtipos: ["80", "100", "120", "140", "160", "180", "200", "220", "240", "270", "300", "330", "360", "400", "450", "500", "550", "600", "OUTRO"]
                 },
                 {
                   tipo: "HEB",
-                  ligas: ["S235", "S275", "S355", "OUTRO"],
+                  ligas: ["S235", "S275", "S355", "OUTRO", "N/A"],
                   subtipos: ["80", "100", "120", "140", "160", "180", "200", "220", "240", "270", "300", "330", "360", "400", "450", "500", "550", "600", "OUTRO"]
                 },
                 {
                   tipo: "HEM",
-                  ligas: ["S235", "S275", "S355", "OUTRO"],
+                  ligas: ["S235", "S275", "S355", "OUTRO", "N/A"],
                   subtipos: ["80", "100", "120", "140", "160", "180", "200", "220", "240", "270", "300", "330", "360", "400", "450", "500", "550", "600", "OUTRO"]
                 },
                 {
                   tipo: "UPN",
-                  ligas: ["S235", "S275", "S355", "OUTRO"],
+                  ligas: ["S235", "S275", "S355", "OUTRO", "N/A"],
                   subtipos: ["80", "100", "120", "140", "160", "180", "200", "220", "240", "270", "300", "330", "360", "400", "450", "500", "550", "600", "OUTRO"]
                 }
               ]
@@ -373,11 +422,11 @@ export default {
               tipos: [
                 {
                   tipo: "ABAS IGUAIS",
-                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                  ligas: ["S235", "S275", "S355", "OUTRO", "N/A"]
                 },
                 {
                   tipo: "ABAS DESIGUAIS",
-                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                  ligas: ["S235", "S275", "S355", "OUTRO", "N/A"]
                 }
               ]
             }
@@ -391,12 +440,12 @@ export default {
               tipos: [
                 {
                   tipo: "BRUTO",
-                  ligas: ["S235", "S275", "S355", "OUTRO"],
+                  ligas: ["S235", "S275", "S355", "OUTRO", "N/A"],
                   subtipos: ["QUADRADO", "REDONDO", "RETANGULO", "OUTRO"]
                 },
                 {
                   tipo: "GALVA",
-                  ligas: [],
+                  ligas: ["N/A"],
                   subtipos: ["QUADRADO", "REDONDO", "RETANGULO", "OUTRO"]
                 }
               ]
@@ -406,17 +455,17 @@ export default {
               tipos: [
                 {
                   tipo: "BRUTO",
-                  ligas: ["304", "316", "OUTRO"],
+                  ligas: ["304", "316", "OUTRO", "N/A"],
                   subtipos: ["QUADRADO", "REDONDO", "RETANGULO", "OUTRO"]
                 },
                 {
                   tipo: "ESCOVADO",
-                  ligas: ["304", "316", "OUTRO"],
+                  ligas: ["304", "316", "OUTRO", "N/A"],
                   subtipos: ["QUADRADO", "REDONDO", "RETANGULO", "OUTRO"]
                 },
                 {
                   tipo: "POLIDO",
-                  ligas: ["304", "316", "OUTRO"],
+                  ligas: ["304", "316", "OUTRO", "N/A"],
                   subtipos: ["QUADRADO", "REDONDO", "RETANGULO", "OUTRO"]
                 }
               ]
@@ -504,7 +553,7 @@ export default {
   },
   methods: {
     verifyMaterialData() {
-      if(this.formInfo.produto.length == 0 || this.formInfo.material.length == 0 || this.formInfo.tipo.length == 0 || (this.formInfo.liga.length == 0 && this.getLigas.length > 0)) {
+      if(this.formInfo.produto.length == 0 || this.formInfo.material.length == 0 || this.formInfo.tipo.length == 0 || this.formInfo.liga.length == 0 || (this.formInfo.liga == "OUTRO" && this.formInfo.ligaOutro == "") || (this.formInfo.subtipo == "OUTRO" && this.formInfo.subtipoOutro == "") || (this.formInfo.tipo == "OUTRO" && this.formInfo.tipoOutro == "")) {
         this.$emit("open-modal", "Preencha todos os campos obrigatórios.");
         return false;
       } else {
@@ -574,6 +623,9 @@ export default {
         }
         
         if(this.verifyMaterialData()) {
+          if(this.formInfo.liga == "OUTRO") this.formInfo.liga = this.formInfo.ligaOutro;
+          if(this.formInfo.subtipo == "OUTRO") this.formInfo.subtipo = this.formInfo.subtipoOutro;
+          if(this.formInfo.tipo == "OUTRO") this.formInfo.tipo = this.formInfo.tipoOutro;
           this.$emit("alter-material", this.formInfo);
 
           this.produtosSearchOpen = false;
@@ -589,8 +641,11 @@ export default {
       
       this.formInfo.material = "";
       this.formInfo.tipo = "";
+      this.formInfo.tipoOutro = "";
       this.formInfo.subtipo = "";
+      this.formInfo.subtipoOutro = "";
       this.formInfo.liga = "";
+      this.formInfo.ligaOutro = "";
 
       this.formInfo.espessura = "";
       this.formInfo.largura = "";
@@ -604,25 +659,36 @@ export default {
       this.materiaisSearchOpen = false;
 
       this.formInfo.tipo = "";
+      this.formInfo.tipoOutro = "";
       this.formInfo.subtipo = "";
+      this.formInfo.subtipoOutro = "";
       this.formInfo.liga = "";
+      this.formInfo.ligaOutro = "";
     },
     chooseTipo(tipo) {
       this.formInfo.tipo = tipo;
       this.tiposSearchOpen = false;
 
       this.formInfo.subtipo = "";
+      this.formInfo.subtipoOutro = "";
       this.formInfo.liga = "";
+      this.formInfo.ligaOutro = "";
 
       if(tipo != "ABAS DESIGUAIS" || tipo != "RETANGULO" || tipo != "OUTRO") this.formInfo.dimensaoB = "";
+
+      if(tipo != "OUTRO") this.formInfo.tipoOutro = "";
     },
     chooseSubtipo(sub) {
       this.formInfo.subtipo = sub;
       this.subtiposSearchOpen = false;
+
+      if(sub != "OUTRO") this.formInfo.subtipoOutro = "";
     },
     chooseLiga(liga) {
       this.formInfo.liga = liga;
       this.ligasSearchOpen = false;
+
+      if(liga != "OUTRO") this.formInfo.ligaOutro = "";
     },
     reset(event) {
       if(event.target.id == "kt_modal_alter_material" || event.target.id == "kt_modal_alter_material_close" || event.target.id == "kt_modal_alter_material_close_btn" || event.target.parentElement.id == "kt_modal_alter_material_close_btn" || event.target.id == "alter_material_reset_btn") {

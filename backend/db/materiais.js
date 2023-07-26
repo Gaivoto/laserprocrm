@@ -11,7 +11,7 @@ const pool = new pg.Pool({
 async function getAllMateriais() {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {
-        const slct = `SELECT id, produto, material, tipo, subtipo, liga, dimensoes, estado FROM "Materiais"`;
+        const slct = `SELECT m.id as id, m.produto as produto, m.material as material, m.tipo as tipo, m.subtipo as subtipo, m.liga as liga, m.dimensoes as dimensoes, m.estado as estado, c.id as count FROM "Materiais" m LEFT JOIN "Compras" c ON m.id = c.id_material`;
         client.query(slct, (err, res) => {
             if(!err) {
                 client.release();
@@ -73,9 +73,26 @@ async function editMaterial(body, id) {
     });
 }
 
+async function deleteMaterial(id) {
+    const client = await pool.connect();
+    return new Promise((resolve, reject) => {
+        slct = `DELETE FROM "Materiais" WHERE id = $1`;
+        client.query(slct, [id], (err, res) => {
+            if(!err) {
+                client.release();
+                resolve(res.rows);
+            } else {
+                client.release();
+                reject(err.message);
+            }
+        });
+    });
+}
+
 module.exports = {
     getAllMateriais: getAllMateriais,
     createMaterial: createMaterial,
     editMaterial: editMaterial,
-    toggleMaterial: toggleMaterial
+    toggleMaterial: toggleMaterial,
+    deleteMaterial: deleteMaterial
 }

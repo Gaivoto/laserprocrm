@@ -66,6 +66,7 @@
           <span title="Alterar Material" v-if="this.$store.getters.getUser.tipo != 'user'" v-on:click="getMaterialToEdit(material.id)" data-bs-toggle="modal" data-bs-target="#kt_modal_alter_material" class="material-icons">edit</span>
           <span title="Ativar Material" v-if="material.estado == 'Inativo' && this.$store.getters.getUser.tipo != 'user'" v-on:click="toggleMaterial(material.id, 'Ativo')" class="material-icons">check_circle</span>
           <span title="Desativar Material" v-if="material.estado == 'Ativo' && this.$store.getters.getUser.tipo != 'user'" v-on:click="toggleMaterial(material.id, 'Inativo')" class="material-icons">cancel</span>
+          <span title="Eliminar Material" v-if="this.$store.getters.getUser.tipo == 'superadm' && material.delete" v-on:click="deleteMaterial(material.id)" class="material-icons">delete</span>
         </template>
       </Datatable>
     </div>
@@ -382,6 +383,31 @@ export default {
         if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
         this.getAllMateriais();
         this.$emit("open-modal", "Material alterado com sucesso.");
+      })
+      .catch(error => {
+        if (error.code) {
+          console.log(error.response.data);
+          this.$emit("open-modal", error.response.data.message);
+          if(error.response.status == 401) {
+            this.$store.commit('resetUser');
+            this.$router.push({ name: "login" });
+          }
+        } else console.log(error);
+      });
+    },
+    deleteMaterial(id) {      
+      axios({
+        method: 'delete',
+        url: `${import.meta.env.VITE_HOST}/materiais/${id}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.getters.getAccessToken}`,
+          refreshtoken: this.$store.getters.getRefreshToken,
+        }
+      })
+      .then(value => {
+        if(value.data.access_token) this.$store.commit('setAccessToken', value.data.access_token);
+        this.getAllMateriais();
+        this.$emit("open-modal", "Material eliminado com sucesso.");
       })
       .catch(error => {
         if (error.code) {
