@@ -87,7 +87,7 @@
               <!--end::Input group-->
 
               <!--begin::Input group-->
-              <div class="fv-row mb-8" v-if="this.formInfo.produto == 'TUBULAR'">
+              <div class="fv-row mb-8" v-if="this.formInfo.produto == 'TUBULAR' || this.formInfo.produto == 'PERFIL'">
                 <!--begin::Label-->
                 <label class="required fs-6 fw-semobold mb-2">Subtipo</label>
                 <!--end::Label-->
@@ -171,9 +171,9 @@
               <!--end::Input group-->
 
               <!--begin::Input group-->
-              <div class="fv-row mb-8" v-if="this.formInfo.produto == 'TUBULAR' || this.formInfo.produto == 'CANTONEIRA'">
+              <div class="fv-row mb-8" v-if="(this.formInfo.produto == 'TUBULAR' && this.formInfo.subtipo == 'RETANGULO') || (this.formInfo.produto == 'TUBULAR' && this.formInfo.subtipo == 'OUTRO') || (this.formInfo.produto == 'CANTONEIRA' && this.formInfo.tipo == 'ABAS DESIGUAIS')">
                 <!--begin::Label-->
-                <label class="fs-6 fw-semobold mb-2">Dimensão B (mm)</label>
+                <label class="required fs-6 fw-semobold mb-2">Dimensão B (mm)</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
@@ -193,20 +193,6 @@
                 <!--begin::Input-->
                 <el-form-item prop="espessura">
                   <el-input v-model="formInfo.espessura" type="number" placeholder="Espessura"/>
-                </el-form-item>
-                <!--end::Input-->
-              </div>
-              <!--end::Input group-->
-
-              <!--begin::Input group-->
-              <div class="fv-row mb-8" v-if="this.formInfo.produto == 'PERFIL'">
-                <!--begin::Label-->
-                <label class="required fs-6 fw-semobold mb-2">Altura (mm)</label>
-                <!--end::Label-->
-
-                <!--begin::Input-->
-                <el-form-item prop="altura">
-                  <el-input v-model="formInfo.altura" type="number" placeholder="Altura"/>
                 </el-form-item>
                 <!--end::Input-->
               </div>
@@ -345,30 +331,35 @@ export default {
               tipos: [
                 {
                   tipo: "IPE",
-                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                  ligas: ["S235", "S275", "S355", "OUTRO"],
+                  subtipos: ["80", "100", "120", "140", "160", "180", "200", "220", "240", "270", "300", "330", "360", "400", "450", "500", "550", "600", "OUTRO"]
                 },
                 {
                   tipo: "HEA",
-                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                  ligas: ["S235", "S275", "S355", "OUTRO"],
+                  subtipos: ["80", "100", "120", "140", "160", "180", "200", "220", "240", "270", "300", "330", "360", "400", "450", "500", "550", "600", "OUTRO"]
                 },
                 {
                   tipo: "HEB",
-                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                  ligas: ["S235", "S275", "S355", "OUTRO"],
+                  subtipos: ["80", "100", "120", "140", "160", "180", "200", "220", "240", "270", "300", "330", "360", "400", "450", "500", "550", "600", "OUTRO"]
                 },
                 {
                   tipo: "HEM",
-                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                  ligas: ["S235", "S275", "S355", "OUTRO"],
+                  subtipos: ["80", "100", "120", "140", "160", "180", "200", "220", "240", "270", "300", "330", "360", "400", "450", "500", "550", "600", "OUTRO"]
                 },
                 {
                   tipo: "UPN",
-                  ligas: ["S235", "S275", "S355", "OUTRO"]
+                  ligas: ["S235", "S275", "S355", "OUTRO"],
+                  subtipos: ["80", "100", "120", "140", "160", "180", "200", "220", "240", "270", "300", "330", "360", "400", "450", "500", "550", "600", "OUTRO"]
                 }
               ]
             }
           ]
         },
         {
-          produto: "CATONEIRA",
+          produto: "CANTONEIRA",
           materiais: [
             {
               material: "AÇO",
@@ -485,7 +476,7 @@ export default {
       let subtipos = [];
 
       this.materialInfo.forEach(prod => {
-        if(prod.produto == this.formInfo.produto && this.formInfo.produto == "TUBULAR") {
+        if(prod.produto == this.formInfo.produto && (this.formInfo.produto == "TUBULAR" || this.formInfo.produto == "PERFIL")) {
           prod.materiais.forEach(mat => {
             if(mat.material == this.formInfo.material) {
               mat.tipos.forEach(tipo => {
@@ -567,6 +558,7 @@ export default {
             this.formInfo.dimensoes = this.formInfo.comprimento + "x" + this.formInfo.largura + "x" + this.formInfo.espessura;
             break;
           case "PERFIL":
+            this.formInfo.altura = this.formInfo.subtipo;
             this.formInfo.dimensoes = this.formInfo.comprimento + "x" + this.formInfo.altura;
             break;
         }
@@ -625,6 +617,8 @@ export default {
 
       this.formInfo.subtipo = "";
       this.formInfo.liga = "";
+
+      if(tipo != "ABAS DESIGUAIS" || tipo != "RETANGULO" || tipo != "OUTRO") this.formInfo.dimensaoB = "";
     },
     chooseSubtipo(sub) {
       this.formInfo.subtipo = sub;
@@ -730,7 +724,7 @@ export default {
     left: 0px;
     top: 36px;
     width: 100%;
-    max-height: 300px;
+    max-height: 200px;
 
     overflow-y: scroll;
 
