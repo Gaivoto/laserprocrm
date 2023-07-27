@@ -626,6 +626,12 @@ export default {
           if(this.formInfo.liga == "OUTRO") this.formInfo.liga = this.formInfo.ligaOutro;
           if(this.formInfo.subtipo == "OUTRO") this.formInfo.subtipo = this.formInfo.subtipoOutro;
           if(this.formInfo.tipo == "OUTRO") this.formInfo.tipo = this.formInfo.tipoOutro;
+
+          if(this.formInfo.produto == "PERFIL") {
+            this.formInfo.altura = this.formInfo.subtipo;
+            this.formInfo.dimensoes = this.formInfo.comprimento + "x" + this.formInfo.altura;
+          } 
+
           this.$emit("alter-material", this.formInfo);
 
           this.produtosSearchOpen = false;
