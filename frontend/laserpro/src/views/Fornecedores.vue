@@ -203,11 +203,11 @@ export default {
     },
     searchFilter() {
       this.fornecedoresFiltered = [];
-      let search = this.$refs.searchBar.value;
+      let search = this.$refs.searchBar.value.toUpperCase();
 
       if(search != "") {
         this.fornecedores.forEach(f => {
-          if(f.nome.includes(search) || f.nif.includes(search) || f.morada.includes(search) || f.contacto.includes(search) || f.email.includes(search)){
+          if(f.nome.toUpperCase().includes(search) || f.nif.includes(search) || f.morada.toUpperCase().includes(search) || f.contacto.includes(search) || f.email.toUpperCase().includes(search)){
             this.fornecedoresFiltered.push(f);
           }
         });

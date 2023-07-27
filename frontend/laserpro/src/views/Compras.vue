@@ -267,7 +267,7 @@ export default {
         this.compras.forEach(c => {
           let check = false;
           search.forEach(s => {
-            if(c.material.material.includes(s) || c.material.tipo.includes(s) || c.material.liga.includes(s) || c.material.produto.includes(s) || c.material.dimensoes.includes(s) || c.fornecedor.nome.includes(s)){
+            if(c.material.material.toUpperCase().includes(s.toUpperCase()) || c.material.tipo.toUpperCase().includes(s.toUpperCase()) || c.material.liga.toUpperCase().includes(s.toUpperCase()) || c.material.produto.toUpperCase().includes(s.toUpperCase()) || c.material.dimensoes.toUpperCase().includes(s.toUpperCase()) || c.fornecedor.nome.toUpperCase().includes(s.toUpperCase())){
               check = true;
             }
           });

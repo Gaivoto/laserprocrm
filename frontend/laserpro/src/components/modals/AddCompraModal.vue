@@ -292,7 +292,7 @@ export default {
       this.fornecedoresFiltered = [];
       
       this.fornecedores.forEach(f => {
-        if(f.nome.includes(search)) this.fornecedoresFiltered.push(f);
+        if(f.nome.toUpperCase().includes(search.toUpperCase())) this.fornecedoresFiltered.push(f);
       });
     },
     chooseFornecedor(forn) {
@@ -311,7 +311,7 @@ export default {
       this.materiais.forEach(m => {
         let check = true;
         search.forEach(s => {
-          if(!(m.tipo.includes(s) || m.subtipo.includes(s) || m.liga.includes(s) || m.dimensoes.includes(s) || m.produto.includes(s) || m.material.includes(s))) check = false;
+          if(!(m.tipo.toUpperCase().includes(s.toUpperCase()) || m.subtipo.toUpperCase().includes(s.toUpperCase()) || m.liga.toUpperCase().includes(s.toUpperCase()) || m.dimensoes.toUpperCase().includes(s.toUpperCase()) || m.produto.toUpperCase().includes(s.toUpperCase()) || m.material.toUpperCase().includes(s.toUpperCase()))) check = false;
         });
 
         if(check) this.materiaisFiltered.push(m);

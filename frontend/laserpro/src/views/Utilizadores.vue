@@ -189,7 +189,7 @@ export default {
 
       if(search != "") {
         this.users.forEach(u => {
-          if(u.username.includes(search)) this.usersFiltered.push(u);
+          if(u.username.toUpperCase().includes(search.toUpperCase())) this.usersFiltered.push(u);
         });
       } else {
         this.users.forEach(u => this.usersFiltered.push(u));
