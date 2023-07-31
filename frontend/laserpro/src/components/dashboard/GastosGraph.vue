@@ -135,7 +135,7 @@ export default {
                 labels: labels,
                 datasets: [
                     {
-                        label: "Gastos",
+                        label: "Gastos (€)",
                         backgroundColor: ["#7239ea", "#777777", "#444444"],
                         data: data
                     }
@@ -182,7 +182,7 @@ export default {
                 labels: labels,
                 datasets: [
                     {
-                        label: "Gastos",
+                        label: "Gastos (€)",
                         backgroundColor: ["#7239ea", "#777777", "#444444"],
                         data: data
                     }
@@ -223,7 +223,7 @@ export default {
                 labels: labels,
                 datasets: [
                     {
-                        label: "Gastos",
+                        label: "Gastos (€)",
                         backgroundColor: ["#7239ea", "#777777", "#444444"],
                         data: data
                     }
