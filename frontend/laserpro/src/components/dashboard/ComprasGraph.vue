@@ -33,7 +33,7 @@ export default {
                 labels: [],
                 datasets: [
                     {
-                        label: "Preço (€)",
+                        label: "Preço/Kg (€)",
                         backgroundColor: "#7239ea",
                         borderColor: "#555555",
                         data: []
@@ -51,7 +51,7 @@ export default {
                     y: {
                         title: {
                             display: true,
-                            text: "Preço em €"
+                            text: "Preço por Kg em €"
                         }
                     },
                     x: {
@@ -96,7 +96,7 @@ export default {
                 labels: [],
                 datasets: [
                     {
-                        label: "Preço (€)",
+                        label: "Preço/Kg (€)",
                         backgroundColor: "#7239ea",
                         borderColor: "#555555",
                         data: []
@@ -140,12 +140,12 @@ export default {
             let max = 0;
 
             this.info.forEach(c => {
-
+                let precokg = (Math.round((parseFloat(c.valor) / parseFloat(c.quantidade)) * 100) / 100).toFixed(2);
                 let novaData = new Date(c.data.split("-")[1] + "-" + c.data.split("-")[0] + "-" + c.data.split("-")[2]);
                 if(novaData >= this.chartOptions.scales.x.min && novaData <= this.chartOptions.scales.x.max) {
                     labels.push(new Date(c.data.split("-")[1] + "-" + c.data.split("-")[0] + "-" + c.data.split("-")[2])); 
-                    data.push(c.valor);
-                    if(c.valor > max) max = Math.ceil(parseFloat(c.valor));
+                    data.push(precokg);
+                    if(precokg > max) max = Math.ceil(parseFloat(precokg));
                 }
             });
 
@@ -153,7 +153,7 @@ export default {
                 labels: labels,
                 datasets: [
                     {
-                        label: "Preço (€)",
+                        label: "Preço/Kg (€)",
                         backgroundColor: "#7239ea",
                         borderColor: "#555555",
                         data: data
@@ -161,7 +161,7 @@ export default {
                 ]
             }
             
-            this.updateOptions(parseInt(max + 5), timeUnit);
+            this.updateOptions(parseInt(max + 2), timeUnit);
         },
         updateOptions(max, unit) {
             this.chartOptions = {
@@ -177,7 +177,7 @@ export default {
                         max: max,
                         title: {
                             display: true,
-                            text: "Preço em €"
+                            text: "Preço por Kg em €"
                         }
                     },
                     x: {

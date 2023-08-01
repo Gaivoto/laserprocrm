@@ -263,7 +263,6 @@ export default {
         this.$emit("open-modal", "Introduza um material válido da lista.");
         return false;
       } else {
-        console.log(this.formInfo)
         return true;
       }
     },
