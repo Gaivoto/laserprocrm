@@ -45,7 +45,7 @@ export default {
         background: rgba(60, 60, 60, 0.4);
         z-index: 10000;
     }
-
+ 
     .modal-wrapper.show {
         visibility: visible;
         opacity: 1;

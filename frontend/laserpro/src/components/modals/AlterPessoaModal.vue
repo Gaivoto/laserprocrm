@@ -26,7 +26,7 @@
                             <!--begin::Label-->
                             <label class="required fs-6 fw-semobold mb-2">Nome</label>
                             <!--end::Label-->
-
+ 
                             <!--begin::Input-->
                             <el-form-item prop="nome">
                                 <el-input v-model="formInfo.nome" type="text" placeholder="Nome" v-on:input="this.formInfo.nome = this.formInfo.nome.toUpperCase()"/>

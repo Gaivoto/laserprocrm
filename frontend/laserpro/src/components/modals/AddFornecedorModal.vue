@@ -175,7 +175,7 @@ export default {
           morada: ""
         }
       }
-    },
+    }, 
     reset(event) {
       if(event.target.id == "kt_modal_add_fornecedor" || event.target.id == "kt_modal_add_fornecedor_close" || event.target.id == "kt_modal_add_fornecedor_close_btn" || event.target.parentElement.id == "kt_modal_add_fornecedor_close_btn") {
         this.formInfo = {

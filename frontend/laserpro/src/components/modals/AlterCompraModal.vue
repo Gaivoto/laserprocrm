@@ -265,7 +265,7 @@ export default {
       } else {
         return true;
       }
-    },
+    }, 
     alterarCompra() {
       if(this.verifyCompraData()) this.$emit("alter-compra", this.formInfo);
     },

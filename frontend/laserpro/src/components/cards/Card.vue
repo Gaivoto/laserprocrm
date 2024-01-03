@@ -8,7 +8,7 @@
         <!--begin::Title-->
         <h2 class="fs-2x fw-bold mb-10">{{ title }}</h2>
         <!--end::Title-->
-
+ 
         <!--begin::Description-->
         <p class="text-gray-400 fs-5 fw-semobold mb-13">
           <span v-html="description"></span>

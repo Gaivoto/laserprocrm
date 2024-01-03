@@ -207,7 +207,7 @@ export default {
     searchFilter() {
       this.materiaisFiltered = [];
       let search = this.$refs.searchBar.value.split(" ");
-
+ 
       if(search != "") {
         this.materiais.forEach(m => {
           let check = false;

@@ -303,7 +303,7 @@ export default {
       this.fornecedoresSearchOpen = true;
       this.materiaisSearchOpen = false;
       this.filterFornecedores();
-    },
+    }, 
     filterMateriais() {
       let search = this.$refs.materialSearchbar.value.split(" ");
       this.materiaisFiltered = [];

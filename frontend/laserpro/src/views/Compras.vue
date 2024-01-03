@@ -366,7 +366,7 @@ export default {
             data: c.data,
             fornecedor: c.fornecedor.nome
           }
-
+ 
           this.editCompra.material = c.material.produto + " " + c.material.material + " " + c.material.tipo;
           if(c.material.subtipo != "") this.editCompra.material += " " + c.material.subtipo;
           this.editCompra.material += " " + c.material.liga + " " + c.material.dimensoes;

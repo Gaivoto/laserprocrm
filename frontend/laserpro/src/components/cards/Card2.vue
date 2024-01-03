@@ -10,7 +10,7 @@
           <img :src="icon" alt="image" class="p-3" />
         </div>
         <!--end::Icon-->
-
+ 
         <!--begin::Title-->
         <a
           href="#"

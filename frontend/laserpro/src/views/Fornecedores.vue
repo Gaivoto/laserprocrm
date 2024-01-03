@@ -214,7 +214,7 @@ export default {
       } else {
         this.fornecedores.forEach(f => this.fornecedoresFiltered.push(f));
       }
-
+ 
       if(this.state != "Estado" && this.state != "Todos") {
         this.fornecedoresFiltered = this.fornecedoresFiltered.filter(f => f.estado == this.state);
       }

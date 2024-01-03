@@ -31,7 +31,7 @@
                   <span :title="this.helpText" class="material-icons">help</span>
                 </div>
                 <!--end::Label-->
-
+ 
                 <!--begin::Input-->
                 <div class="custom-select">
                   <div class="selected" :class="{ open: tipoOpen }" v-on:click="this.tipoOpen = !this.tipoOpen">{{ this.formInfo.tipo }}</div>

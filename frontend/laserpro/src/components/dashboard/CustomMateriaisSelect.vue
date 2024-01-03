@@ -59,7 +59,7 @@ export default {
                 });
             } else this.selected = mat;
             this.$emit('choose-mat', mat);
-
+ 
             this.isToReset = false;
             this.tempSelect = "";
         },

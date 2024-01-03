@@ -4,7 +4,7 @@
       <MessageModal :class="{ 'show': this.messageModalOpen }" v-bind:msg="this.modalMessage" v-on:close-modal="this.closeMessageModal" />  
   </div>
 </template>
-
+ 
 <script lang="ts">
 import { nextTick, onBeforeMount, onMounted } from "vue";
 import { useConfigStore } from "@/stores/config";

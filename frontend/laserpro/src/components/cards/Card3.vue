@@ -18,7 +18,7 @@
             :class="`text-${color} bg-light-${color}`"
             class="symbol-label fs-2x fw-semobold"
             >{{ initials }}</span
-          >
+          > 
           <div
             v-if="online"
             class="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-white h-15px w-15px ms-n3 mt-n3"

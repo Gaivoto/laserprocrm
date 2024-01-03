@@ -23,7 +23,7 @@ export default {
     }
 }
 </script>
-
+ 
 <style scoped>
     .modal-wrapper {
         position: fixed;

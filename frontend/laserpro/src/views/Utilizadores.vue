@@ -186,7 +186,7 @@ export default {
     searchFilter() {
       this.usersFiltered = [];
       let search = this.$refs.searchBar.value;
-
+ 
       if(search != "") {
         this.users.forEach(u => {
           if(u.username.toUpperCase().includes(search.toUpperCase())) this.usersFiltered.push(u);

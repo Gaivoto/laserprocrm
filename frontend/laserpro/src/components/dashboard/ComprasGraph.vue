@@ -134,7 +134,7 @@ export default {
                     if(rangeDays < 32) timeUnit = "day";
                     else timeUnit = "week";
             }
-
+ 
             let labels = [];
             let data = [];
             let max = 0;

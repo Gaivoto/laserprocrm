@@ -25,7 +25,7 @@
     />
   </div>
 </template>
-
+ 
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from "vue";
 import TableContent from "@/components/kt-datatable/table-partials/table-content/TableContent.vue";

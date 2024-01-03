@@ -15,7 +15,7 @@
           <!--end::Text-->
           <!--begin::Illustration-->
           <div class="mb-11">
-            <img
+            <img 
               :src="getAssetPath('media/auth/500-error.png')"
               class="mw-100 mh-300px theme-light-show"
               alt=""

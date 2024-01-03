@@ -307,7 +307,7 @@ export default {
                 copy = copy.reverse();
                 this.comprasList = [...copy];
             }
-        },
+        }, 
         changeUltima(mat) {
             if(mat != "Todos os materiais"){
                 let comprasMat = this.compras.filter(c => c.material.id == mat);
