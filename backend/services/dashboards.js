@@ -35,7 +35,7 @@ async function getAllDashboards(access_token, refresh_token) {
         });
     });
 }
-
+ 
 async function toggleDashboard(access_token, refresh_token, id, estado) {
     return new Promise((resolve, reject) => {
         

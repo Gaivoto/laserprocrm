@@ -1,5 +1,5 @@
 const serDash = require('../services/dashboards.js');
-
+ 
 async function getAllDashboards(req, res) {
     serDash.getAllDashboards(req.headers['authorization'], req.headers.refreshtoken).then(value => {
         res.status(value.code).send(value.info)

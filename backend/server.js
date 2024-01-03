@@ -14,7 +14,7 @@ const rtPess = require('./routes/pessoas.js');
 const rtUser = require('./routes/users.js');
 const rtComp = require('./routes/compras.js');
 const rtDash = require('./routes/dashboards.js');
-
+ 
 app.use("/api/auth", rtAuth);
 
 app.use("/api/fornecedores", rtForn);

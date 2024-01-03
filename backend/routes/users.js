@@ -11,5 +11,5 @@ router.post("/", cntrUser.createUser);
 router.put("/:id", cntrUser.editUser);
 
 router.put("/:id/toggle", cntrUser.toggleUser);
-
+ 
 module.exports = router

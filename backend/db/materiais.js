@@ -56,7 +56,7 @@ async function toggleMaterial(id, estado) {
         });
     });
 }
-
+ 
 async function editMaterial(body, id) {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {

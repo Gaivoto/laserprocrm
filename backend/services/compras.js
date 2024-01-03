@@ -4,7 +4,7 @@ const uuid = require('uuid');
 const dbComp = require('../db/compras.js');
 const dbForn = require('../db/fornecedores.js');
 const dbMate = require('../db/materiais.js');
-
+ 
 async function getAllCompras(access_token, refresh_token) {
     return new Promise((resolve, reject) => {
 

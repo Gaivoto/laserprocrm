@@ -1,5 +1,5 @@
 const serPess = require('../services/pessoas.js');
-
+ 
 async function createPessoa(req, res) {
     serPess.createPessoa(req.headers['authorization'], req.headers.refreshtoken, req.body).then(value => {
         res.status(value.code).send(value.info)

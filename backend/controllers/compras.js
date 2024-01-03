@@ -1,5 +1,5 @@
 const serComp = require('../services/compras.js');
-
+ 
 async function getAllCompras(req, res) {
     serComp.getAllCompras(req.headers['authorization'], req.headers.refreshtoken).then(value => {
         res.status(value.code).send(value.info)

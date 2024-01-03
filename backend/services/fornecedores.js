@@ -176,7 +176,7 @@ async function toggleFornecedor(access_token, refresh_token, id, estado) {
         });
     });
 }
-
+ 
 async function editFornecedor(access_token, refresh_token, id, body) {
     return new Promise((resolve, reject) => {
 

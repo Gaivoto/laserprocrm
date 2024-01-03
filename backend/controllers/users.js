@@ -1,5 +1,5 @@
 const serUser = require('../services/users.js');
-
+ 
 async function getAllUsers(req, res) {
     serUser.getAllUsers(req.headers['authorization'], req.headers.refreshtoken).then(value => {
         res.status(value.code).send(value.info)

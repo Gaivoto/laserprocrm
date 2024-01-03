@@ -12,7 +12,7 @@ async function getAllUsers(access_token, refresh_token) {
         utils.validateToken(access_token, refresh_token).then(value => {
             let info = value;
             let users = [];
-
+ 
             if(info.user.tipo == "user") {
                 reject({ code: 403, error: { message: "Este utilizador não tem permissão para efetuar esta operação." } });
                 utils.createErrorLog(`Tentativa de leitura de utilizadores falhada por falta de permissão. Apenas administradores e super-administradores podem efetuar esta operação`, value.user, 403);

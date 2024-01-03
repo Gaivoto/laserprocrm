@@ -9,7 +9,7 @@ router.get("/", cntrComp.getAllCompras);
 router.post("/", cntrComp.createCompra);
 
 router.put("/:id", cntrComp.editCompra);
-
+ 
 router.delete("/:id", cntrComp.deleteCompra);
 
 module.exports = router

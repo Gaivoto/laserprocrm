@@ -1,5 +1,5 @@
 const serForn = require('../services/fornecedores.js');
-
+ 
 async function getAllFornecedores(req, res) {
     serForn.getAllFornecedores(req.headers['authorization'], req.headers.refreshtoken).then(value => {
         res.status(value.code).send(value.info)

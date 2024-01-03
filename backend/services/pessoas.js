@@ -173,7 +173,7 @@ async function editPessoa(access_token, refresh_token, id, body) {
                         utils.createErrorLog(`Tentativa de modificação de pessoa (id: '${id}') falhada por dados inválidos (fornecedor não encontrado)`, value.user, 404);
                     } else {
                         dbPess.getAllPessoas().then(value2 => {
-
+ 
                             let existe = false;
                                     
                             value2.forEach(p => {

@@ -7,7 +7,7 @@ const pool = new pg.Pool({
     password: process.env.DBPW,
     database: process.env.DBNAME
 });
-
+ 
 async function getAllDashboards() {
     const client = await pool.connect();
     return new Promise((resolve, reject) => {

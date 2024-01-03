@@ -50,7 +50,7 @@ async function login(username, password) {
         }
     });
 }
-
+ 
 async function logout(refresh_token) {
     return new Promise((resolve, reject) => {
         dbAuth.deleteToken(refresh_token).then(value => {

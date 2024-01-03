@@ -1,5 +1,5 @@
 const serMate = require('../services/materiais.js');
-
+ 
 async function getAllMateriais(req, res) {
     serMate.getAllMateriais(req.headers['authorization'], req.headers.refreshtoken).then(value => {
         res.status(value.code).send(value.info)

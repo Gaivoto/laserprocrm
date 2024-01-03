@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs');
 
 const dbAuth = require('../db/auth.js');
-
+ 
 async function validateToken(access_token, refresh_token){
     return new Promise((resolve, reject) => {
         jwt.verify(access_token, process.env.ACCESS_SECRET, (error, user) => {

@@ -1,5 +1,5 @@
 const serAuth = require('../services/auth.js');
-
+ 
 async function login(req, res){
     serAuth.login(req.body.username, req.body.password).then(value => {
         res.status(value.code).send(value.info);

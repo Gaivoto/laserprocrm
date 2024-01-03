@@ -297,7 +297,7 @@ async function deleteMaterial(access_token, refresh_token, id) {
         });
     });
 }
-
+ 
 module.exports = {
     getAllMateriais: getAllMateriais,
     createMaterial: createMaterial,
